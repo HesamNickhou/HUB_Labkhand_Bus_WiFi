@@ -1,0 +1,1829 @@
+#include "Config.h"
+#include "rtc/rtc.h"
+
+//------------------------------------------------------------------------------
+//         Headers
+//------------------------------------------------------------------------------
+//#if(1)//Config.UC==2937)
+
+//#define DEBUGKASHAN
+
+#include <rdlib/types/RdLib.h>
+
+#include <includes.h>
+
+#include <stdio.h>
+
+//#include <utility/ecard.h>
+
+#include "SmartCard/smartcard.h"
+
+
+struct{
+	signed int Etebar1;
+	signed int Etebar2;
+	unsigned int CardID;
+	unsigned int Payment;
+}LastTransactionKashan;
+
+
+unsigned char PayInfo[30];
+signed int CardEtebarKashan=0;
+signed int CardEtebarKashan2=0;
+
+//==============================================================================
+unsigned char _BCD(unsigned char value)
+{
+unsigned char i;
+	
+  i = value / 10;
+	i <<= 4;
+	i+=value % 10;
+	return(i);
+}
+
+//unsigned int Period=0;
+//==============================================================================
+unsigned char CRC8(unsigned char *data, unsigned char offset, unsigned char len)
+{
+unsigned char i, j;	
+signed short crc=0;
+	
+  for(i=0; i<len; i++)
+	{
+    crc ^= data[offset+i];
+    for(j=0; j<8; j++) 
+		{
+      if((crc & 0x80) != 0)
+        crc=(crc << 1) ^ 0xD5;
+      else
+        crc <<= 1;
+    }
+    crc &= 0xFF;
+  }
+  return(crc);
+}
+
+//==============================================================================
+unsigned char AppletKashan(void)
+{
+unsigned short i, RxLength;
+unsigned char ApduCmd[100];
+unsigned char ResBuff[256];	
+	
+  //Select SAM Applet
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xA4;
+  ApduCmd[2]=0x04;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x07;
+  ApduCmd[5]=0xD0;
+  ApduCmd[6]=0xD1;
+  ApduCmd[7]=0xD2;
+  ApduCmd[8]=0xD3;
+  ApduCmd[9]=0xD4;
+  ApduCmd[10]=0xD5;
+  ApduCmd[11]=0x01;
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[SAM]Select Applet :");
+  for(i=0; i<12; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x9000)
+    return(i);		
+}
+
+
+//==============================================================================
+//#define RGB(red, green, blue)	(unsigned int)(((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF))
+#define KEY 0x0B
+unsigned char UUID[16];
+
+unsigned int ReadCardIDKashan2(unsigned  int *CardID)
+{
+unsigned char idx;
+unsigned char ApduCmd[100];
+unsigned char ResBuff[256];	
+uint8_t pAts[255]; 
+unsigned short i, RxLength;
+unsigned char status;	
+uint8_t bCid;
+uint8_t bCidEnable; 
+uint8_t bNadSupported;
+uint8_t bFwi;
+uint8_t bFsdi;
+uint8_t bFsci;
+	
+  CardEtebarKashan=0;
+	
+  //SetTX485();
+  
+  //Period=OS_TimeMS;
+  
+  #ifndef WithPN532
+  
+  status = phpalI14443p4a_Rats(&palI14443p4a, 0x08, 0x01, pAts);
+  if(PH_ERR_SUCCESS != status)		return(1);
+
+  status = phpalI14443p4a_Pps(&palI14443p4a, 0x00, 0x00);  
+  if(PH_ERR_SUCCESS != status)		return(2);
+
+  status = phpalI14443p4a_GetProtocolParams(&palI14443p4a,&bCidEnable,&bCid,&bNadSupported,&bFwi,&bFsdi,&bFsci);
+  if(PH_ERR_SUCCESS != status)		return(3);
+
+  status = phpalI14443p4_SetProtocol(&palI14443p4,bCidEnable,bCid,bNadSupported,0x00,bFwi,bFsdi,bFsci);
+  if(PH_ERR_SUCCESS != status)		return(4);
+	
+  #endif
+ 
+    
+  //=========================================
+  //Select Issuer  
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xA4;
+  ApduCmd[2]=0x04;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x09;
+  ApduCmd[5]=0x4B; 
+  ApduCmd[6]=0x46;
+  ApduCmd[7]=0x50;
+  ApduCmd[8]=0x44;
+  ApduCmd[9]=0x45;
+  ApduCmd[10]=0x42;
+  ApduCmd[11]=0x49;
+  ApduCmd[12]=0x54;
+  ApduCmd[13]=0x00;
+  
+  #ifdef DEBUGKASHAN	
+  SetTX485();
+  printf("\n\r[CARD]Select Debit :");
+  //SetRX485();
+  for(i=0; i<14; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 14, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 14, ResBuff, &RxLength);	
+  #endif
+ // NFC_SendAPDU(ApduCmd, 14, ResBuff, &RxLength);
+  
+  #ifdef DEBUGKASHAN	
+ //  SetTX485();
+  printf("\n\rResponse :");
+   // SetRX485();
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif
+	
+  if(RxLength < 32) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[30]; i<<=8; i+=ResBuff[31];
+  if(i!=0x9000)
+    {
+     if(i==0) i=20;
+     return(i);		
+    }
+  for(i=0; i<16; i++)
+    UUID[i]=ResBuff[i+14];
+	
+	PayInfo[0]='K'; //Kashan
+  for(i=0; i<14; i++)
+		PayInfo[i+1]=ResBuff[i];
+
+  *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
+  return(0);
+}
+//==============================================================================
+unsigned int ReadCardIDKashan(unsigned long int *CardID, unsigned int Payment, signed long int *Etebar, signed long int *PreEtebar)
+{
+unsigned char idx;
+unsigned char ApduCmd[100];
+unsigned char ResBuff[256];	
+uint8_t pAts[255]; 
+unsigned short i, RxLength;
+unsigned char status;	
+uint8_t bCid;
+uint8_t bCidEnable; 
+uint8_t bNadSupported;
+uint8_t bFwi;
+uint8_t bFsdi;
+uint8_t bFsci;
+unsigned int Price=Payment/10;
+	
+  CardEtebarKashan=0;
+	
+	//SendByte(0xAA);
+	
+  //SetTX485();
+  
+  //Period=OS_TimeMS;
+  
+  #ifndef WithPN532
+  
+  status = phpalI14443p4a_Rats(&palI14443p4a, 0x08, 0x01, pAts);
+  if(PH_ERR_SUCCESS != status)		return(1);
+
+  status = phpalI14443p4a_Pps(&palI14443p4a, 0x00, 0x00);  
+  if(PH_ERR_SUCCESS != status)		return(2);
+
+  status = phpalI14443p4a_GetProtocolParams(&palI14443p4a,&bCidEnable,&bCid,&bNadSupported,&bFwi,&bFsdi,&bFsci);
+  if(PH_ERR_SUCCESS != status)		return(3);
+
+  status = phpalI14443p4_SetProtocol(&palI14443p4,bCidEnable,bCid,bNadSupported,0x00,bFwi,bFsdi,bFsci);
+  if(PH_ERR_SUCCESS != status)		return(4);
+	
+  #endif
+ GUI_SetColor(0x007FFF00);
+ GUI_FillRoundedRect(7+39+5, 275+2, 7+2*39+5, 275+28,0);	
+
+    
+  //=========================================
+  //Select Issuer  
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xA4;
+  ApduCmd[2]=0x04;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x09;
+  ApduCmd[5]=0x4B; 
+  ApduCmd[6]=0x46;
+  ApduCmd[7]=0x50;
+  ApduCmd[8]=0x44;
+  ApduCmd[9]=0x45;
+  ApduCmd[10]=0x42;
+  ApduCmd[11]=0x49;
+  ApduCmd[12]=0x54;
+  ApduCmd[13]=0x00;
+  
+  #ifdef DEBUGKASHAN	
+  //SetTX485();
+  printf("\n\r[CARD]Select Debit :");
+  //SetRX485();
+  for(i=0; i<14; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 14, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 14, ResBuff, &RxLength);	
+  #endif
+ // NFC_SendAPDU(ApduCmd, 14, ResBuff, &RxLength);
+  
+  #ifdef DEBUGKASHAN	
+ //  SetTX485();
+  printf("\n\rResponse :");
+   // SetRX485();
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif
+	
+  if(RxLength < 32) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[30]; i<<=8; i+=ResBuff[31];
+  if(i!=0x9000)
+    {
+     if(i==0) i=20;
+     return(i);		
+    }
+  for(i=0; i<16; i++)
+    UUID[i]=ResBuff[i+14];
+	
+	PayInfo[0]='K'; //Kashan
+  for(i=0; i<14; i++)
+		PayInfo[i+1]=ResBuff[i];
+
+  *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
+  
+
+ //printf("\n\rTime1=%d ",timestamp+1);
+ 
+  //MM
+  if(*CardID != LastTransactionKashan.CardID)
+  {
+	LastTransactionKashan.Etebar1=0;
+	LastTransactionKashan.Etebar2=0;
+	LastTransactionKashan.Payment=0;
+  }
+  LastTransactionKashan.CardID=*CardID;
+  //MM
+
+
+  //=========================================
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xA1;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x00;
+  ApduCmd[5]=0x00;
+
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[CARD]GetActivationStatus :");
+  for(i=0; i<6; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 6, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 6, ResBuff, &RxLength);	
+  #endif  
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+	
+  if(RxLength==4)
+    {
+     if((ResBuff[0]!=1) || (ResBuff[2]!=0x90) || (ResBuff[3]!=0))	return(33);
+    }
+ else if(RxLength==6)
+    {
+     if((ResBuff[2]!=0) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))      return(34);
+     if(ResBuff[0]!=1)	return(33);
+    }
+ else if(RxLength==8)
+    {
+     if((ResBuff[2]!=0) || (ResBuff[6]!=0x90) || (ResBuff[7]!=0))      return(34);
+     if(ResBuff[0]!=1)	return(33);
+    }  
+ else                   return(33);
+  
+ //SendByte(4);
+  //MM
+	//=========================================
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xBA;
+  ApduCmd[2]=0x02;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x00;
+  ApduCmd[5]=0x00;
+
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[CARD]GetCardBalance :");
+  for(i=0; i<6; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  SendAPDU(ApduCmd, 6, ResBuff, &RxLength);				
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+	
+  if((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  {
+    i=ResBuff[0]; i<<=8;
+    i+=ResBuff[1];
+    if(i==0)
+      return(44);
+    return(i);
+  }
+	
+  CardEtebarKashan=ResBuff[0]; CardEtebarKashan<<=8;
+  CardEtebarKashan+=ResBuff[1]; CardEtebarKashan<<=8;
+  CardEtebarKashan+=ResBuff[2]; CardEtebarKashan<<=8;
+  CardEtebarKashan+=ResBuff[3];
+	//SendByte(5);
+ GUI_SetColor(0x001FFF00);
+ GUI_FillRoundedRect(7+2*39+2*5, 275+2, 7+3*39+2*5, 275+28,0);	
+	
+
+
+	
+	//=========================================
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xBA;
+  ApduCmd[2]=0x01;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x00;
+  ApduCmd[5]=0x00;
+
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[CARD]GetCardBalance :");
+  for(i=0; i<6; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  SendAPDU(ApduCmd, 6, ResBuff, &RxLength);				
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+	
+  if((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  {
+    i=ResBuff[0]; i<<=8;
+    i+=ResBuff[1];
+    if(i==0)
+      return(44);
+    return(i);
+  }
+
+  i=ResBuff[0]; i<<=8;
+  i+=ResBuff[1]; i<<=8;
+  i+=ResBuff[2]; i<<=8;
+  i+=ResBuff[3];
+	CardEtebarKashan2=i;
+	CardEtebarKashan2/=10;
+	
+	
+	CardEtebarKashan/=10;
+  //MM
+
+//SendByte(6);
+  //delay_ms(100);
+  //=========================================
+  //ProgressBar2(40,50,280,75, 600,3000,YELLOW);
+ 
+  //Select SAM Applet
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xA4;
+  ApduCmd[2]=0x04;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x07;
+  ApduCmd[5]=0xD0;
+  ApduCmd[6]=0xD1;
+  ApduCmd[7]=0xD2;
+  ApduCmd[8]=0xD3;
+  ApduCmd[9]=0xD4;
+  ApduCmd[10]=0xD5;
+  ApduCmd[11]=0x01;
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[SAM]Select Applet :");
+  for(i=0; i<12; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  ResBuff[0]=0xff;
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x9000)
+    {
+     ResBuff[0]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     if(i!=0x9000)
+       {
+        ResBuff[0]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+       }
+    }
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif	
+  
+
+  if(RxLength < 2)
+    {
+     // printf("\n\rRESET"); 
+     // ISO7816_warm_reset(); 
+      if(RxLength!=2) return(19); 
+      else 
+        {
+         i=ResBuff[0]; 
+         i<<=8;
+         i+=ResBuff[1]; 
+         if(i==0) i=19; 
+         return(i); 
+        }
+    }
+
+  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  
+  if(i!=0x9000)
+    {
+     //printf("\n\rRESET");
+     //ISO7816_warm_reset();
+     //Port_Clear(pinSamRst); delay_ms(100);	Port_Set(pinSamRst); //SAM_RST=1;
+     if(i==0) i=19;
+     return(i);		
+    }
+ GUI_SetColor(0x0007FF00);
+ GUI_FillRoundedRect(7+3*39+3*5, 275+2, 7+4*39+3*5, 275+28,0);			
+
+
+ //=========================================
+	//  ProgressBar2(40,50,280,75, 800,3000,YELLOW);
+  //Prepare Secure Channel
+  ApduCmd[0]=0x80;
+  ApduCmd[1]=0xF2;
+  ApduCmd[2]=KEY;/////////Key
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x10;
+  for(i=0; i<16; i++)
+    ApduCmd[i+5]=UUID[i];
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[SAM]Prepare Secure Channel :");
+  for(i=0; i<21; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  //RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+  
+  
+	//	SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
+		
+  ResBuff[0]=0xff;
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+	
+	//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
+	
+  if(i!=0x6108)//6108
+    {
+     ResBuff[0]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+			//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
+     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     if(i!=0x6108)
+       {
+        ResBuff[0]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+				 //SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
+       }
+    }
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+		
+
+
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	
+	//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
+	
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+	//SendByte(ResBuff[0]);SendByte(ResBuff[1]);
+  if(i!=0x6108)
+	{	
+    if(i==0) i=21;
+		return(i);		
+	}
+  
+	//SendByte(8);
+ //delay_ms(100);
+	//=========================================
+	//  ProgressBar2(40,50,280,75, 1000,3000,YELLOW);
+	//Save SAM Challenge
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xC0;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x08;
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[SAM]Save SAM Challenge :");
+  for(i=0; i<5; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+//  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+
+  ResBuff[8]=0xff;
+
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+    {
+     ResBuff[8]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     if(i!=0x9000)
+       {
+        ResBuff[8]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+       }
+    }
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 10) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+	{
+    if(i==0) i=22;
+    return(i);		
+	}
+  //SendByte(9);
+  // printf("\n\rTime3=%d ",timestamp+1);
+	//=========================================
+	//  ProgressBar2(40,50,280,75, 1500,3000,YELLOW);
+  //Get Challenge
+  idx=0;
+  ApduCmd[idx++]=0xA0;
+  ApduCmd[idx++]=0x85;
+  ApduCmd[idx++]=KEY;////////Key
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x17;
+  
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  
+  
+  jalali_to_gregorian(Year,Month,Day,&CurrentDate);
+  
+  
+  ApduCmd[idx++]=_BCD(CurrentDate.year/100);
+  ApduCmd[idx++]=_BCD(CurrentDate.year%100);
+  ApduCmd[idx++]=_BCD(CurrentDate.month);
+  ApduCmd[idx++]=_BCD(CurrentDate.day);
+  ApduCmd[idx++]=_BCD(Hour);
+  ApduCmd[idx++]=_BCD(Min);
+  ApduCmd[idx++]=_BCD(Sec);
+  for(i=0; i<8; i++)
+    ApduCmd[idx++]=ResBuff[i];
+	
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[CARD]Get Challenge :");
+  for(i=0; i<idx; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, idx, ResBuff, &RxLength);				
+  #else
+  NFC_SendAPDU(ApduCmd, idx, ResBuff, &RxLength);	
+  #endif  
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif		
+  if(RxLength < 18) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[16]; i<<=8; i+=ResBuff[17];
+  if(i!=0x9000)
+	{
+    if(i==0) i=43;
+    return(i);		
+	}
+  GUI_SetColor(0x0003F800);
+  GUI_FillRoundedRect(7+4*39+4*5, 275+2, 7+5*39+4*5, 275+28,0);	
+ 
+	//===========================================================================================
+  //ProgressBar2(40,50,280,75, 2000,3000,YELLOW);
+  //SAM  : Establish Secure Channel 2
+
+  idx=0;
+  ApduCmd[idx++]=0x80;
+  ApduCmd[idx++]=0xF3;
+  ApduCmd[idx++]=KEY; //////Key
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x10;
+  for(i=0; i<16; i++)
+    ApduCmd[idx++]=ResBuff[i];
+	
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[SAM]Establish Secure Channel 2 :");
+  for(i=0; i<idx; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+	
+  
+  ResBuff[0]=0xff;
+
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+
+  i=ResBuff[0]; 
+
+  if((i!=0x61)&&(i!=0x63)&&(i!=0x99))
+    {
+     ResBuff[0]=0xff;
+     //delay_ms(10);
+     
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+
+     i=ResBuff[0]; 
+     if((i!=0x61)&&(i!=0x63)&&(i!=0x99))
+       {
+        ResBuff[0]=0xff;         
+        //delay_ms(10);        
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+
+       }
+    }
+
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+		
+		
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x6108)
+	{
+    if(i==0) i=24;
+    return(i);		
+	}
+	  GUI_SetColor(GUI_RED);
+  GUI_FillRoundedRect(7+4*39+4*5, 275+2, 7+5*39+4*5, 275+28,0);	
+
+	//SendByte(0x11);
+	//  GetTimeStamp();    printf("\n\rTime4.5=%d ",timestamp+1);
+	//=========================================
+	//  ProgressBar2(40,50,280,75, 2500,3000,YELLOW);
+	//Save SAMCryptogram 2
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xC0;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x08;
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[SAM]SAMCryptogram 2 :");
+  for(i=0; i<5; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+ // RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+  ResBuff[8]=0xff;
+
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+/*
+  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+    {
+     ResBuff[8]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     if(i!=0x9000)
+       {
+        ResBuff[8]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+       }
+    }
+  */
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 10) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+	{
+    if(i==0) i=25;
+    return(i);		
+	}
+		  GUI_SetColor(GUI_WHITE);
+  GUI_FillRoundedRect(7+4*39+4*5, 275+2, 7+5*39+4*5, 275+28,0);	
+//	SendByte(0x12);
+	//  GetTimeStamp();    printf("\n\rTime5=%d ",timestamp+1);
+  //=========================================
+  
+  //Card Authenticate 2
+  idx=0;
+  ApduCmd[idx++]=0xA0;
+  ApduCmd[idx++]=0x89;
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x8;
+  for(i=0; i<8; i++)
+    ApduCmd[idx++]=ResBuff[i];
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[CARD]Authenticate :");
+  for(i=0; i<idx; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, idx, ResBuff, &RxLength);				
+  #else
+  NFC_SendAPDU(ApduCmd, idx, ResBuff, &RxLength);	
+  #endif  
+  
+  #ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x9000)
+	{
+    if(i==0) i=46;
+    return(i);		
+	}
+  
+	//SendByte(0x13);
+  //ProgressBar2(40,50,280,75, 3000,3000,YELLOW);
+  
+	//   printf("\n\rTime6=%d ",timestamp+1);
+
+			  GUI_SetColor(GUI_BLUE);
+  GUI_FillRoundedRect(7+4*39+4*5, 275+2, 7+5*39+4*5, 275+28,0);	
+
+	
+  //MM
+	if(LastTransactionKashan.CardID!=0)
+		if(LastTransactionKashan.Payment==Price)
+		{
+			if((LastTransactionKashan.Etebar1==CardEtebarKashan)&&(LastTransactionKashan.Etebar2==CardEtebarKashan2+Price))
+			{
+        *Etebar=CardEtebarKashan2;
+	      *PreEtebar=LastTransactionKashan.Etebar2;
+        ResBuff[0]=1;
+        ResBuff[1]=0xFF;
+        ResBuff[2]=0xFF;
+				Price=*Etebar*10;
+        ResBuff[6]=Price & 0xFF;
+        ResBuff[5]=(Price >> 8) & 0xFF;
+        ResBuff[4]=(Price >> 16) & 0xFF;
+        ResBuff[3]=(Price >> 24) & 0xFF;
+        ResBuff[7]=0xFF;
+        ResBuff[8]=0xFF;
+        ResBuff[9]=0xFF;
+        ResBuff[10]=0xFF;
+				
+	      for(i=0; i<11; i++)
+	        PayInfo[i+15]=ResBuff[i];
+       	LastTransactionKashan.Payment=0;
+	      LastTransactionKashan.CardID=0;
+	      LastTransactionKashan.Etebar1=0;
+	      LastTransactionKashan.Etebar2=0;
+	      return(0);
+			}				
+			if((LastTransactionKashan.Etebar1==CardEtebarKashan+Price)&&(LastTransactionKashan.Etebar2==CardEtebarKashan2))
+			{
+        *Etebar=CardEtebarKashan;
+	      *PreEtebar=LastTransactionKashan.Etebar1;
+        ResBuff[0]=2;
+        ResBuff[1]=0xFF;
+        ResBuff[2]=0xFF;
+		    Price=*Etebar*10;
+        ResBuff[6]=Price & 0xFF;
+        ResBuff[5]=(Price >> 8) & 0xFF;
+        ResBuff[4]=(Price >> 16) & 0xFF;
+        ResBuff[3]=(Price >> 24) & 0xFF;
+        ResBuff[7]=0xFF;
+        ResBuff[8]=0xFF;
+        ResBuff[9]=0xFF;
+        ResBuff[10]=0xFF;
+				
+	      for(i=0; i<11; i++)
+	        PayInfo[i+15]=ResBuff[i];
+       	LastTransactionKashan.Payment=0;
+	      LastTransactionKashan.CardID=0;
+	      LastTransactionKashan.Etebar1=0;
+	      LastTransactionKashan.Etebar2=0;
+	      return(0);
+			}
+		}
+	LastTransactionKashan.Etebar1=CardEtebarKashan;
+	LastTransactionKashan.Etebar2=CardEtebarKashan2;
+	LastTransactionKashan.Payment=Price;
+
+  //MM  
+	
+	//SendByte(0x14);
+	
+	
+  //Debit
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xAF;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x06;
+  ApduCmd[5]=0x06;
+
+  ApduCmd[6]=0x0;
+  ApduCmd[7]=0x0;
+  ApduCmd[8]=(Payment>>8) & 0xFF;
+  ApduCmd[9]=Payment & 0xFF;
+	
+	ApduCmd[10]=CRC8(ApduCmd, 5, 5);
+        
+        // GetTimeStamp();    printf("\n\rTime66=%d ",timestamp+1);
+  #ifdef DEBUGKASHAN	
+  printf("\n\r[CARD]Debit :");
+  for(i=0; i<11; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  				
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 11, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 11, ResBuff, &RxLength);
+  #endif   
+
+#ifdef DEBUGKASHAN	
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  
+  
+  // printf("\n\rTime67=%d ",timestamp+1);
+   
+  if(((RxLength == 13) && (ResBuff[11]==0x90) && (ResBuff[12]==0)) ||
+	   ((RxLength == 17) && (ResBuff[15]==0x90) && (ResBuff[16]==0)))	
+  {
+    *Etebar=ResBuff[3]; *Etebar<<=8;
+    *Etebar+=ResBuff[4]; *Etebar<<=8;
+    *Etebar+=ResBuff[5]; *Etebar<<=8;
+    *Etebar+=ResBuff[6];
+    *Etebar/=10;
+
+    *PreEtebar=ResBuff[11]; *PreEtebar<<=8;
+    *PreEtebar+=ResBuff[12]; *PreEtebar<<=8;
+    *PreEtebar+=ResBuff[13]; *PreEtebar<<=8;
+    *PreEtebar+=ResBuff[14];
+    *PreEtebar/=10;
+	  for(i=0; i<11; i++)
+	    PayInfo[i+15]=ResBuff[i];
+  }
+	else
+  {
+    i=ResBuff[0]; i<<=8;
+    i+=ResBuff[1];                                                                           
+    if(i==0)
+      return(19);
+    return(i);
+  }
+   // printf("\n\rTime7=%d ",timestamp+1);
+  LastTransactionKashan.Payment=0;
+  LastTransactionKashan.CardID=0;
+  LastTransactionKashan.Etebar1=0;
+  LastTransactionKashan.Etebar2=0;
+	
+	
+ GUI_SetColor(GUI_GREEN);
+ GUI_FillRoundedRect(7+5*39+5*5, 275+2, 7+6*39+5*5, 275+28,0);
+	return(0);
+}
+
+
+//==============================================================================
+unsigned int ReadCardIDKashanLog(unsigned long int *CardID, unsigned int Payment, signed long int *Etebar, signed long int *PreEtebar)
+{
+unsigned char idx;
+unsigned char ApduCmd[100];
+unsigned char ResBuff[256];	
+uint8_t pAts[255]; 
+unsigned short i, RxLength;
+unsigned char status;	
+uint8_t bCid;
+uint8_t bCidEnable; 
+uint8_t bNadSupported;
+uint8_t bFwi;
+uint8_t bFsdi;
+uint8_t bFsci;
+unsigned int Price=Payment/10;
+	
+  CardEtebarKashan=0;
+	
+  //SetTX485();
+  SendByte(1);
+  //Period=OS_TimeMS;
+  
+  #ifndef WithPN532
+  
+  status = phpalI14443p4a_Rats(&palI14443p4a, 0x08, 0x01, pAts);
+  if(PH_ERR_SUCCESS != status)		return(1);
+
+  status = phpalI14443p4a_Pps(&palI14443p4a, 0x00, 0x00);  
+  if(PH_ERR_SUCCESS != status)		return(2);
+
+  status = phpalI14443p4a_GetProtocolParams(&palI14443p4a,&bCidEnable,&bCid,&bNadSupported,&bFwi,&bFsdi,&bFsci);
+  if(PH_ERR_SUCCESS != status)		return(3);
+
+  status = phpalI14443p4_SetProtocol(&palI14443p4,bCidEnable,bCid,bNadSupported,0x00,bFwi,bFsdi,bFsci);
+  if(PH_ERR_SUCCESS != status)		return(4);
+	
+  #endif
+ SendByte(2);
+    
+  //=========================================
+  //Select Issuer  
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xA4;
+  ApduCmd[2]=0x04;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x09;
+  ApduCmd[5]=0x4B; 
+  ApduCmd[6]=0x46;
+  ApduCmd[7]=0x50;
+  ApduCmd[8]=0x44;
+  ApduCmd[9]=0x45;
+  ApduCmd[10]=0x42;
+  ApduCmd[11]=0x49;
+  ApduCmd[12]=0x54;
+  ApduCmd[13]=0x00;
+  
+  #ifdef DEBUGKASHAN	
+  SetTX485();
+  printf("\n\r[CARD]Select Debit :");
+  //SetRX485();
+  for(i=0; i<14; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 14, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 14, ResBuff, &RxLength);	
+  #endif
+ // NFC_SendAPDU(ApduCmd, 14, ResBuff, &RxLength);
+  
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+   // SetRX485();
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif
+	
+  if(RxLength < 32) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[30]; i<<=8; i+=ResBuff[31];
+		
+ SendByte(3);
+  if(i!=0x9000)
+    {
+     if(i==0) i=20;
+     return(i);		
+    }
+  for(i=0; i<16; i++)
+    UUID[i]=ResBuff[i+14];
+	
+	PayInfo[0]='K'; //Kashan
+  for(i=0; i<14; i++)
+		PayInfo[i+1]=ResBuff[i];
+
+  *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID+=((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
+  
+
+ //printf("\n\rTime1=%d ",timestamp+1);
+ 
+  //MM
+  if(*CardID != LastTransactionKashan.CardID)
+  {
+	LastTransactionKashan.Etebar1=0;
+	LastTransactionKashan.Etebar2=0;
+	LastTransactionKashan.Payment=0;
+  }
+  LastTransactionKashan.CardID=*CardID;
+  //MM
+        
+
+  //=========================================
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xA1;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x00;
+  ApduCmd[5]=0x00;
+
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[CARD]GetActivationStatus :");
+  for(i=0; i<6; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 6, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 6, ResBuff, &RxLength);	
+  #endif  
+  
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+	
+  if(RxLength==4)
+    {
+     if((ResBuff[0]!=1) || (ResBuff[2]!=0x90) || (ResBuff[3]!=0))	return(33);
+    }
+ else if(RxLength==6)
+    {
+     if((ResBuff[2]!=0) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))      return(34);
+     if(ResBuff[0]!=1)	return(33);
+    }
+ else if(RxLength==8)
+    {
+     if((ResBuff[2]!=0) || (ResBuff[6]!=0x90) || (ResBuff[7]!=0))      return(34);
+     if(ResBuff[0]!=1)	return(33);
+    }  
+ else                   return(33);
+  
+
+  //MM
+	//=========================================
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xBA;
+  ApduCmd[2]=0x02;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x00;
+  ApduCmd[5]=0x00;
+
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[CARD]GetCardBalance :");
+  for(i=0; i<6; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  SendAPDU(ApduCmd, 6, ResBuff, &RxLength);				
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+	
+  if((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  {
+    i=ResBuff[0]; i<<=8;
+    i+=ResBuff[1];
+    if(i==0)
+      return(44);
+    return(i);
+  }
+	
+	
+	
+  CardEtebarKashan=ResBuff[0]; CardEtebarKashan<<=8;
+  CardEtebarKashan+=ResBuff[1]; CardEtebarKashan<<=8;
+  CardEtebarKashan+=ResBuff[2]; CardEtebarKashan<<=8;
+  CardEtebarKashan+=ResBuff[3];
+	
+	//=========================================
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xBA;
+  ApduCmd[2]=0x01;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x00;
+  ApduCmd[5]=0x00;
+
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[CARD]GetCardBalance :");
+  for(i=0; i<6; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  SendAPDU(ApduCmd, 6, ResBuff, &RxLength);
+  
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+	
+  if((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  {
+    i=ResBuff[0]; i<<=8;
+    i+=ResBuff[1];
+    if(i==0)
+      return(44);
+    return(i);
+  }
+
+  i=ResBuff[0]; i<<=8;
+  i+=ResBuff[1]; i<<=8;
+  i+=ResBuff[2]; i<<=8;
+  i+=ResBuff[3];
+	CardEtebarKashan2=i;
+	CardEtebarKashan2/=10;
+	
+	
+	CardEtebarKashan/=10;
+  //MM
+
+  SendByte(7); 
+  //delay_ms(100);
+  //=========================================
+  //ProgressBar2(40,50,280,75, 600,3000,YELLOW);
+ 
+  //Select SAM Applet
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xA4;
+  ApduCmd[2]=0x04;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x07;
+  ApduCmd[5]=0xD0;
+  ApduCmd[6]=0xD1;
+  ApduCmd[7]=0xD2;
+  ApduCmd[8]=0xD3;
+  ApduCmd[9]=0xD4;
+  ApduCmd[10]=0xD5;
+  ApduCmd[11]=0x01;
+  
+  #ifdef DEBUGKASHAN	
+  SetTX485();
+  printf("\n\r[SAM]Select Applet :");
+  for(i=0; i<12; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  ResBuff[0]=0xff;
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x9000)
+    {
+     ResBuff[0]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     if(i!=0x9000)
+       {
+        ResBuff[0]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
+       }
+    }
+  
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif	
+  
+
+  if(RxLength < 2)
+    {
+      //printf("\n\rRESET"); 
+    //  ISO7816_warm_reset(); 
+      if(RxLength!=2) return(19); 
+      else 
+        {
+         i=ResBuff[0]; 
+         i<<=8;
+         i+=ResBuff[1]; 
+         if(i==0) i=19; 
+         return(i); 
+        }
+    }
+
+  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  
+  if(i!=0x9000)
+    {
+     //printf("\n\rRESET");
+//     ISO7816_warm_reset();
+     //Port_Clear(pinSamRst); delay_ms(100);	Port_Set(pinSamRst); //SAM_RST=1;
+     if(i==0) i=19;
+     return(i);		
+    }
+  SendByte(8); 
+ //delay_ms(100);
+ //=========================================
+	//  ProgressBar2(40,50,280,75, 800,3000,YELLOW);
+  //Prepare Secure Channel
+  ApduCmd[0]=0x80;
+  ApduCmd[1]=0xF2;
+  ApduCmd[2]=KEY;/////////Key
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x10;
+  for(i=0; i<16; i++)
+    ApduCmd[i+5]=UUID[i];
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[SAM]Prepare Secure Channel :");
+  for(i=0; i<21; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  //RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+  
+  
+  ResBuff[0]=0xff;
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x6108)
+    {
+     ResBuff[0]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     if(i!=0x6108)
+       {
+        ResBuff[0]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
+       }
+    }
+  
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x6108)
+	{	
+    if(i==0) i=21;
+		return(i);		
+	}
+  SendByte(9); 
+ //delay_ms(100);
+	//=========================================
+	//  ProgressBar2(40,50,280,75, 1000,3000,YELLOW);
+	//Save SAM Challenge
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xC0;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x08;
+  #ifdef DEBUGKASHAN	
+    SetTX485();
+  printf("\n\r[SAM]Save SAM Challenge :");
+  for(i=0; i<5; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+//  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+
+  ResBuff[8]=0xff;
+
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+    {
+     ResBuff[8]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     if(i!=0x9000)
+       {
+        ResBuff[8]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+       }
+    }
+  
+  #ifdef DEBUGKASHAN	
+    SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 10) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+	{
+    if(i==0) i=22;
+    return(i);		
+	}
+  SendByte(10); 
+  // printf("\n\rTime3=%d ",timestamp+1);
+	//=========================================
+	//  ProgressBar2(40,50,280,75, 1500,3000,YELLOW);
+  //Get Challenge
+  idx=0;
+  ApduCmd[idx++]=0xA0;
+  ApduCmd[idx++]=0x85;
+  ApduCmd[idx++]=KEY;////////Key
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x17;
+  
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  ApduCmd[idx++]=0x01; 
+  
+  
+  jalali_to_gregorian(Year,Month,Day,&CurrentDate);
+  
+  
+  ApduCmd[idx++]=_BCD(CurrentDate.year/100);
+  ApduCmd[idx++]=_BCD(CurrentDate.year%100);
+  ApduCmd[idx++]=_BCD(CurrentDate.month);
+  ApduCmd[idx++]=_BCD(CurrentDate.day);
+  ApduCmd[idx++]=_BCD(Hour);
+  ApduCmd[idx++]=_BCD(Min);
+  ApduCmd[idx++]=_BCD(Sec);
+  for(i=0; i<8; i++)
+    ApduCmd[idx++]=ResBuff[i];
+	
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[CARD]Get Challenge :");
+  for(i=0; i<idx; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, idx, ResBuff, &RxLength);				
+  #else
+  NFC_SendAPDU(ApduCmd, idx, ResBuff, &RxLength);	
+  #endif  
+  
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif		
+  if(RxLength < 18) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[16]; i<<=8; i+=ResBuff[17];
+  if(i!=0x9000)
+	{
+    if(i==0) i=43;
+    return(i);		
+	}
+	
+	SendByte(11); 
+    //printf("\n\rTime4=%d ",timestamp+1);	
+ //delay_ms(100);
+ //=========================================
+ // ProgressBar2(40,50,280,75, 2000,3000,YELLOW);
+  //SAM  : Establish Secure Channel 2
+  idx=0;
+  ApduCmd[idx++]=0x80;
+  ApduCmd[idx++]=0xF3;
+  ApduCmd[idx++]=KEY; //////Key
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x10;
+  for(i=0; i<16; i++)
+    ApduCmd[idx++]=ResBuff[i];
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[SAM]Establish Secure Channel 2 :");
+  for(i=0; i<idx; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  //RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+  ResBuff[0]=0xff;
+
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+
+  i=ResBuff[0]; 
+
+    if((i!=0x61)&&(i!=0x63)&&(i!=0x99))
+    {
+     ResBuff[0]=0xff;
+     //delay_ms(10);
+     
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+
+     i=ResBuff[0]; 
+     if((i!=0x61)&&(i!=0x63)&&(i!=0x99))
+       {
+        ResBuff[0]=0xff;         
+        //delay_ms(10);        
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
+
+       }
+    }
+
+  
+  #ifdef DEBUGKASHAN	
+     SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x6108)
+	{
+    if(i==0) i=24;
+    return(i);		
+	}
+	SendByte(12); 
+	//  GetTimeStamp();    printf("\n\rTime4.5=%d ",timestamp+1);
+	//=========================================
+	//  ProgressBar2(40,50,280,75, 2500,3000,YELLOW);
+	//Save SAMCryptogram 2
+  ApduCmd[0]=0x00;
+  ApduCmd[1]=0xC0;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x08;
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\r[SAM]SAMCryptogram 2 :");
+  for(i=0; i<5; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+ // RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+  ResBuff[8]=0xff;
+
+  RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+/*
+  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+    {
+     ResBuff[8]=0xff;
+     RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     if(i!=0x9000)
+       {
+        ResBuff[8]=0xff;         
+        RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
+       }
+    }
+  */
+  #ifdef DEBUGKASHAN	
+   SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  if(RxLength < 10) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if(i!=0x9000)
+	{
+    if(i==0) i=25;
+    return(i);		
+	}
+	SendByte(13); 
+	//  GetTimeStamp();    printf("\n\rTime5=%d ",timestamp+1);
+  //=========================================
+  
+  //Card Authenticate 2
+  idx=0;
+  ApduCmd[idx++]=0xA0;
+  ApduCmd[idx++]=0x89;
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x00;
+  ApduCmd[idx++]=0x8;
+  for(i=0; i<8; i++)
+    ApduCmd[idx++]=ResBuff[i];
+  #ifdef DEBUGKASHAN	
+    SetTX485();
+  printf("\n\r[CARD]Authenticate :");
+  for(i=0; i<idx; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, idx, ResBuff, &RxLength);				
+  #else
+  NFC_SendAPDU(ApduCmd, idx, ResBuff, &RxLength);	
+  #endif  
+  
+  #ifdef DEBUGKASHAN	
+    SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif
+  if(RxLength < 2) {	if(RxLength!=2) return(19); else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if(i==0) i=19; return(i); } }
+	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if(i!=0x9000)
+	{
+    if(i==0) i=46;
+    return(i);		
+	}
+  
+	SendByte(14); 
+  //ProgressBar2(40,50,280,75, 3000,3000,YELLOW);
+  
+	//   printf("\n\rTime6=%d ",timestamp+1);
+
+	
+	/*
+  //MM
+	if(LastTransactionKashan.CardID!=0)
+		if(LastTransactionKashan.Payment==Price)
+		{
+			if((LastTransactionKashan.Etebar1==CardEtebarKashan)&&(LastTransactionKashan.Etebar2==CardEtebarKashan2+Price))
+			{
+        *Etebar=CardEtebarKashan2;
+	      *PreEtebar=LastTransactionKashan.Etebar2;
+        ResBuff[0]=1;
+        ResBuff[1]=0xFF;
+        ResBuff[2]=0xFF;
+				Price=*Etebar*10;
+        ResBuff[6]=Price & 0xFF;
+        ResBuff[5]=(Price >> 8) & 0xFF;
+        ResBuff[4]=(Price >> 16) & 0xFF;
+        ResBuff[3]=(Price >> 24) & 0xFF;
+        ResBuff[7]=0xFF;
+        ResBuff[8]=0xFF;
+        ResBuff[9]=0xFF;
+        ResBuff[10]=0xFF;
+				
+	      for(i=0; i<11; i++)
+	        PayInfo[i+15]=ResBuff[i];
+       	LastTransactionKashan.Payment=0;
+	      LastTransactionKashan.CardID=0;
+	      LastTransactionKashan.Etebar1=0;
+	      LastTransactionKashan.Etebar2=0;
+	      return(0);
+			}				
+			if((LastTransactionKashan.Etebar1==CardEtebarKashan+Price)&&(LastTransactionKashan.Etebar2==CardEtebarKashan2))
+			{
+        *Etebar=CardEtebarKashan;
+	      *PreEtebar=LastTransactionKashan.Etebar1;
+        ResBuff[0]=2;
+        ResBuff[1]=0xFF;
+        ResBuff[2]=0xFF;
+		Price=*Etebar*10;
+        ResBuff[6]=Price & 0xFF;
+        ResBuff[5]=(Price >> 8) & 0xFF;
+        ResBuff[4]=(Price >> 16) & 0xFF;
+        ResBuff[3]=(Price >> 24) & 0xFF;
+        ResBuff[7]=0xFF;
+        ResBuff[8]=0xFF;
+        ResBuff[9]=0xFF;
+        ResBuff[10]=0xFF;
+				
+	      for(i=0; i<11; i++)
+	        PayInfo[i+15]=ResBuff[i];
+       	LastTransactionKashan.Payment=0;
+	      LastTransactionKashan.CardID=0;
+	      LastTransactionKashan.Etebar1=0;
+	      LastTransactionKashan.Etebar2=0;
+	      return(0);
+			}
+		}
+	LastTransactionKashan.Etebar1=CardEtebarKashan;
+	LastTransactionKashan.Etebar2=CardEtebarKashan2;
+	LastTransactionKashan.Payment=Price;
+*/
+  //MM  
+
+	
+ //==============================================================================
+  //Read Log
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0x10;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0xFF;
+
+
+        
+   // GetTimeStamp();    printf("\n\rTime66=%d ",timestamp+1);
+  #ifdef DEBUGKASHAN	
+    SetTX485();
+  printf("\n\r[CARD]LOG :");
+  for(i=0; i<5; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  				
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 5, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 5, ResBuff, &RxLength);
+  #endif   
+
+  #ifdef DEBUGKASHAN	
+      SetTX485();
+  printf("\n\r******Response :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+  #endif	
+  
+  
+  //Read Log
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0x10;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0xFF;
+
+
+        
+   // GetTimeStamp();    printf("\n\rTime66=%d ",timestamp+1);
+  #ifdef DEBUGKASHAN	
+    SetTX485();
+  printf("\n\r[CARD]LOG :");
+  for(i=0; i<5; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  				
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 5, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 5, ResBuff, &RxLength);
+  #endif   
+
+  #ifdef DEBUGKASHAN	
+  printf("\n\r******Response :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  
+
+  
+ //==============================================================================
+  //Debit
+  ApduCmd[0]=0xA0;
+  ApduCmd[1]=0xAF;
+  ApduCmd[2]=0x00;
+  ApduCmd[3]=0x00;
+  ApduCmd[4]=0x06;
+  ApduCmd[5]=0x06;
+
+  ApduCmd[6]=0x0;
+  ApduCmd[7]=0x0;
+  ApduCmd[8]=(Payment>>8) & 0xFF;
+  ApduCmd[9]=Payment & 0xFF;
+	
+	ApduCmd[10]=CRC8(ApduCmd, 5, 5);
+        
+        // GetTimeStamp();    printf("\n\rTime66=%d ",timestamp+1);
+  #ifdef DEBUGKASHAN	
+            SetTX485();
+  printf("\n\r[CARD]Debit :");
+  for(i=0; i<11; i++)
+    printf("%X ",ApduCmd[i]);
+  #endif
+  
+  				
+  #ifndef WithPN532
+  SendAPDU(ApduCmd, 11, ResBuff, &RxLength);			
+  #else
+  NFC_SendAPDU(ApduCmd, 11, ResBuff, &RxLength);
+  #endif   
+
+#ifdef DEBUGKASHAN	
+      SetTX485();
+  printf("\n\rResponse :");
+  for(i=0; i<RxLength; i++)
+    printf("%X ",ResBuff[i]);
+	#endif	
+  
+  
+  // printf("\n\rTime67=%d ",timestamp+1);
+   
+  if(((RxLength == 13) && (ResBuff[11]==0x90) && (ResBuff[12]==0)) ||
+	   ((RxLength == 17) && (ResBuff[15]==0x90) && (ResBuff[16]==0)))	
+  {
+    *Etebar=ResBuff[3]; *Etebar<<=8;
+    *Etebar+=ResBuff[4]; *Etebar<<=8;
+    *Etebar+=ResBuff[5]; *Etebar<<=8;
+    *Etebar+=ResBuff[6];
+    *Etebar/=10;
+
+    *PreEtebar=ResBuff[11]; *PreEtebar<<=8;
+    *PreEtebar+=ResBuff[12]; *PreEtebar<<=8;
+    *PreEtebar+=ResBuff[13]; *PreEtebar<<=8;
+    *PreEtebar+=ResBuff[14];
+    *PreEtebar/=10;
+	  for(i=0; i<11; i++)
+	    PayInfo[i+15]=ResBuff[i];
+  }
+	else
+  {
+    i=ResBuff[0]; i<<=8;
+    i+=ResBuff[1];                                                                           
+    if(i==0)
+      return(19);
+    return(i);
+  }
+   // printf("\n\rTime7=%d ",timestamp+1);
+  LastTransactionKashan.Payment=0;
+  LastTransactionKashan.CardID=0;
+  LastTransactionKashan.Etebar1=0;
+  LastTransactionKashan.Etebar2=0;
+  
+	return(0);
+}
+
+//==============================================================================
+unsigned char GetCardEtebarKashan(signed int *Etebar)
+{
+	*Etebar=CardEtebarKashan;
+	
+	return(0);
+}
+
+//#endif

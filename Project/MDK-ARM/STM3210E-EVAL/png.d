@@ -1,0 +1,10 @@
+.\stm3210e-eval\png.o: ..\..\Libraries\STemWinLibrary522\PNG\png.c
+.\stm3210e-eval\png.o: ..\..\Libraries\STemWinLibrary522\PNG\png.h
+.\stm3210e-eval\png.o: ..\..\Libraries\STemWinLibrary522\PNG\zlib.h
+.\stm3210e-eval\png.o: ..\..\Libraries\STemWinLibrary522\PNG\zconf.h
+.\stm3210e-eval\png.o: ..\..\Libraries\STemWinLibrary522\PNG\pngconf.h
+.\stm3210e-eval\png.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\setjmp.h
+.\stm3210e-eval\png.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\stm3210e-eval\png.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\stm3210e-eval\png.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\stm3210e-eval\png.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h

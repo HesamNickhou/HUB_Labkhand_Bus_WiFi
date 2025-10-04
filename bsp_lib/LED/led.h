@@ -1,0 +1,16 @@
+#ifndef __LED_H
+#define __LED_H	 
+#include "sys.h"
+//////////////////////////////////////////////////////////////////////////////////	 
+//ECA 2014
+//All rights reserved									  
+////////////////////////////////////////////////////////////////////////////////// 
+#define LED1 PFout(11)
+#define LED2 PGout(7)
+#define LED3 PFout(6)
+#define LED4 PBout(0)
+
+void LED_Init(void);
+
+		 				    
+#endif

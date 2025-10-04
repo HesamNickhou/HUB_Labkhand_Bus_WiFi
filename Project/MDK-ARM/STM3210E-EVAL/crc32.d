@@ -1,0 +1,10 @@
+.\stm3210e-eval\crc32.o: ..\..\Libraries\STemWinLibrary522\PNG\crc32.c
+.\stm3210e-eval\crc32.o: ..\..\Libraries\STemWinLibrary522\PNG\zutil.h
+.\stm3210e-eval\crc32.o: ..\..\Libraries\STemWinLibrary522\PNG\zlib.h
+.\stm3210e-eval\crc32.o: ..\..\Libraries\STemWinLibrary522\PNG\zconf.h
+.\stm3210e-eval\crc32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\stm3210e-eval\crc32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\stm3210e-eval\crc32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\stm3210e-eval\crc32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\errno.h
+.\stm3210e-eval\crc32.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\limits.h
+.\stm3210e-eval\crc32.o: ..\..\Libraries\STemWinLibrary522\PNG\crc32.h
