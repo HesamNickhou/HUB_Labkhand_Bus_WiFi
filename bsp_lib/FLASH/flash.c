@@ -133,10 +133,10 @@ void SPI_Flash_Write_NoCheck(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
 		if (NumByteToWrite==pageremain)break;
 	 	else 
 		{
-			pBuffer+=pageremain;
-			WriteAddr+=pageremain;	
+			pBuffer += pageremain;
+			WriteAddr += pageremain;	
 
-			NumByteToWrite-=pageremain;			 
+			NumByteToWrite -= pageremain;			 
 			if (NumByteToWrite>256)pageremain=256;
 			else pageremain=NumByteToWrite; 	  
 		}
@@ -177,13 +177,13 @@ unsigned char Month, Day, Hour, Min;
 	for (i=0; i<4096; i++)
 	  printf("%X ", SPI_FLASH_BUF[i]);
 
-	for (i=0; i<4096; i+=256)
+	for (i=0; i<4096; i += 256)
 	{
   	printf("\n\rRecords %d:", i);
 		j=i;
       CardID=SPI_FLASH_BUF[j+3]; CardID<<=8;
-      CardID+=SPI_FLASH_BUF[j+2]; CardID<<=8;
-      CardID+=SPI_FLASH_BUF[j+1];
+      CardID += SPI_FLASH_BUF[j+2]; CardID<<=8;
+      CardID += SPI_FLASH_BUF[j+1];
       Year=(SPI_FLASH_BUF[j+5]>>4)+1390;
       Month=SPI_FLASH_BUF[j+5]&0x0F;
       Day=SPI_FLASH_BUF[j+6]>>3;
@@ -196,12 +196,12 @@ unsigned char Month, Day, Hour, Min;
 
 	SPI_Flash_Read(SPI_FLASH_BUF,Sector*4096,4096);
 	
-	for (i=0; i<Offset; i+=256)
+	for (i=0; i<Offset; i += 256)
 	{
  		//printf("\n\rCheck %d",i);
     crc=crc16(0, SPI_FLASH_BUF+i, 256-6);
 		j=SPI_FLASH_BUF[i+251]; j<<=8;
-		j+=SPI_FLASH_BUF[i+250];
+		j += SPI_FLASH_BUF[i+250];
 		if (j!=crc)
 		{
   		//printf("\n\rCRC Error: \n\r");
@@ -297,7 +297,7 @@ unsigned short i, crc;
 	
   crc=crc16(0, pBuffer, 256-6);
   i=pBuffer[251]; i<<=8;
-	i+=pBuffer[250];
+	i += pBuffer[250];
 	if (i!=crc)
 	{
 		//printf("\n\rCheck Error");
@@ -357,9 +357,9 @@ u16 i;
 		secpos++;
 		secoff=0;
 
-   	pBuffer+=secremain;
-		WriteAddr+=secremain;
-   	NumByteToWrite-=secremain;
+   	pBuffer += secremain;
+		WriteAddr += secremain;
+   	NumByteToWrite -= secremain;
 		if (NumByteToWrite>4096)secremain=4096;
 		else secremain=NumByteToWrite;			
 

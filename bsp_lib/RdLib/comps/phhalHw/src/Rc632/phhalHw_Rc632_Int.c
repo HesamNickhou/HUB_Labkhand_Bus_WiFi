@@ -718,7 +718,7 @@ phStatus_t phhalHw_Rc632_ReadData(
     wLength = wLength + 4;
     // perform exchange 
     PH_CHECK_SUCCESS_FCT(statusTmp, phbalReg_Exchange(pDataParams->pBalDataParams, PH_EXCHANGE_DEFAULT, pTxBufferTmp, wLength, wLength, pData, &wBytesRead));
-    pData +=3;
+    pData += 3;
     // check number of received bytes 
     if (wBytesRead != (wLength - 1))
     {

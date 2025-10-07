@@ -434,16 +434,16 @@ int ZEXPORT gzread (file, buf, len)
                 zmemcpy(s->stream.next_out, s->stream.next_in, n);
                 next_out += n;
                 s->stream.next_out = next_out;
-                s->stream.next_in   += n;
+                s->stream.next_in += n;
                 s->stream.avail_out -= n;
-                s->stream.avail_in  -= n;
+                s->stream.avail_in -= n;
             }
             if (s->stream.avail_out > 0) {
                 s->stream.avail_out -=
                     (uInt)fread(next_out, 1, s->stream.avail_out, s->file);
             }
             len -= s->stream.avail_out;
-            s->in  += len;
+            s->in += len;
             s->out += len;
             if (len == 0) s->z_eof = 1;
             return (int)len;

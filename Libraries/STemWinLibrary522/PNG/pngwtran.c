@@ -444,7 +444,7 @@ png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
                *(dp++) = *(sp++);
                *(dp++) = *(sp++);
                */
-               sp+=3; dp = sp;
+               sp += 3; dp = sp;
                *(dp++) = (png_byte)(255 - *(sp++));
             }
          }
@@ -465,7 +465,7 @@ png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
                *(dp++) = *(sp++);
                *(dp++) = *(sp++);
                */
-               sp+=6; dp = sp;
+               sp += 6; dp = sp;
                *(dp++) = (png_byte)(255 - *(sp++));
                *(dp++) = (png_byte)(255 - *(sp++));
             }
@@ -499,7 +499,7 @@ png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
                *(dp++) = *(sp++);
                *(dp++) = *(sp++);
                */
-               sp+=2; dp = sp;
+               sp += 2; dp = sp;
                *(dp++) = (png_byte)(255 - *(sp++));
                *(dp++) = (png_byte)(255 - *(sp++));
             }

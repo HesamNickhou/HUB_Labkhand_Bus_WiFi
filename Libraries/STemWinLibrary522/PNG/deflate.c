@@ -538,10 +538,10 @@ local void flush_pending(strm)
     if (len == 0) return;
 
     zmemcpy(strm->next_out, strm->state->pending_out, len);
-    strm->next_out  += len;
-    strm->state->pending_out  += len;
+    strm->next_out += len;
+    strm->state->pending_out += len;
     strm->total_out += len;
-    strm->avail_out  -= len;
+    strm->avail_out -= len;
     strm->state->pending -= len;
     if (strm->state->pending == 0) {
         strm->state->pending_out = strm->state->pending_buf;
@@ -963,7 +963,7 @@ local int read_buf(strm, buf, size)
     if (len > size) len = size;
     if (len == 0) return 0;
 
-    strm->avail_in  -= len;
+    strm->avail_in -= len;
 
     if (strm->state->wrap == 1) {
         strm->adler = adler32(strm->adler, strm->next_in, len);
@@ -974,7 +974,7 @@ local int read_buf(strm, buf, size)
     }
 #endif
     zmemcpy(buf, strm->next_in, len);
-    strm->next_in  += len;
+    strm->next_in += len;
     strm->total_in += len;
 
     return (int)len;
@@ -1102,10 +1102,10 @@ local uInt longest_match(s, cur_match)
         Assert(scan[2] == match[2], "scan[2]?");
         scan++, match++;
         do {
-        } while (*(ushf*)(scan+=2) == *(ushf*)(match+=2) &&
-                 *(ushf*)(scan+=2) == *(ushf*)(match+=2) &&
-                 *(ushf*)(scan+=2) == *(ushf*)(match+=2) &&
-                 *(ushf*)(scan+=2) == *(ushf*)(match+=2) &&
+        } while (*(ushf*)(scan += 2) == *(ushf*)(match += 2) &&
+                 *(ushf*)(scan += 2) == *(ushf*)(match += 2) &&
+                 *(ushf*)(scan += 2) == *(ushf*)(match += 2) &&
+                 *(ushf*)(scan += 2) == *(ushf*)(match += 2) &&
                  scan < strend);
         /* The funny "do {}" generates better code on most compilers */
 
@@ -1294,7 +1294,7 @@ local void fill_window(s)
 
             zmemcpy(s->window, s->window+wsize, (unsigned)wsize);
             s->match_start -= wsize;
-            s->strstart    -= wsize; /* we now have strstart >= MAX_DIST */
+            s->strstart -= wsize; /* we now have strstart >= MAX_DIST */
             s->block_start -= (long) wsize;
 
             /* Slide the hash table (could be avoided with 32 bit values

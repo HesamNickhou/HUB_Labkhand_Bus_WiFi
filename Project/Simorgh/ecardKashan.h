@@ -39,7 +39,7 @@ unsigned char i;
 	
   i = value / 10;
 	i <<= 4;
-	i+=value % 10;
+	i += value % 10;
 	return i;
 }
 
@@ -96,8 +96,8 @@ unsigned char ResBuff[256];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x9000)
     return i;		
 }
@@ -186,8 +186,8 @@ uint8_t bFsci;
     printf("%X ",ResBuff[i]);
   #endif
 	
-  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[30]; i<<=8; i+=ResBuff[31];
+  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[30]; i<<=8; i += ResBuff[31];
   if (i!=0x9000)
     {
      if (i==0) i=20;
@@ -201,9 +201,9 @@ uint8_t bFsci;
 		PayInfo[i+1] =ResBuff[i];
 
   *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  *CardID += ((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
   //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
 #endif		
   return 0;
@@ -308,8 +308,8 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
   #endif
 	
-  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[30]; i<<=8; i+=ResBuff[31];
+  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[30]; i<<=8; i += ResBuff[31];
   if (i!=0x9000)
     {
      if (i==0) i=20;
@@ -323,9 +323,9 @@ unsigned int Price=Payment/10;
 		PayInfo[i+1] =ResBuff[i];
 
   *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  *CardID += ((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
   //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
   
 //9410221250222776
@@ -422,16 +422,16 @@ unsigned int Price=Payment/10;
   if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
   {
     i=ResBuff[0]; i<<=8;
-    i+=ResBuff[1];
+    i += ResBuff[1];
     if (i==0)
       return 44;
     return i;
   }
 	
   CardEtebarKashan=ResBuff[0]; CardEtebarKashan<<=8;
-  CardEtebarKashan+=ResBuff[1]; CardEtebarKashan<<=8;
-  CardEtebarKashan+=ResBuff[2]; CardEtebarKashan<<=8;
-  CardEtebarKashan+=ResBuff[3];
+  CardEtebarKashan += ResBuff[1]; CardEtebarKashan<<=8;
+  CardEtebarKashan += ResBuff[2]; CardEtebarKashan<<=8;
+  CardEtebarKashan += ResBuff[3];
 	//SendByte(5);
   GUI_SetColor(0x001FFF00);
   GUI_FillRoundedRect(7+2*70+2*5, 275+2-(LCDType==LCD480_272?41:0), 7+3*70+2*5, 275+28-(LCDType==LCD480_272?41:0),0);	//2
@@ -459,16 +459,16 @@ unsigned int Price=Payment/10;
   if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
   {
     i=ResBuff[0]; i<<=8;
-    i+=ResBuff[1];
+    i += ResBuff[1];
     if (i==0)
       return 44;
     return i;
   }
 
   i=ResBuff[0]; i<<=8;
-  i+=ResBuff[1]; i<<=8;
-  i+=ResBuff[2]; i<<=8;
-  i+=ResBuff[3];
+  i += ResBuff[1]; i<<=8;
+  i += ResBuff[2]; i<<=8;
+  i += ResBuff[3];
 	CardEtebarKashan2=i;
 	
 	
@@ -501,8 +501,8 @@ unsigned int Price=Payment/10;
       printf("%X ",ResBuff[i]);
 	  #endif	
 	
-    if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+    if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	  i=ResBuff[0]; i<<=8; i += ResBuff[1];
 		
 
     if (i!=0x9714)
@@ -550,12 +550,12 @@ unsigned int Price=Payment/10;
   
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
-  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x9000)
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
-     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     i=ResBuff[0]; i<<=8; i += ResBuff[1];
      if (i!=0x9000)
        {
         ResBuff[0] =0xff;         
@@ -579,13 +579,13 @@ unsigned int Price=Payment/10;
         {
          i=ResBuff[0]; 
          i<<=8;
-         i+=ResBuff[1]; 
+         i += ResBuff[1]; 
          if (i==0) i=19; 
          return i; 
         }
     }
 
-  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  i=ResBuff[0]; i<<=8; i += ResBuff[1];
   
   if (i!=0x9000)
     {
@@ -621,7 +621,7 @@ unsigned int Price=Payment/10;
 		
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
-  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  i=ResBuff[0]; i<<=8; i += ResBuff[1];
 	
 	//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
 	
@@ -630,7 +630,7 @@ unsigned int Price=Payment/10;
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
 			//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
-     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     i=ResBuff[0]; i<<=8; i += ResBuff[1];
      if (i!=0x6108)
        {
         ResBuff[0] =0xff;         
@@ -647,11 +647,11 @@ unsigned int Price=Payment/10;
 		
 
 
-  if (RxLength < 2) {			if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {			if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	
 	//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
 	
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
 	//SendByte(ResBuff[0]);SendByte(ResBuff[1]);
   if (i!=0x6108)
 	{	
@@ -680,12 +680,12 @@ unsigned int Price=Payment/10;
   ResBuff[8] =0xff;
 
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
-  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
-     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     i=ResBuff[8]; i<<=8; i += ResBuff[9];
      if (i!=0x9000)
        {
         ResBuff[8] =0xff;         
@@ -698,8 +698,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {			 	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if (RxLength < 10) {			 	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
 	{
     if (i==0) i=22;
@@ -751,8 +751,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
   #endif		
-  if (RxLength < 18) {		 	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[16]; i<<=8; i+=ResBuff[17];
+  if (RxLength < 18) {		 	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[16]; i<<=8; i += ResBuff[17];
   if (i!=0x9000)
 	{
 
@@ -814,8 +814,8 @@ unsigned int Price=Payment/10;
 		
 		
   if (RxLength < 2) { 
-			if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+			if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x6108)
 	{
 
@@ -843,12 +843,12 @@ unsigned int Price=Payment/10;
 
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
 /*
-  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
-     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     i=ResBuff[8]; i<<=8; i += ResBuff[9];
      if (i!=0x9000)
        {
         ResBuff[8] =0xff;         
@@ -861,8 +861,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
 	{
     if (i==0) i=25;
@@ -899,8 +899,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
 		
 
   if (i!=0x9000)
@@ -1024,15 +1024,15 @@ unsigned int Price=Payment/10;
 	   ((RxLength == 17) && (ResBuff[15] ==0x90) && (ResBuff[16] ==0)))	
   {
     *Etebar=ResBuff[3]; *Etebar<<=8;
-    *Etebar+=ResBuff[4]; *Etebar<<=8;
-    *Etebar+=ResBuff[5]; *Etebar<<=8;
-    *Etebar+=ResBuff[6];
+    *Etebar += ResBuff[4]; *Etebar<<=8;
+    *Etebar += ResBuff[5]; *Etebar<<=8;
+    *Etebar += ResBuff[6];
     *Etebar/=10;
 
     *PreEtebar=ResBuff[11]; *PreEtebar<<=8;
-    *PreEtebar+=ResBuff[12]; *PreEtebar<<=8;
-    *PreEtebar+=ResBuff[13]; *PreEtebar<<=8;
-    *PreEtebar+=ResBuff[14];
+    *PreEtebar += ResBuff[12]; *PreEtebar<<=8;
+    *PreEtebar += ResBuff[13]; *PreEtebar<<=8;
+    *PreEtebar += ResBuff[14];
     *PreEtebar/=10;
 	  for (i=0; i<11; i++)
 	    PayInfo[i+15] =ResBuff[i];
@@ -1040,7 +1040,7 @@ unsigned int Price=Payment/10;
 	else
   {
     i=ResBuff[0]; i<<=8;
-    i+=ResBuff[1];                                                                           
+    i += ResBuff[1];                                                                           
     if (i==0)
       return 19;
     return i;
@@ -1143,8 +1143,8 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
   #endif
 	
-  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[30]; i<<=8; i+=ResBuff[31];
+  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[30]; i<<=8; i += ResBuff[31];
 		
   if (i!=0x9000)
     {
@@ -1159,9 +1159,9 @@ unsigned int Price=Payment/10;
 		PayInfo[i+1] =ResBuff[i];
 
   *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
-  *CardID+=((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  *CardID += ((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
   //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
   
 
@@ -1249,7 +1249,7 @@ unsigned int Price=Payment/10;
   if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
   {
     i=ResBuff[0]; i<<=8;
-    i+=ResBuff[1];
+    i += ResBuff[1];
     if (i==0)
       return 44;
     return i;
@@ -1258,9 +1258,9 @@ unsigned int Price=Payment/10;
 	
 	
   CardEtebarKashan=ResBuff[0]; CardEtebarKashan<<=8;
-  CardEtebarKashan+=ResBuff[1]; CardEtebarKashan<<=8;
-  CardEtebarKashan+=ResBuff[2]; CardEtebarKashan<<=8;
-  CardEtebarKashan+=ResBuff[3];
+  CardEtebarKashan += ResBuff[1]; CardEtebarKashan<<=8;
+  CardEtebarKashan += ResBuff[2]; CardEtebarKashan<<=8;
+  CardEtebarKashan += ResBuff[3];
 	
 	//=========================================
   ApduCmd[0] =0xA0;
@@ -1288,16 +1288,16 @@ unsigned int Price=Payment/10;
   if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
   {
     i=ResBuff[0]; i<<=8;
-    i+=ResBuff[1];
+    i += ResBuff[1];
     if (i==0)
       return 44;
     return i;
   }
 
   i=ResBuff[0]; i<<=8;
-  i+=ResBuff[1]; i<<=8;
-  i+=ResBuff[2]; i<<=8;
-  i+=ResBuff[3];
+  i += ResBuff[1]; i<<=8;
+  i += ResBuff[2]; i<<=8;
+  i += ResBuff[3];
 	CardEtebarKashan2=i;
 	CardEtebarKashan2/=10;
 	
@@ -1332,12 +1332,12 @@ unsigned int Price=Payment/10;
   
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
-  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x9000)
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
-     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     i=ResBuff[0]; i<<=8; i += ResBuff[1];
      if (i!=0x9000)
        {
         ResBuff[0] =0xff;         
@@ -1362,13 +1362,13 @@ unsigned int Price=Payment/10;
         {
          i=ResBuff[0]; 
          i<<=8;
-         i+=ResBuff[1]; 
+         i += ResBuff[1]; 
          if (i==0) i=19; 
          return i; 
         }
     }
 
-  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  i=ResBuff[0]; i<<=8; i += ResBuff[1];
   
   if (i!=0x9000)
     {
@@ -1400,12 +1400,12 @@ unsigned int Price=Payment/10;
   
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
-  i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x6108)
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
-     i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+     i=ResBuff[0]; i<<=8; i += ResBuff[1];
      if (i!=0x6108)
        {
         ResBuff[0] =0xff;         
@@ -1419,8 +1419,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x6108)
 	{	
     if (i==0) i=21;
@@ -1446,12 +1446,12 @@ unsigned int Price=Payment/10;
   ResBuff[8] =0xff;
 
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
-  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
-     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     i=ResBuff[8]; i<<=8; i += ResBuff[9];
      if (i!=0x9000)
        {
         ResBuff[8] =0xff;         
@@ -1465,8 +1465,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
 	{
     if (i==0) i=22;
@@ -1525,8 +1525,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
   #endif		
-  if (RxLength < 18) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[16]; i<<=8; i+=ResBuff[17];
+  if (RxLength < 18) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[16]; i<<=8; i += ResBuff[17];
   if (i!=0x9000)
 	{
     if (i==0) i=43;
@@ -1583,8 +1583,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x6108)
 	{
     if (i==0) i=24;
@@ -1610,12 +1610,12 @@ unsigned int Price=Payment/10;
 
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
 /*
-  i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
-     i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+     i=ResBuff[8]; i<<=8; i += ResBuff[9];
      if (i!=0x9000)
        {
         ResBuff[8] =0xff;         
@@ -1629,8 +1629,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[8]; i<<=8; i+=ResBuff[9];
+  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[8]; i<<=8; i += ResBuff[9];
   if (i!=0x9000)
 	{
     if (i==0) i=25;
@@ -1667,8 +1667,8 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x9000)
 	{
     if (i==0) i=46;
@@ -1853,15 +1853,15 @@ unsigned int Price=Payment/10;
 	   ((RxLength == 17) && (ResBuff[15] ==0x90) && (ResBuff[16] ==0)))	
   {
     *Etebar=ResBuff[3]; *Etebar<<=8;
-    *Etebar+=ResBuff[4]; *Etebar<<=8;
-    *Etebar+=ResBuff[5]; *Etebar<<=8;
-    *Etebar+=ResBuff[6];
+    *Etebar += ResBuff[4]; *Etebar<<=8;
+    *Etebar += ResBuff[5]; *Etebar<<=8;
+    *Etebar += ResBuff[6];
     *Etebar/=10;
 
     *PreEtebar=ResBuff[11]; *PreEtebar<<=8;
-    *PreEtebar+=ResBuff[12]; *PreEtebar<<=8;
-    *PreEtebar+=ResBuff[13]; *PreEtebar<<=8;
-    *PreEtebar+=ResBuff[14];
+    *PreEtebar += ResBuff[12]; *PreEtebar<<=8;
+    *PreEtebar += ResBuff[13]; *PreEtebar<<=8;
+    *PreEtebar += ResBuff[14];
     *PreEtebar/=10;
 	  for (i=0; i<11; i++)
 	    PayInfo[i+15] =ResBuff[i];
@@ -1869,7 +1869,7 @@ unsigned int Price=Payment/10;
 	else
   {
     i=ResBuff[0]; i<<=8;
-    i+=ResBuff[1];                                                                           
+    i += ResBuff[1];                                                                           
     if (i==0)
       return 19;
     return i;
@@ -1975,8 +1975,8 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) { SAM_RST=0; GUI_Delay(100);	SAM_RST=1; if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) { SAM_RST=0; GUI_Delay(100);	SAM_RST=1; if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x9000)
 	{
 		SAM_RST=0; GUI_Delay(100);	SAM_RST=1;
@@ -2008,8 +2008,8 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x9000)
 	{	
     if (i==0) i=21;
@@ -2039,8 +2039,8 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[0]; i<<=8; i+=ResBuff[1];
+  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[0]; i<<=8; i += ResBuff[1];
   if (i!=0x6110)
 	{
     if (i==0) i=22;
@@ -2067,8 +2067,8 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 18) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i+=ResBuff[1]; if (i==0) i=19; return i; } }
-	i=ResBuff[16]; i<<=8; i+=ResBuff[17];
+  if (RxLength < 18) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+	i=ResBuff[16]; i<<=8; i += ResBuff[17];
   if (i!=0x9000)
 	{
     if (i==0) i=22;
@@ -2083,14 +2083,14 @@ unsigned char keyCoded[12];
 	idx=2;
 	for (i=1; i<=15; i++)
 	{
-		j=MAD[idx]; j<<=8; j+=MAD[idx+1];
+		j=MAD[idx]; j<<=8; j += MAD[idx+1];
 		if (j==0x88DE)
 			DebitSector=i;
 		if (j==0x8810) 
 			LogSector=i;
 		if (j==0x00FA)
 			IssuerSector=i;
-		idx+=2;
+		idx += 2;
 	}
 	
 	if ((DebitSector==0) || (LogSector==0) || (IssuerSector==0))
@@ -2120,9 +2120,9 @@ unsigned char keyCoded[12];
   PayInfo[2] =buf2[1]; //Version
 
   *CardID=((buf2[10]>>4)*10)+(buf2[10]&0x0F); *CardID*=100;
-  *CardID+=((buf2[11]>>4)*10)+(buf2[11]&0x0F); *CardID*=100;
-  *CardID+=((buf2[12]>>4)*10)+(buf2[12]&0x0F); *CardID*=100;
-  *CardID+=((buf2[13]>>4)*10)+(buf2[13]&0x0F);
+  *CardID += ((buf2[11]>>4)*10)+(buf2[11]&0x0F); *CardID*=100;
+  *CardID += ((buf2[12]>>4)*10)+(buf2[12]&0x0F); *CardID*=100;
+  *CardID += ((buf2[13]>>4)*10)+(buf2[13]&0x0F);
 	
 	Num=SearchForCard(*CardID, &LastTime);
 	if (Num)
@@ -2267,7 +2267,7 @@ unsigned char keyCoded[12];
 	Log[8] =1; //debit
 	Log[9] =WalletType; //1 city  2 cash
 	i=Log[10]; i<<=8;
-	i+=Log[11];
+	i += Log[11];
 	i++; //TxCounter
 	Log[10] =(i>>8)&0xFF;
 	Log[11] =i&0xFF;

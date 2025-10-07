@@ -724,7 +724,7 @@ png_combine_row(png_structp png_ptr, png_bytep row, int mask)
                }
                if (diff)  /* number of leftover pixels:  3 for pngtest */
                {
-                  final_val+=diff /* *BPP1 */ ;
+                  final_val += diff /* *BPP1 */ ;
                   for (; i < final_val; i += stride)
                   {
                      if (rep_bytes > (int)(final_val-i))
@@ -878,7 +878,7 @@ png_combine_row(png_structp png_ptr, png_bytep row, int mask)
                }
                if (diff)  /* number of leftover pixels:  3 for pngtest */
                {
-                  final_val+=diff*BPP2;
+                  final_val += diff*BPP2;
                   for (; i < final_val; i += stride)
                   {
                      if (rep_bytes > (int)(final_val-i))
@@ -1046,7 +1046,7 @@ png_combine_row(png_structp png_ptr, png_bytep row, int mask)
                }
                if (diff)  /* number of leftover pixels:  3 for pngtest */
                {
-                  final_val+=diff*BPP3;
+                  final_val += diff*BPP3;
                   for (; i < final_val; i += stride)
                   {
                      if (rep_bytes > (int)(final_val-i))
@@ -1221,7 +1221,7 @@ png_combine_row(png_structp png_ptr, png_bytep row, int mask)
                }
                if (diff)  /* number of leftover pixels:  3 for pngtest */
                {
-                  final_val+=diff*BPP4;
+                  final_val += diff*BPP4;
                   for (; i < final_val; i += stride)
                   {
                      if (rep_bytes > (int)(final_val-i))
@@ -1413,7 +1413,7 @@ png_combine_row(png_structp png_ptr, png_bytep row, int mask)
                }
                if (diff)  /* number of leftover pixels:  3 for pngtest */
                {
-                  final_val+=diff*BPP6;
+                  final_val += diff*BPP6;
                   for (; i < final_val; i += stride)
                   {
                      if (rep_bytes > (int)(final_val-i))
@@ -1454,7 +1454,7 @@ png_combine_row(png_structp png_ptr, png_bytep row, int mask)
             }
             if (diff)  /* number of leftover pixels:  3 for pngtest */
             {
-               final_val+=diff*BPP8;
+               final_val += diff*BPP8;
                for (; i < final_val; i += stride)
                {
                   if (rep_bytes > (int)(final_val-i))
@@ -2618,7 +2618,7 @@ png_do_read_interlace(png_structp png_ptr)
                         png_memcpy(dp, v, pixel_bytes);
                         dp -= pixel_bytes;
                      }
-                     sptr-= pixel_bytes;
+                     sptr -= pixel_bytes;
                   }
                }
             } // end of _mmx_supported ========================================

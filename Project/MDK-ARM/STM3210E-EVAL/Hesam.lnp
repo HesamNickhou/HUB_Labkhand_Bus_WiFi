@@ -5,6 +5,7 @@
 ".\stm3210e-eval\system_stm32f10x.o"
 ".\stm3210e-eval\startup_stm32f10x_hd_mdkarm.o"
 ".\stm3210e-eval\stm32xxx_it.o"
+".\stm3210e-eval\test.o"
 "..\..\Libraries\STemWinLibrary522\Lib\STemWin522_CM3_Keil.lib"
 ".\stm3210e-eval\gui_x.o"
 ".\stm3210e-eval\lcdconf_stm3210e_eval.o"

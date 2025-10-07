@@ -54,7 +54,7 @@ png_error(png_structp png_ptr, png_const_charp error_message)
               error_message=msg;
            }
            else
-              error_message+=offset;
+              error_message += offset;
        }
        else
        {

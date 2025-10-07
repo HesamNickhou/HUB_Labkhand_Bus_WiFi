@@ -1804,7 +1804,7 @@ loop4_pass4:
                         png_memcpy(dp, v, pixel_bytes);
                         dp -= pixel_bytes;
                      }
-                     sptr-= pixel_bytes;
+                     sptr -= pixel_bytes;
                   }
                }
             } /* end of mmx_supported */

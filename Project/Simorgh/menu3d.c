@@ -246,7 +246,7 @@ unsigned char NeedRelocate=0;
 unsigned short LastRow=0;
 unsigned short b=0;
 
-	  Y+=TFT_START_Y;
+	  Y += TFT_START_Y;
     // Open the file
     res = f_open(&FileObject, FileName, FA_OPEN_EXISTING|FA_READ);
     if ( res != FR_OK ) 
@@ -268,9 +268,9 @@ unsigned short b=0;
         {
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth+=_acBuffer[20]; biWidth<<=8;
-          biWidth+=_acBuffer[19]; biWidth<<=8;
-          biWidth+=_acBuffer[18];
+          biWidth += _acBuffer[20]; biWidth<<=8;
+          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth += _acBuffer[18];
           yPos=y2-y1+Y;
 					#ifdef Simorgh50N
           LCD_REG_ADDRESS=0x002b;	
@@ -384,9 +384,9 @@ unsigned int StartAddress, Len;
 	  if (GetResourceAddress((char *)FileName, &StartAddress, &Len))
 			return 1;
 		
-		Y+=TFT_START_Y;
+		Y += TFT_START_Y;
 		
-    Len+=StartAddress;
+    Len += StartAddress;
     while (1)
     {
  			ByteRead=DATA_SIZE;
@@ -402,13 +402,13 @@ unsigned int StartAddress, Len;
 						return 1;
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth+=_acBuffer[20]; biWidth<<=8;
-          biWidth+=_acBuffer[19]; biWidth<<=8;
-          biWidth+=_acBuffer[18];
+          biWidth += _acBuffer[20]; biWidth<<=8;
+          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth += _acBuffer[18];
           biHeight=_acBuffer[25]; biHeight<<=8;
-          biHeight+=_acBuffer[24]; biHeight<<=8;
-          biHeight+=_acBuffer[23]; biHeight<<=8;
-          biHeight+=_acBuffer[22];
+          biHeight += _acBuffer[24]; biHeight<<=8;
+          biHeight += _acBuffer[23]; biHeight<<=8;
+          biHeight += _acBuffer[22];
 					if ((biHeight>480) || (biWidth>800))
 						return 3;
           yPos=Y+biHeight;
@@ -521,7 +521,7 @@ unsigned int StartAddress, Len;
           }  
         }
       }
-			StartAddress+=ByteRead;
+			StartAddress += ByteRead;
       if (StartAddress>=Len)
         break;
     }
@@ -546,7 +546,7 @@ unsigned char NeedRelocate=0;
 unsigned short LastRow=0;
 unsigned short b=0;
 
-		Y+=TFT_START_Y;
+		Y += TFT_START_Y;
 
   	// Open the file
     res = f_open(&FileObject, FileName, FA_OPEN_EXISTING|FA_READ);
@@ -574,9 +574,9 @@ unsigned short b=0;
         {
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth+=_acBuffer[20]; biWidth<<=8;
-          biWidth+=_acBuffer[19]; biWidth<<=8;
-          biWidth+=_acBuffer[18];
+          biWidth += _acBuffer[20]; biWidth<<=8;
+          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth += _acBuffer[18];
           yPos=y2-y1+Y;
 					/*
           LCD_REG_ADDRESS=0x002b;	
@@ -704,7 +704,7 @@ unsigned short b=0;
       return 1;
 		}		
 
-	  Y+=TFT_START_Y;
+	  Y += TFT_START_Y;
 
     while (1)
     {
@@ -716,13 +716,13 @@ unsigned short b=0;
         {
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth+=_acBuffer[20]; biWidth<<=8;
-          biWidth+=_acBuffer[19]; biWidth<<=8;
-          biWidth+=_acBuffer[18];
+          biWidth += _acBuffer[20]; biWidth<<=8;
+          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth += _acBuffer[18];
           biHeight=_acBuffer[25]; biHeight<<=8;
-          biHeight+=_acBuffer[24]; biHeight<<=8;
-          biHeight+=_acBuffer[23]; biHeight<<=8;
-          biHeight+=_acBuffer[22];
+          biHeight += _acBuffer[24]; biHeight<<=8;
+          biHeight += _acBuffer[23]; biHeight<<=8;
+          biHeight += _acBuffer[22];
           yPos=Y+biHeight;
           LCD_REG_ADDRESS=0x002b;	
           LCD_DATA_ADDRESS=yPos>>8;	    
@@ -956,7 +956,7 @@ void DisplayMenu(MenuStruct const *Menu, unsigned char OldMenuItem, unsigned cha
   Loc=0;
   for (i=0; (i<7) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
   {
-    Loc+=34;
+    Loc += 34;
     if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
       if (FirstItem+i==MenuItem)
@@ -1012,7 +1012,7 @@ unsigned short x;
   Loc=0;
   for (i=0; (i<4) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
   {
-    Loc+=35;
+    Loc += 35;
     if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
       if (FirstItem+i==MenuItem)
@@ -1210,7 +1210,7 @@ void DisplayStringList(unsigned char List[20][50], unsigned char OldMenuItem, un
 		FirstItem=MenuItem-6;
   Loc=0;
   for (i=0; (i<7) && (List[i+FirstItem][0]!='\0'); i++) {
-    Loc+=34;
+    Loc += 34;
     if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem)) {
       if (FirstItem+i==MenuItem) {
     		GUI_DrawGradientRoundedV(0, Loc+2, 479, Loc+33,6,GUI_MAKE_ALPHA(0, RGB(220,220,0)),GUI_MAKE_ALPHA(0, RGB(40,40,0)));
@@ -1247,7 +1247,7 @@ unsigned short x;
   Loc=0;
   for (i=0; (i<4) && (List[i+FirstItem][0]!='\0'); i++)
   {
-    Loc+=35;
+    Loc += 35;
     if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
       if (FirstItem+i==MenuItem)
@@ -1351,7 +1351,7 @@ unsigned char Y=35;
 		if (Menu[i+FirstItem].Select==Option)
       G_LoadBMP(455, Y+5, "0:icons/r1.bmp", 1);
     PutText(0, Y, 450, Y+35, (unsigned char *)Menu[i+FirstItem].Title[0], GUI_TA_RIGHT);
-    Y+=35;
+    Y += 35;
   }
 	#endif
 	
@@ -1368,7 +1368,7 @@ unsigned char Y=35;
 		if (Menu[i+FirstItem].Select==Option)
       G_LoadBMP(190, Y, "0:icons/r1.bmp", 1);
     PutText(0, Y, 185, Y+30, (char *)Menu[i+FirstItem].Title[0], GUI_TA_RIGHT);
-    Y+=30;
+    Y += 30;
   }
 	#endif
 }
@@ -1607,7 +1607,7 @@ unsigned char buf[32];
            Min=(Stream[8]*10)+Stream[9];
            Sec=0;
            Year=(Stream[0]*10)+Stream[1];
-           Year+=1300;
+           Year += 1300;
            Month=(Stream[2]*10)+Stream[3];
            Day=(Stream[4]*10)+Stream[5];
            Config.StartYear=Year;
@@ -1831,14 +1831,14 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
          if (k>0) k--;
          else if (++cnt>3) break;
          n*=10;
-         n+=k;
+         n += k;
          break;
        case BDOWN:
        case 'L':
          k=n%10;
          n/=10; if (k<9) k++;
          n*=10;
-         n+=k;
+         n += k;
          break;
        case 120:    
        case BRIGHT: 

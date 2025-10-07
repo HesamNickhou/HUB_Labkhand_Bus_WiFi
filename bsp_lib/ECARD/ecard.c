@@ -161,11 +161,11 @@ unsigned char GetCardEtebar(signed int *Etebar) {
   if (ISO14443_ReadBlock(1, buf)) return S_TimeOut; 
   
   CurECardInfo.UC=buf[1];  CurECardInfo.UC<<=8;
-  CurECardInfo.UC+=buf[0];
+  CurECardInfo.UC += buf[0];
   CurECardInfo.CardID=buf[5];  CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[4]; CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[3]; CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[2];
+  CurECardInfo.CardID += buf[4]; CurECardInfo.CardID<<=8;
+  CurECardInfo.CardID += buf[3]; CurECardInfo.CardID<<=8;
+  CurECardInfo.CardID += buf[2];
   if ((CurECardInfo.UC & 0x8000)==0x8000)
   {
     CurECardInfo.UC = CurECardInfo.UC & 0x7FFF;
@@ -193,9 +193,9 @@ unsigned char GetCardEtebar(signed int *Etebar) {
   if (IsOldFormat)
   {                                      
     CurECardInfo.Etebar=buf[3]; CurECardInfo.Etebar<<=8; 
-    CurECardInfo.Etebar+=buf[2]; CurECardInfo.Etebar<<=8; 
-    CurECardInfo.Etebar+=buf[1]; CurECardInfo.Etebar<<=8; 
-    CurECardInfo.Etebar+=buf[0]; 
+    CurECardInfo.Etebar += buf[2]; CurECardInfo.Etebar<<=8; 
+    CurECardInfo.Etebar += buf[1]; CurECardInfo.Etebar<<=8; 
+    CurECardInfo.Etebar += buf[0]; 
 
     if (ISO14443_LoginE2(6,0x14)) return 12;   
     if (ISO14443_ReadValueBlock(24, &Value)) 
@@ -216,17 +216,17 @@ unsigned char GetCardEtebar(signed int *Etebar) {
   }
   
   CurECardInfo.Etebar=CurECardInfo.EtebarBlock[3]; CurECardInfo.Etebar<<=8;    
-  CurECardInfo.Etebar+=CurECardInfo.EtebarBlock[2]; CurECardInfo.Etebar<<=8;    
-  CurECardInfo.Etebar+=CurECardInfo.EtebarBlock[1]; CurECardInfo.Etebar<<=8;    
-  CurECardInfo.Etebar+=CurECardInfo.EtebarBlock[0];
+  CurECardInfo.Etebar += CurECardInfo.EtebarBlock[2]; CurECardInfo.Etebar<<=8;    
+  CurECardInfo.Etebar += CurECardInfo.EtebarBlock[1]; CurECardInfo.Etebar<<=8;    
+  CurECardInfo.Etebar += CurECardInfo.EtebarBlock[0];
 
   Payment=CurECardInfo.EtebarBlock[9]; Payment<<=8;    
-  Payment+=CurECardInfo.EtebarBlock[8];
+  Payment += CurECardInfo.EtebarBlock[8];
 
   PreEtebar=CurECardInfo.EtebarBlock[7]; PreEtebar<<=8;    
-  PreEtebar+=CurECardInfo.EtebarBlock[6]; PreEtebar<<=8;    
-  PreEtebar+=CurECardInfo.EtebarBlock[5]; PreEtebar<<=8;    
-  PreEtebar+=CurECardInfo.EtebarBlock[4];
+  PreEtebar += CurECardInfo.EtebarBlock[6]; PreEtebar<<=8;    
+  PreEtebar += CurECardInfo.EtebarBlock[5]; PreEtebar<<=8;    
+  PreEtebar += CurECardInfo.EtebarBlock[4];
   
   OP=CurECardInfo.EtebarBlock[10];
   
@@ -326,16 +326,16 @@ unsigned char ReadCardOPs(void) {
     CardOPs[NumOPs].Time[1] =((buf[1]&0x07)<<3)+(buf[2] & 0x07);
     CardOPs[NumOPs].OP=buf[3];
     CardOPs[NumOPs].PreEtebar=buf[6]; CardOPs[NumOPs].PreEtebar<<=8;
-    CardOPs[NumOPs].PreEtebar+=buf[5]; CardOPs[NumOPs].PreEtebar<<=8;
-    CardOPs[NumOPs].PreEtebar+=buf[4];
+    CardOPs[NumOPs].PreEtebar += buf[5]; CardOPs[NumOPs].PreEtebar<<=8;
+    CardOPs[NumOPs].PreEtebar += buf[4];
     CardOPs[NumOPs].Payment=buf[8]; CardOPs[NumOPs].Payment<<=8;
-    CardOPs[NumOPs].Payment+=buf[7];
+    CardOPs[NumOPs].Payment += buf[7];
     CardOPs[NumOPs].Etebar=buf[11]; CardOPs[NumOPs].Etebar<<=8;
-    CardOPs[NumOPs].Etebar+=buf[10]; CardOPs[NumOPs].Etebar<<=8;
-    CardOPs[NumOPs].Etebar+=buf[9];
+    CardOPs[NumOPs].Etebar += buf[10]; CardOPs[NumOPs].Etebar<<=8;
+    CardOPs[NumOPs].Etebar += buf[9];
     CardOPs[NumOPs].OPIndex=buf[12]&0x1F;  
     CardOPs[NumOPs].DeviceID=buf[14]; CardOPs[NumOPs].DeviceID<<=8;
-    CardOPs[NumOPs].DeviceID+=buf[13];  
+    CardOPs[NumOPs].DeviceID += buf[13];  
     NumOPs++;
     //printf(" > %d/%d/%d %d:%d %d +- %d = %d",CardOPs[idx].Date[0],CardOPs[idx].Date[1],CardOPs[idx].Date[2],CardOPs[idx].Time[0],CardOPs[idx].Time[1],CardOPs[idx].PreEtebar,CardOPs[idx].Payment,CardOPs[idx].Etebar);
   }      
@@ -345,7 +345,7 @@ unsigned char ReadCardOPs(void) {
     {
       for (i=0; i<9; i++)
         if (CardOPs[i].OPIndex<9)
-          CardOPs[i].OPIndex+=18;
+          CardOPs[i].OPIndex += 18;
       break;
     }
   idx=0; 
@@ -367,7 +367,7 @@ unsigned char ReadCardOPs(void) {
   //Reset sort indexes
   for (idx=0; idx<NumOPs; idx++)
     if (CardOPs[idx].OPIndex>=18)
-      CardOPs[idx].OPIndex-=18;
+      CardOPs[idx].OPIndex -= 18;
 
   //printf("\n\rSotring...");
   //for (idx=0; idx<9; idx++)
@@ -478,11 +478,11 @@ unsigned char ReadECardInfo(void) {
 		
 		/*
   CurECardInfo.UC=buf[1];  CurECardInfo.UC<<=8;
-  CurECardInfo.UC+=buf[0];
+  CurECardInfo.UC += buf[0];
   CurECardInfo.CardID=buf[5];  CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[4]; CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[3]; CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[2];
+  CurECardInfo.CardID += buf[4]; CurECardInfo.CardID<<=8;
+  CurECardInfo.CardID += buf[3]; CurECardInfo.CardID<<=8;
+  CurECardInfo.CardID += buf[2];
   if ((CurECardInfo.UC & 0x8000)==0x8000)
   {
     CurECardInfo.UC = CurECardInfo.UC & 0x7FFF;
@@ -1030,16 +1030,16 @@ TCardOP CardOP;
     CardOPs[idx].Time[1] =((buf[1]&0x07)<<3)+(buf[2] & 0x07);
     CardOPs[idx].OP=buf[3];
     CardOPs[idx].PreEtebar=buf[6]; CardOPs[idx].PreEtebar<<=8;
-    CardOPs[idx].PreEtebar+=buf[5]; CardOPs[idx].PreEtebar<<=8;
-    CardOPs[idx].PreEtebar+=buf[4];
+    CardOPs[idx].PreEtebar += buf[5]; CardOPs[idx].PreEtebar<<=8;
+    CardOPs[idx].PreEtebar += buf[4];
     CardOPs[idx].Payment=buf[8]; CardOPs[idx].Payment<<=8;
-    CardOPs[idx].Payment+=buf[7];
+    CardOPs[idx].Payment += buf[7];
     CardOPs[idx].Etebar=buf[11]; CardOPs[idx].Etebar<<=8;
-    CardOPs[idx].Etebar+=buf[10]; CardOPs[idx].Etebar<<=8;
-    CardOPs[idx].Etebar+=buf[9];
+    CardOPs[idx].Etebar += buf[10]; CardOPs[idx].Etebar<<=8;
+    CardOPs[idx].Etebar += buf[9];
     CardOPs[idx].OPIndex=buf[12];  
     CardOPs[idx].DeviceID=buf[14]; CardOPs[idx].DeviceID<<=8;
-    CardOPs[idx].DeviceID+=buf[13];  
+    CardOPs[idx].DeviceID += buf[13];  
     /*
     SendNum(CardOPs[idx].Date[0]);
     SendNum(CardOPs[idx].Date[1]);
@@ -1060,7 +1060,7 @@ TCardOP CardOP;
     {
       for (i=0; i<15; i++)
         if (CardOPs[i].OPIndex<15)
-          CardOPs[i].OPIndex+=30;
+          CardOPs[i].OPIndex += 30;
       break;
     }
   idx=0;        
@@ -1079,7 +1079,7 @@ TCardOP CardOP;
   } 
   for (idx=0; idx<15; idx++)
     if (CardOPs[idx].OPIndex>=30)
-      CardOPs[idx].OPIndex-=30;
+      CardOPs[idx].OPIndex -= 30;
      
   /*
   SendStrLn("Sotring...");
@@ -1158,8 +1158,8 @@ unsigned char Old_RestoreEtebar(void) {
    }       
 
   Etebar=buf[10]; Etebar<<=8;
-  Etebar+=buf[9]; Etebar<<=8;
-  Etebar+=buf[8]; 
+  Etebar += buf[9]; Etebar<<=8;
+  Etebar += buf[8]; 
               
   //SendStr("Etebar="); SendNum(Etebar); SendStrLn("");
   if (ISO14443_LoginE2(CreditSector,CreditLogin)) { return 11; }
@@ -1197,8 +1197,8 @@ unsigned long int CurEtebar, OldRemEtebar=0;
     CurMin=buf[14];   
 
     CurEtebar=buf[4]; CurEtebar<<=8;
-    CurEtebar+=buf[3]; CurEtebar<<=8;
-    CurEtebar+=buf[2];
+    CurEtebar += buf[3]; CurEtebar<<=8;
+    CurEtebar += buf[2];
     
     if ((CurMonth>12) || (CurDay>31) || (CurHour>23) || (CurMin>59))
       continue;
@@ -1239,8 +1239,8 @@ unsigned long int CurEtebar, OldRemEtebar=0;
       OldHour=CurHour;
       OldMin=CurMin;  
       OldRemEtebar=buf[10]; OldRemEtebar<<=8;
-      OldRemEtebar+=buf[9]; OldRemEtebar<<=8;
-      OldRemEtebar+=buf[8];
+      OldRemEtebar += buf[9]; OldRemEtebar<<=8;
+      OldRemEtebar += buf[8];
     }   
   }//for 
 
@@ -1282,11 +1282,11 @@ unsigned char Old_ReadECardInfo(void) {
 	
   	
   CurECardInfo.UC=buf[1];  CurECardInfo.UC<<=8;
-  CurECardInfo.UC+=buf[0];
+  CurECardInfo.UC += buf[0];
   CurECardInfo.CardID=buf[5];  CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[4]; CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[3]; CurECardInfo.CardID<<=8;
-  CurECardInfo.CardID+=buf[2];
+  CurECardInfo.CardID += buf[4]; CurECardInfo.CardID<<=8;
+  CurECardInfo.CardID += buf[3]; CurECardInfo.CardID<<=8;
+  CurECardInfo.CardID += buf[2];
   if ((CurECardInfo.UC & 0x8000)==0x8000)
   {
     CurECardInfo.UC = CurECardInfo.UC & 0x7FFF;
@@ -1312,7 +1312,7 @@ unsigned char Old_ReadECardInfo(void) {
   if (ISO14443_ReadBlock(i, buf)) return 14;
   CurECardInfo.OP=buf[5];
   CurECardInfo.DeviceID=buf[12]; CurECardInfo.DeviceID<<=8;
-  CurECardInfo.DeviceID+=buf[11];     
+  CurECardInfo.DeviceID += buf[11];     
 
   if (ISO14443_LoginE2(CreditSector,CreditLogin)) return 12;
   if (ISO14443_ReadValueBlock(CreditBlock, &CurECardInfo.Etebar))  

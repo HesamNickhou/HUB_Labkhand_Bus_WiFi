@@ -290,7 +290,7 @@ unsigned short y, m, d;
   Calc_Minute=(GPSData.UTC[2]-48)*10+(GPSData.UTC[3]-48);
   Calc_Second=(GPSData.UTC[4]-48)*10+(GPSData.UTC[5]-48);
   Gps_Year=(GPSData.DATE[4]-48)*10+(GPSData.DATE[5]-48); 
-  Gps_Year+=2000;
+  Gps_Year += 2000;
   Gps_Month=(GPSData.DATE[2]-48)*10+(GPSData.DATE[3]-48);
   Gps_Day=(GPSData.DATE[0]-48)*10+(GPSData.DATE[1]-48); 
   if ((Gps_Year<2014) || (Gps_Year>2020))
@@ -305,13 +305,13 @@ unsigned short y, m, d;
   Leap_YearFlag=Is_LeapYaer(Gps_Year);
 
   if ((Gps_Month>=1) && (Gps_Month<=6))
-    Calc_Hour+=4;
+    Calc_Hour += 4;
   else
-    Calc_Hour+=3;
+    Calc_Hour += 3;
   
   if ((Gps_Month==6) && (Gps_Day==31)) Calc_Hour--;
   
-  Calc_Minute+=30;
+  Calc_Minute += 30;
   if (Calc_Minute>=60)
   {
     Calc_Minute%=60;
@@ -351,7 +351,7 @@ unsigned short i;
   //if (SattelitesInView==0)
   //  return 2;
   i=2000;
-  i+=(GPSData.DATE[4]-48)*10+(GPSData.DATE[5]-48); 
+  i += (GPSData.DATE[4]-48)*10+(GPSData.DATE[5]-48); 
   if ((i<2014) || (i>2020))
     return 2;
   
@@ -365,9 +365,9 @@ unsigned short i;
     Gps_Hour++;
   }
   if (Month<=6)
-    Gps_Hour+=4;
+    Gps_Hour += 4;
   else
-    Gps_Hour+=3;
+    Gps_Hour += 3;
   if (Gps_Hour>23)
     Gps_Hour%=24;
   

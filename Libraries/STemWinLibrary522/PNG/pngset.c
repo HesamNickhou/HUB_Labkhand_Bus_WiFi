@@ -1122,7 +1122,7 @@ png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_bytep
     }
     png_memcpy(new_list+5*old_num_chunks, chunk_list,
        (png_size_t)(5*num_chunks));
-    for (p=new_list+5*old_num_chunks+4, i=0; i<num_chunks; i++, p+=5)
+    for (p=new_list+5*old_num_chunks+4, i=0; i<num_chunks; i++, p += 5)
        *p=(png_byte)keep;
     png_ptr->num_chunk_list=old_num_chunks+num_chunks;
     png_ptr->chunk_list=new_list;

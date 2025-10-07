@@ -115,7 +115,7 @@ static void _FillRectOpt8(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1) 
           RemItems -= 4;
         }
       }
-      Off0      += (RemPixels >> 2);
+      Off0 += (RemPixels >> 2);
       RemPixels -= (RemPixels >> 2) << 2;
     }
     //
@@ -183,7 +183,7 @@ static void _FillRectOpt8(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1) 
           RemItems -= 4;
         }
       }
-      Off0      += (RemPixels >> 2);
+      Off0 += (RemPixels >> 2);
       RemPixels -= (RemPixels >> 2) << 2;
     }
     //

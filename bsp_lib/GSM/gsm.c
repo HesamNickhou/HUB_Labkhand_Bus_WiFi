@@ -241,7 +241,7 @@ void USART3_IRQHandler(void) {
             case '8':
             case '9':
               DataSize*=10;
-              DataSize+=Byte-'0';
+              DataSize += Byte-'0';
               break;
           }//switch    
         }
@@ -755,14 +755,14 @@ unsigned char SendConfig=0;
   {
     F=atof(GPSData.Lat);
     I=floor(F);
-    F-=I;
+    F -= I;
     D=I/100;
     M=I%100;
     F=D+(float)(M*0.0167)+(float)(F*0.0167*0.0167); 
     
     F1=atof(GPSData.Lon);
     I=floor(F1);
-    F1-=I;
+    F1 -= I;
     D=I/100;
     M=I%100;
     F1=D+(float)(M*0.0167)+(float)(F1*0.0167*0.0167); 
@@ -1352,7 +1352,7 @@ unsigned long int time=0;
   if ((str[2]!='/') || (str[5]!='/') || (str[8]!=',') || (str[11]!=':') || (str[14]!=':') || (str[17]!='+'))
     return 2;
   
-  Year=(str[0]-'0')*10+(str[1]-'0'); Year+=2000;
+  Year=(str[0]-'0')*10+(str[1]-'0'); Year += 2000;
   Month=(str[3]-'0')*10+(str[4]-'0');
   Day=(str[6]-'0')*10+(str[7]-'0');
   Hour=(str[9]-'0')*10+(str[10]-'0');

@@ -428,6 +428,11 @@
               <FileType>5</FileType>
               <FilePath>..\User\sys.h</FilePath>
             </File>
+            <File>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\test.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2434,6 +2439,11 @@
               <FileType>5</FileType>
               <FilePath>..\User\sys.h</FilePath>
             </File>
+            <File>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\test.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4031,6 +4041,11 @@
               <FileName>sys.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\User\sys.h</FilePath>
+            </File>
+            <File>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\test.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6037,6 +6052,11 @@
               <FileName>sys.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\User\sys.h</FilePath>
+            </File>
+            <File>
+              <FileName>test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\test.c</FilePath>
             </File>
           </Files>
         </Group>

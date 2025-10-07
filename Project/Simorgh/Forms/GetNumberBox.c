@@ -118,7 +118,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			  for (i=0; (i<15) && (str[i]!=0); i++)
 			  {
 			    defValue*=10;
-					defValue+=(str[i]-48);
+					defValue += (str[i]-48);
         }
 			  Released=1;
         break;
@@ -149,7 +149,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			  for (i=0; (i<15) && (str[i]!=0); i++)
 			  {
 			    defValue*=10;
-					defValue+=(str[i]-48);
+					defValue += (str[i]-48);
         }
 				Released=1;
         break;

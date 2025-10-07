@@ -478,8 +478,8 @@ unsigned char Check_AndSaveDownloadedFirmware(void) {
 			Loc=0;
 		}
 	  //SendByte(GlobalBuffer[Loc]);
-		Calculated_CheckSum+=GlobalBuffer[Loc];
-		crc2+=GlobalBuffer[Loc];
+		Calculated_CheckSum += GlobalBuffer[Loc];
+		crc2 += GlobalBuffer[Loc];
 		Loc++;
 	}
 
@@ -632,7 +632,7 @@ unsigned short New_Release;
 
         if (BufferLen>40)
           {
-           for (Counter=0;Counter<(BufferLen-3);Counter+=43)
+           for (Counter=0;Counter<(BufferLen-3);Counter += 43)
               {
                if (GlobalBuffer[Counter+i] ==BCU)
                  {
@@ -668,13 +668,13 @@ unsigned short New_Release;
                   UpdateFile[k].NewVer=New_Ver;                                  
                   UpdateFile[k].NewRelease=New_Release;
                   UpdateFile[k].SpecifiedLength=GlobalBuffer[i+Counter+5];
-                  UpdateFile[k].SpecifiedLength+=GlobalBuffer[i+Counter+6]*256;
-                  UpdateFile[k].SpecifiedLength+=GlobalBuffer[i+Counter+7]*256*256;
-                  UpdateFile[k].SpecifiedLength+=GlobalBuffer[i+Counter+8]*256*256*256;
+                  UpdateFile[k].SpecifiedLength += GlobalBuffer[i+Counter+6]*256;
+                  UpdateFile[k].SpecifiedLength += GlobalBuffer[i+Counter+7]*256*256;
+                  UpdateFile[k].SpecifiedLength += GlobalBuffer[i+Counter+8]*256*256*256;
                   UpdateFile[k].SpecifiedCheckSum=GlobalBuffer[i+Counter+9];
-                  UpdateFile[k].SpecifiedCheckSum+=GlobalBuffer[i+Counter+10]*256;
-                  UpdateFile[k].SpecifiedCheckSum+=GlobalBuffer[i+Counter+11]*256*256;
-                  UpdateFile[k].SpecifiedCheckSum+=GlobalBuffer[i+Counter+12]*256*256*256;
+                  UpdateFile[k].SpecifiedCheckSum += GlobalBuffer[i+Counter+10]*256;
+                  UpdateFile[k].SpecifiedCheckSum += GlobalBuffer[i+Counter+11]*256*256;
+                  UpdateFile[k].SpecifiedCheckSum += GlobalBuffer[i+Counter+12]*256*256*256;
                 
                   for (j=0;j<30;j++)  UpdateFile[k].FirmwareName[j] =GlobalBuffer[i+Counter+13+j];
                   UpdateFile[k].FirmwareName[j] =0;
@@ -844,7 +844,7 @@ unsigned short New_Release;
 			           else if (Which_DeviceFirmware==BD90) SaveFromRamToDF(addDoorsFirmware2+512+((FirmwarePacketIndex)-1)*512, 512, GlobalBuffer+9);
                  //FLASH_LOCK
 										
-                 Downloaded_FirmwareLength+=Data_Length;
+                 Downloaded_FirmwareLength += Data_Length;
 
 
 
@@ -921,7 +921,7 @@ unsigned short New_Release;
                      SaveFromRamToDF(addFirmwareInfo, 512, GlobalBuffer);
 									  }
 										
-                  Indicators.LastFirmwareDownloadedLength+=Data_Length;  
+                  Indicators.LastFirmwareDownloadedLength += Data_Length;  
                   Indicators.LastFirmwareFirmwarePacketIndex=FirmwarePacketIndex;                  
                   SaveIndicators();
                 }

@@ -109,7 +109,7 @@ unsigned int TIM6ARRValue = 1088,ReadedSector=0;
 		
 		VOICEEN=1; 
 
-    Len+=StartAddress;
+    Len += StartAddress;
     while (1)
     {
 			if (FirstSector)
@@ -118,11 +118,11 @@ unsigned int TIM6ARRValue = 1088,ReadedSector=0;
 
 				
 				
-				StartAddress+=44;
+				StartAddress += 44;
 				i=_acBuffer[24]; i<<=8;
-				i+=_acBuffer[25]; i<<=8;
-				i+=_acBuffer[26]; i<<=8;
-				i+=_acBuffer[27];
+				i += _acBuffer[25]; i<<=8;
+				i += _acBuffer[26]; i<<=8;
+				i += _acBuffer[27];
         switch (i)
         {
           case SAMPLE_RATE_8000 :
@@ -187,7 +187,7 @@ unsigned int TIM6ARRValue = 1088,ReadedSector=0;
 			}
 			#endif
 			
-			StartAddress+=ByteRead;
+			StartAddress += ByteRead;
       if (ByteRead<512)
         break;
     }

@@ -577,7 +577,7 @@ void LoadResourceFromSD2DF(void) {
       if (res==FR_OK) 
       {
         SaveFromRamToDF(address, ByteRead, _acBuffer);
-				address+=ByteRead;
+				address += ByteRead;
       }
       if (ByteRead<DATA_SIZE)
         break;
@@ -610,7 +610,7 @@ void LoadResourceFromSD2DF(void) {
       if (res==FR_OK) 
       {
         SaveFromRamToDF(address, ByteRead, _acBuffer);
-				address+=ByteRead;
+				address += ByteRead;
       }
       if (ByteRead<DATA_SIZE)
         break;
@@ -647,7 +647,7 @@ s8 ConvertUTF8TOWin1256(u8 *StringUTF8, u8 *BuffStrWin1256) {
 				break;
 		}
 		BuffStrWin1256[CountLen++] = TableWin1256[j];
-		i+= 2;
+		i += 2;
 	}
 	BuffStrWin1256[CountLen++] = 0;
 	return 0;

@@ -38,16 +38,16 @@ unsigned int days, i, m;
   days=Day-1;
   
   for (i=1385; i<Year; i++)
-    if ((i-1383)%4) days+=365;
-    else              days+=366;
+    if ((i-1383)%4) days += 365;
+    else              days += 366;
   
   m=Month;
   if (m>6) {
-    days+=((m-7)*30);
+    days += ((m-7)*30);
     m=7;
   }    
   
-  days+=((m-1)*31);
+  days += ((m-1)*31);
   
   return (days + 3%7); 
  
@@ -61,11 +61,11 @@ unsigned short days;
   days=Day;
   
   if (Month<=6)
-    days+=(Month-1)*31;
+    days += (Month-1)*31;
   else if (Month==12)
-    days+=(6*31)+(5*30);
+    days += (6*31)+(5*30);
   else
-    days+=(6*31)+((Month-7)*30);
+    days += (6*31)+((Month-7)*30);
 
   return days; 
  
@@ -291,7 +291,7 @@ void RTC_IRQHandler(void)
 u8 Is_Leap_Year(u16 year)
 {		
 	if (year<2000)
-		year+=2000;
+		year += 2000;
 	if (year%4==0) 
 	{ 
 		if (year%100==0) 
@@ -314,24 +314,24 @@ u32 seccount=0;
 	if (syear<1970||syear>2099)return 1;	   
 	for (t=MinYear;t<syear;t++)	
 	{
-		if (Is_Leap_Year(t))seccount+=31622400;
-		else seccount+=31536000;			 
+		if (Is_Leap_Year(t))seccount += 31622400;
+		else seccount += 31536000;			 
 	}
-	smon-=1;
+	smon -= 1;
 	if (smon>11)return -2;	
 	for (t=0;t<smon;t++)	  
 	{
-		seccount+=(u32)mon_table[t]*86400;
-		if (Is_Leap_Year(syear)&&t==1)seccount+=86400;
+		seccount += (u32)mon_table[t]*86400;
+		if (Is_Leap_Year(syear)&&t==1)seccount += 86400;
 	}
 	if (sday>31)return -3;	
-	seccount+=(u32)(sday-1)*86400;								//
+	seccount += (u32)(sday-1)*86400;								//
 	if (hour>23)return -4;	
-	seccount+=(u32)hour*3600;									//
+	seccount += (u32)hour*3600;									//
 	if (min>59)return -5;	
-	seccount+=(u32)min*60;	 									//
+	seccount += (u32)min*60;	 									//
 	if (sec>59)return -6;	
-	seccount+=sec;													//
+	seccount += sec;													//
 
 	RTC_WaitForLastTask();	
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//??PWR?BKP????  
@@ -362,10 +362,10 @@ u16 temp1=0;
 		{				 
 			if (Is_Leap_Year(temp1))
 			{
-				if (temp>=366)temp-=366;
+				if (temp>=366)temp -= 366;
 				else {/*temp1++;*/break;}  
 			}
-			else temp-=365;	 
+			else temp -= 365;	 
 			temp1++;  
 		}   
 		Year=temp1;
@@ -374,12 +374,12 @@ u16 temp1=0;
 		{
 			if (Is_Leap_Year(Year)&&temp1==1)
 			{
-				if (temp>=29)temp-=29;
+				if (temp>=29)temp -= 29;
 				else break; 
 			}
 			else 
 			{
-				if (temp>=mon_table[temp1])temp-=mon_table[temp1];
+				if (temp>=mon_table[temp1])temp -= mon_table[temp1];
 				else break;
 			}
 			temp1++;  
@@ -426,7 +426,7 @@ u8 RTC_Get_Week(u16 year,u8 month,u8 day)
 	u8 yearH,yearL;
 	
 	yearH=year/100;	yearL=year%100; 
-	if (yearH>19)yearL+=100;
+	if (yearH>19)yearL += 100;
 	temp2=yearL+yearL/4;
 	temp2=temp2%7; 
 	temp2=temp2+day+table_week[month-1];

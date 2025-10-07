@@ -1046,7 +1046,7 @@ unsigned char buf[20];
   buf[15] =(loTail>>24) & 0xFF;
   crc=0;
   for (i=0; i<16; i++)
-    crc+=buf[i];
+    crc += buf[i];
   buf[16] =crc & 0xFF;
   buf[17] =(crc>>8) & 0xFF;
   buf[18] ='N';
@@ -1070,23 +1070,23 @@ unsigned char buf[LEN_TRANSACTIONS];
 
 	BytesToInt(&trHead, &buf[0]);
   //trHead=buf[3]; trHead<<=8;
-  //trHead+=buf[2]; trHead<<=8;
-  //trHead+=buf[1]; trHead<<=8;
-  //trHead+=buf[0];
+  //trHead += buf[2]; trHead<<=8;
+  //trHead += buf[1]; trHead<<=8;
+  //trHead += buf[0];
 	BytesToInt(&trTail, &buf[4]);
   //trTail=buf[7]; trTail<<=8;
-  //trTail+=buf[6]; trTail<<=8;
-  //trTail+=buf[5]; trTail<<=8;
-  //trTail+=buf[4];
+  //trTail += buf[6]; trTail<<=8;
+  //trTail += buf[5]; trTail<<=8;
+  //trTail += buf[4];
 	//BytesToInt(&prHead, &buf[8]);
   //prHead=buf[11]; prHead<<=8;
-  //prHead+=buf[10]; prHead<<=8;
-  //prHead+=buf[9]; prHead<<=8;
-  //prHead+=buf[8];
+  //prHead += buf[10]; prHead<<=8;
+  //prHead += buf[9]; prHead<<=8;
+  //prHead += buf[8];
 	
 	crc=0;
   for (i=0; i<16; i++)
-    crc+=buf[i];
+    crc += buf[i];
   if ((buf[16]+(buf[17]*256))!=crc)
   {
     trHead=0;
@@ -1185,7 +1185,7 @@ void IncTrHead(void)
 	{
 		//if Head and Tail come in same sector tail must jump to next sector
 		if ((trHead/(4096/LEN_TRANSACTIONS))==(trTail/(4096/LEN_TRANSACTIONS)))
-			trTail+=(4096/LEN_TRANSACTIONS)-(trTail%(4096/LEN_TRANSACTIONS));
+			trTail += (4096/LEN_TRANSACTIONS)-(trTail%(4096/LEN_TRANSACTIONS));
     if (++trTail>=MAX_TRANSACTIONS)
       trTail=0; 
 	}
@@ -1249,9 +1249,9 @@ void IntToBytes(unsigned int i, unsigned char *buf)
 void BytesToInt(unsigned int *i, unsigned char *buf)
 {
   *i=buf[3]; *i<<=8;
-  *i+=buf[2]; *i<<=8;
-  *i+=buf[1]; *i<<=8;
-  *i+=buf[0];
+  *i += buf[2]; *i<<=8;
+  *i += buf[1]; *i<<=8;
+  *i += buf[0];
 }
 */
 
@@ -1294,9 +1294,9 @@ unsigned int uInt(unsigned char *data)
 unsigned int i=0;
 
   i=data[3]; i<<=8;
-  i+=data[2]; i<<=8;
-  i+=data[1]; i<<=8;
-  i+=data[0];
+  i += data[2]; i<<=8;
+  i += data[1]; i<<=8;
+  i += data[0];
   
   return i;
 }
@@ -1980,8 +1980,8 @@ unsigned int pageSize;
 			SPI_Flash_Read(GlobalBuffer, i+addFirmware, 1024);
 			Loc=0;
 		}
-		crc+=GlobalBuffer[Loc];
-		crc2+=GlobalBuffer[Loc];
+		crc += GlobalBuffer[Loc];
+		crc2 += GlobalBuffer[Loc];
 		Loc++;
 	}
 	
@@ -2195,9 +2195,9 @@ char str[20];
           Config.Price = (GlobalBuffer[9]+(GlobalBuffer[10]*256)); // for test
           Config.UC=GlobalBuffer[11] +(GlobalBuffer[12]*256) ;   
           Config.Password=GlobalBuffer[16]; Config.Password <<= 8;
-          Config.Password+=GlobalBuffer[15]; Config.Password <<= 8; 
-          Config.Password+=GlobalBuffer[14]; Config.Password <<= 8;
-          Config.Password+=GlobalBuffer[13]; 
+          Config.Password += GlobalBuffer[15]; Config.Password <<= 8; 
+          Config.Password += GlobalBuffer[14]; Config.Password <<= 8;
+          Config.Password += GlobalBuffer[13]; 
           Config.TransactionsSendInterval = (GlobalBuffer[17]+(GlobalBuffer[18]*256)); 
           for (i=0; i<15; i++)
             Config.HostIP[i] =GlobalBuffer[19+i];
@@ -2486,7 +2486,7 @@ unsigned short New_Release;
         
         if (BufferLen>40)
           {
-           for (Counter=0;Counter<(BufferLen-3);Counter+=43)
+           for (Counter=0;Counter<(BufferLen-3);Counter += 43)
               {
                if (GlobalBuffer[Counter+i] ==DeviceType)
                  {
@@ -2508,14 +2508,14 @@ unsigned short New_Release;
 				
             Firmware.HaveData=0xAA;
             Firmware.Length=GlobalBuffer[i+Counter+8]; Firmware.Length<<=8;
-            Firmware.Length+=GlobalBuffer[i+Counter+7]; Firmware.Length<<=8;
-            Firmware.Length+=GlobalBuffer[i+Counter+6]; Firmware.Length<<=8;
-            Firmware.Length+=GlobalBuffer[i+Counter+5];
+            Firmware.Length += GlobalBuffer[i+Counter+7]; Firmware.Length<<=8;
+            Firmware.Length += GlobalBuffer[i+Counter+6]; Firmware.Length<<=8;
+            Firmware.Length += GlobalBuffer[i+Counter+5];
 
             Firmware.CheckSum=GlobalBuffer[i+Counter+12]; Firmware.CheckSum<<=8;
-            Firmware.CheckSum+=GlobalBuffer[i+Counter+11]; Firmware.CheckSum<<=8;
-            Firmware.CheckSum+=GlobalBuffer[i+Counter+10]; Firmware.CheckSum<<=8;
-            Firmware.CheckSum+=GlobalBuffer[i+Counter+9];
+            Firmware.CheckSum += GlobalBuffer[i+Counter+11]; Firmware.CheckSum<<=8;
+            Firmware.CheckSum += GlobalBuffer[i+Counter+10]; Firmware.CheckSum<<=8;
+            Firmware.CheckSum += GlobalBuffer[i+Counter+9];
          
 
             Firmware.SavedVer=New_Ver;
@@ -2577,7 +2577,7 @@ unsigned short New_Release;
 			if (SaveFromRamToDF(addFirmware+((FirmwarePacketIndex-1)*512), 512, GlobalBuffer+9))
         SaveFromRamToDF(addFirmware+((FirmwarePacketIndex-1)*512), 512, GlobalBuffer+9);
 
-                  Downloaded_FirmwareLength+=Data_Length;
+                  Downloaded_FirmwareLength += Data_Length;
 			
 //TESTMEM();
  FLASH_LOCK
@@ -2609,7 +2609,7 @@ unsigned short New_Release;
 
                   Request_FirmwareNextPacketfromServer512Byte();
    
-                  //Indicators.LastFirmwareDownloadedLength+=Data_Length;  
+                  //Indicators.LastFirmwareDownloadedLength += Data_Length;  
                   //Indicators.LastFirmwareFirmwarePacketIndex=FirmwarePacketIndex;                  
                   //SaveIndicators();                  
                 }
@@ -3025,11 +3025,11 @@ unsigned int CardEtebar=0;
   if (ISO14443_LoginE2(0,0x10)) return 1;
   if (ISO14443_ReadBlock(1,buf)) return 1;
   UC=buf[0];
-  UC+=(buf[1]<<8);
+  UC += (buf[1]<<8);
   CardID=buf[2];
-  CardID+=(buf[3]<<8);
-  CardID+=(buf[4]<<16);
-  CardID+=(buf[5]<<24);
+  CardID += (buf[3]<<8);
+  CardID += (buf[4]<<16);
+  CardID += (buf[5]<<24);
   if ((UC & 0x8000)==0x8000)
   {
     UC = UC & 0x7FFF;
@@ -3067,9 +3067,9 @@ Grouh=0;
 		 if ((buf[4] ==0xAB) && (buf[5] ==0xCD))
 		   {
  		    HEtebar=buf[3];  HEtebar<<=8; 
-        HEtebar+=buf[2]; HEtebar<<=8; 
-        HEtebar+=buf[1]; HEtebar<<=8; 
-        HEtebar+=buf[0]; 
+        HEtebar += buf[2]; HEtebar<<=8; 
+        HEtebar += buf[1]; HEtebar<<=8; 
+        HEtebar += buf[0]; 
 		   }
 			 if ((buf[0] ==0xFF) && (buf[1] ==0xFF) && (buf[2] ==0xFF) && (buf[3] ==0xFF))
 				 HEtebar=0;
@@ -3100,7 +3100,7 @@ Grouh=0;
   if (BCC==buf[15])
     {
      Grouh=buf[0];
-     Grouh+=(buf[1]<<8);
+     Grouh += (buf[1]<<8);
      DisCount=buf[2];
      
 		 EDate[0] =buf[3];
@@ -4068,11 +4068,11 @@ void InitializeAlef(void) {
   LoadFromDFToRam(addFirmwareInfo, 32, GlobalBuffer);
   if ((GlobalBuffer[0] == 0xE2) && (GlobalBuffer[7] == 0xE9)) {
     FirmwareRequestNo=GlobalBuffer[2]; FirmwareRequestNo<<=8;
-    FirmwareRequestNo+=GlobalBuffer[1];
+    FirmwareRequestNo += GlobalBuffer[1];
     FirmwareLength=GlobalBuffer[6]; FirmwareLength<<=8;
-    FirmwareLength+=GlobalBuffer[5]; FirmwareLength<<=8;
-    FirmwareLength+=GlobalBuffer[4]; FirmwareLength<<=8;
-    FirmwareLength+=GlobalBuffer[3];
+    FirmwareLength += GlobalBuffer[5]; FirmwareLength<<=8;
+    FirmwareLength += GlobalBuffer[4]; FirmwareLength<<=8;
+    FirmwareLength += GlobalBuffer[3];
     _FirmwareVer=GlobalBuffer[9]+(GlobalBuffer[10]*256);
     _FirmwareRelease=GlobalBuffer[11]+(GlobalBuffer[12]*256);
     if ((FirmwareLength>512*1024) || (_FirmwareVer!=Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
@@ -4086,13 +4086,13 @@ void InitializeAlef(void) {
      	FLASH_LOCK
     }else{  
       Firmware.Length=GlobalBuffer[16]; Firmware.Length<<=8;
-      Firmware.Length+=GlobalBuffer[15]; Firmware.Length<<=8;
-      Firmware.Length+=GlobalBuffer[14]; Firmware.Length<<=8;
-      Firmware.Length+=GlobalBuffer[13];
+      Firmware.Length += GlobalBuffer[15]; Firmware.Length<<=8;
+      Firmware.Length += GlobalBuffer[14]; Firmware.Length<<=8;
+      Firmware.Length += GlobalBuffer[13];
       Firmware.CheckSum=GlobalBuffer[20]; Firmware.CheckSum<<=8;
-      Firmware.CheckSum+=GlobalBuffer[19]; Firmware.CheckSum<<=8;
-      Firmware.CheckSum+=GlobalBuffer[18]; Firmware.CheckSum<<=8;
-      Firmware.CheckSum+=GlobalBuffer[17];  
+      Firmware.CheckSum += GlobalBuffer[19]; Firmware.CheckSum<<=8;
+      Firmware.CheckSum += GlobalBuffer[18]; Firmware.CheckSum<<=8;
+      Firmware.CheckSum += GlobalBuffer[17];  
       for (i=0; i<15; i++)
         Firmware.FirmwareFileName[i] =GlobalBuffer[i+21];
     }
@@ -4217,11 +4217,11 @@ unsigned char Stream[] ="0000000000000000";
          {
            Loc=12;
            *SYear=(Stream[0]*10)+Stream[1];
-           *SYear+=1300;
+           *SYear += 1300;
            *SMonth=(Stream[2]*10)+Stream[3];
            *SDay=(Stream[4]*10)+Stream[5];
            *EYear=(Stream[6]*10)+Stream[7];
-           *EYear+=1300;
+           *EYear += 1300;
            *EMonth=(Stream[8]*10)+Stream[9];
            *EDay=(Stream[10]*10)+Stream[11];
            break;

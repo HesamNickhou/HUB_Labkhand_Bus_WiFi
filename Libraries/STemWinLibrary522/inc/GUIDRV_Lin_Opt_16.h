@@ -171,7 +171,7 @@ static void _FillRectOpt16(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1)
           WRITE_MEM32P(pDest + 5, ColorMask);
           WRITE_MEM32P(pDest + 6, ColorMask);
           WRITE_MEM32P(pDest + 7, ColorMask);
-          pDest    += 8;
+          pDest += 8;
           RemItems -= 16;
         } while (RemItems >= 0);
       }

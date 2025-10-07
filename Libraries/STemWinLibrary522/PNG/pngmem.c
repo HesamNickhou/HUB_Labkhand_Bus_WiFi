@@ -232,7 +232,7 @@ png_malloc_default(png_structp png_ptr, png_uint_32 size)
             for (i = 0; i < num_blocks; i++)
             {
                png_ptr->offset_table_ptr[i] = (png_bytep)hptr;
-               hptr = hptr + (png_uint_32)65536L;  /* "+=" fails on TC++3.0 */
+               hptr = hptr + (png_uint_32)65536L;  /* " += " fails on TC++3.0 */
             }
 
             png_ptr->offset_table_number = num_blocks;

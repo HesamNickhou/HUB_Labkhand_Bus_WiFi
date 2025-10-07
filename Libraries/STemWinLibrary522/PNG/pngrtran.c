@@ -1843,7 +1843,7 @@ png_do_read_invert_alpha(png_row_infop row_info, png_bytep row)
                *(--dp) = *(--sp);
                We can replace it with:
 */
-               sp-=3;
+               sp -= 3;
                dp=sp;
             }
          }
@@ -1868,7 +1868,7 @@ png_do_read_invert_alpha(png_row_infop row_info, png_bytep row)
                *(--dp) = *(--sp);
                We can replace it with:
 */
-               sp-=6;
+               sp -= 6;
                dp=sp;
             }
          }
@@ -1903,7 +1903,7 @@ png_do_read_invert_alpha(png_row_infop row_info, png_bytep row)
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
 */
-               sp-=2;
+               sp -= 2;
                dp=sp;
             }
          }
@@ -2269,9 +2269,9 @@ png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
                {
                   png_uint_16 red, green, blue, w;
 
-                  red   = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
-                  green = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
-                  blue  = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
+                  red   = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
+                  green = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
+                  blue  = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
 
                   if (red == green && red == blue)
                      w = red;
@@ -2303,9 +2303,9 @@ png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
                {
                   png_uint_16 red, green, blue, gray16;
 
-                  red   = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
-                  green = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
-                  blue  = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
+                  red   = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
+                  green = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
+                  blue  = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
 
                   if (red != green || red != blue)
                      rgb_error |= 1;
@@ -2366,9 +2366,9 @@ png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
                {
                   png_uint_16 red, green, blue, w;
 
-                  red   = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
-                  green = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
-                  blue  = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp+=2;
+                  red   = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
+                  green = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
+                  blue  = (png_uint_16)(((*(sp))<<8) | *(sp+1)); sp += 2;
 
                   if (red == green && red == blue)
                      w = red;
@@ -2401,9 +2401,9 @@ png_do_rgb_to_gray(png_structp png_ptr, png_row_infop row_info, png_bytep row)
                for (i = 0; i < row_width; i++)
                {
                   png_uint_16 red, green, blue, gray16;
-                  red   = (png_uint_16)((*(sp)<<8) | *(sp+1)); sp+=2;
-                  green = (png_uint_16)((*(sp)<<8) | *(sp+1)); sp+=2;
-                  blue  = (png_uint_16)((*(sp)<<8) | *(sp+1)); sp+=2;
+                  red   = (png_uint_16)((*(sp)<<8) | *(sp+1)); sp += 2;
+                  green = (png_uint_16)((*(sp)<<8) | *(sp+1)); sp += 2;
+                  blue  = (png_uint_16)((*(sp)<<8) | *(sp+1)); sp += 2;
                   if (red != green || red != blue)
                      rgb_error |= 1;
                   gray16  = (png_uint_16)((rc*red + gc*green + bc*blue)>>15);

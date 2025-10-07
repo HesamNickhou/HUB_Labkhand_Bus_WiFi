@@ -98,7 +98,7 @@ u16 TP_Read_XOY(u8 xy)
 		}
 	}	  
 	sum=0;
-	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum += buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	return temp;   
 } 
@@ -224,7 +224,7 @@ uint16_t ADS_Read_XY(uint8_t xy)
 		}
 	}	  
 	sum=0;
-	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum += buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	return temp;   
 } 
@@ -309,7 +309,7 @@ uint8_t Touch_GexX(uint16_t *x,uint8_t ext)
 		}
 	}	  
 	sum=0;
-	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)	sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)	sum += buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	x1=temp;   	
 	
@@ -335,7 +335,7 @@ uint8_t Touch_GexX(uint16_t *x,uint8_t ext)
 		}
 	}	  
 	sum=0;
-	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum += buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	x2=temp; 
 
@@ -413,7 +413,7 @@ uint8_t Touch_GexY(uint16_t *y,uint8_t ext)
 		}
 	}	  
 	sum=0;
-	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum += buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	y1=temp;   	
 	
@@ -437,7 +437,7 @@ uint8_t Touch_GexY(uint16_t *y,uint8_t ext)
 		}
 	}	  
 	sum=0;
-	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum += buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	y2=temp;   	
 

@@ -195,10 +195,10 @@ unsigned char Keys[7][16] ={{0x89,0x51,0x71,0xf2,0x1d,0xcb},
     if ((Key>=0x10) && (Key<=0x2F))
     {
       Auth=PICC_AUTHENT1A;  
-      Key-=0x10;
+      Key -= 0x10;
     }else if ((Key>=0x30) && (Key<=0x4F))
     {
-      Key-=0x30;
+      Key -= 0x30;
       Auth=PICC_AUTHENT1B;
     }else{                
       //printf("\n\rE");
@@ -455,9 +455,9 @@ unsigned char i, data[16];
     //if ((data[12]!=0) || (data[13]!=0xFF) || (data[14]!=0) || (data[15]!=0xFF)) { return 1; }  
   
     *Val=data[3]; *Val<<=8;
-  	*Val+=data[2]; *Val<<=8;
-	  *Val+=data[1]; *Val<<=8;
-	  *Val+=data[0];
+  	*Val += data[2]; *Val<<=8;
+	  *Val += data[1]; *Val<<=8;
+	  *Val += data[0];
 		#endif
 	
 

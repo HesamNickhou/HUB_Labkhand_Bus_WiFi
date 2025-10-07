@@ -1346,8 +1346,8 @@ uint8_t ntag2xx_WriteNDEFURI (uint8_t uriIdentifier, char * url, uint8_t dataLen
       if (!(ntag2xx_WritePage (currentPage, pageBuffer)))
         return 0;
       currentPage++;
-      urlcopy+=4;
-      len-=4;
+      urlcopy += 4;
+      len -= 4;
     }
   }
 

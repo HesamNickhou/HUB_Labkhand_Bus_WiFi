@@ -29,7 +29,7 @@ unsigned char RXDBuffer[BUFFER_SIZE];
 //=============================================================================
 void SendByteE(unsigned char c)
 {
-  CheckSum+=c;
+  CheckSum += c;
   USART_SendData(USART1, c);
 }
 
