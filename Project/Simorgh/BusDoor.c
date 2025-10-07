@@ -190,8 +190,8 @@ unsigned short PassengerTargetID=0;
 
 signed short int CurrentCourse=-1, OldCourse=-1;
 
-const unsigned char* strDays[7]={{"يکشنبه"},{"دوشنبه"},{"سه شنبه"},{"چهارشنبه"},{"پنج شنبه"},{"جمعه"},{"شنبه"}};
-const unsigned char* strMonths[13]={{"فروردين"},{"ارديبهشت"},{"خرداد"},{"تير"},{"مرداد"},{"شهريور"},{"مهر"},{"آبان"},{"آذر"},{"دي"},{"بهمن"},{"اسفند"}};
+const unsigned char* strDays[7] ={{"يکشنبه"},{"دوشنبه"},{"سه شنبه"},{"چهارشنبه"},{"پنج شنبه"},{"جمعه"},{"شنبه"}};
+const unsigned char* strMonths[13] ={{"فروردين"},{"ارديبهشت"},{"خرداد"},{"تير"},{"مرداد"},{"شهريور"},{"مهر"},{"آبان"},{"آذر"},{"دي"},{"بهمن"},{"اسفند"}};
 	
 void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int _ID,unsigned char Result,unsigned char *);
 
@@ -203,29 +203,29 @@ void SaveRingDetail(void){
 	unsigned short crc=0;
 	unsigned char buf[20];
 	
-  buf[0]=trHead & 0xFF;
-  buf[1]=(trHead>>8) & 0xFF;
-  buf[2]=(trHead>>16) & 0xFF;
-  buf[3]=(trHead>>24) & 0xFF;
-  buf[4]=trTail & 0xFF;
-  buf[5]=(trTail>>8) & 0xFF;
-  buf[6]=(trTail>>16) & 0xFF;
-  buf[7]=(trTail>>24) & 0xFF;
-  buf[8]=loHead & 0xFF;
-  buf[9]=(loHead>>8) & 0xFF;
-  buf[10]=(loHead>>16) & 0xFF;
-  buf[11]=(loHead>>24) & 0xFF;
-  buf[12]=loTail & 0xFF;
-  buf[13]=(loTail>>8) & 0xFF;
-  buf[14]=(loTail>>16) & 0xFF;
-  buf[15]=(loTail>>24) & 0xFF;
+  buf[0] =trHead & 0xFF;
+  buf[1] =(trHead>>8) & 0xFF;
+  buf[2] =(trHead>>16) & 0xFF;
+  buf[3] =(trHead>>24) & 0xFF;
+  buf[4] =trTail & 0xFF;
+  buf[5] =(trTail>>8) & 0xFF;
+  buf[6] =(trTail>>16) & 0xFF;
+  buf[7] =(trTail>>24) & 0xFF;
+  buf[8] =loHead & 0xFF;
+  buf[9] =(loHead>>8) & 0xFF;
+  buf[10] =(loHead>>16) & 0xFF;
+  buf[11] =(loHead>>24) & 0xFF;
+  buf[12] =loTail & 0xFF;
+  buf[13] =(loTail>>8) & 0xFF;
+  buf[14] =(loTail>>16) & 0xFF;
+  buf[15] =(loTail>>24) & 0xFF;
   crc=0;
-  for(i=0; i<16; i++)
+  for (i=0; i<16; i++)
     crc+=buf[i];
-  buf[16]=crc & 0xFF;
-  buf[17]=(crc>>8) & 0xFF;
-  buf[18]='N';
-  buf[19]='W';
+  buf[16] =crc & 0xFF;
+  buf[17] =(crc>>8) & 0xFF;
+  buf[18] ='N';
+  buf[19] ='W';
  	FLASH_UNLOCK
   SaveFromRamToDF(addIndicators, 20, buf);
  	FLASH_LOCK
@@ -259,9 +259,9 @@ unsigned char LoadRecordsInfo(void) {
   //prHead+=buf[8];
 	
 	crc=0;
-  for(i=0; i<16; i++)
+  for (i=0; i<16; i++)
     crc+=buf[i];
-  if((buf[16]+(buf[17]*256))!=crc)
+  if ((buf[16]+(buf[17]*256))!=crc)
   {
     trHead=0;
     trTail=0;
@@ -273,20 +273,20 @@ unsigned char LoadRecordsInfo(void) {
 	
   //printf("\n\r===================================");
   //printf("\n\rFirst Values: trHead: %d trTail: %d", trHead, trTail);
-  if((trHead>MAX_TRANSACTIONS)||(trTail>MAX_TRANSACTIONS))
+  if ((trHead>MAX_TRANSACTIONS) || (trTail>MAX_TRANSACTIONS))
   {
     trHead=0;
     trTail=0;
   }
   Idx=trHead; Idx2=trTail;
 
-  for(i=0; i<MAX_TRANSACTIONS; i++) 
+  for (i=0; i<MAX_TRANSACTIONS; i++) 
   {
    
     Address=addTransactions+((Idx+1)*LEN_TRANSACTIONS)-2; 
     LoadFromDFToRam(Address, 2, buf);
-		//printf("\n\r%d,buf[0]=%x,buf[1]=%x,buf[2]=%x,buf[3]=%x",Idx,buf[0],buf[1],buf[2],buf[3]);
-    if((buf[0]==0xff)&&(buf[1]==0xff))  //3c 14
+		//printf("\n\r%d,buf[0] =%x,buf[1] =%x,buf[2] =%x,buf[3] =%x",Idx,buf[0],buf[1],buf[2],buf[3]);
+    if ((buf[0] ==0xff) && (buf[1] ==0xff))  //3c 14
     {
       //printf("\n\rFound");
       trHead=Idx;
@@ -294,46 +294,46 @@ unsigned char LoadRecordsInfo(void) {
       break;
     }
     Idx++;
-    if(Idx>=MAX_TRANSACTIONS) Idx=0;
-    if(Idx==Idx2)
-      if(++Idx2>=MAX_TRANSACTIONS)
+    if (Idx>=MAX_TRANSACTIONS) Idx=0;
+    if (Idx==Idx2)
+      if (++Idx2>=MAX_TRANSACTIONS)
         Idx2=0;
   }
   //printf("\n\rFound Values: trHead: %d trTail: %d", trHead, trTail);
-  if(i>=MAX_TRANSACTIONS)
+  if (i>=MAX_TRANSACTIONS)
   {
     trHead=0;
     trTail=0;
   }
   
   //-----------------------------
-  if(trHead!=trTail)
+  if (trHead!=trTail)
   {
     Idx=trHead;
     OfflineStart=trTail;
-    if(Idx>0)
+    if (Idx>0)
       Idx--;
-    else if(trTail!=0)
+    else if (trTail!=0)
       Idx=MAX_TRANSACTIONS-1;
     
     //printf("\n\rCheck Offline ");
-    for(i=0; i<MAX_TRANSACTIONS; i++)
+    for (i=0; i<MAX_TRANSACTIONS; i++)
     {
-      if(Idx==trTail)
+      if (Idx==trTail)
         break;
 			
 
       Address=addTransactions+(Idx*LEN_TRANSACTIONS); 
       LoadFromDFToRam(Address+LEN_TRANSACTIONS-1, 1, buf);
       //printf("- %d, buf[0] =%x ",Idx,buf[0]);			
-      if(buf[0]==0x90)
+      if (buf[0] ==0x90)
       {
         //printf("\n\rOff Found");
         OfflineStart=Idx+1;
-        if(OfflineStart>=MAX_TRANSACTIONS) OfflineStart=0;
+        if (OfflineStart>=MAX_TRANSACTIONS) OfflineStart=0;
         break;
       }
-      if(Idx==0)
+      if (Idx==0)
         Idx=MAX_TRANSACTIONS-1;
       else 
         Idx--;
@@ -355,7 +355,7 @@ unsigned char LoadRecordsInfo(void) {
 	i+=buf[3]; 
 	BlackList_LastIdx=i;
 	bcc=0xBC^buf[0]^buf[1]^buf[2]^buf[3]^buf[4]^buf[5]^buf[6];
-	if(bcc!=buf[7])
+	if (bcc!=buf[7])
 	{
 		BlackList_Count=0;
 		BlackList_LastIdx=0;
@@ -365,17 +365,17 @@ unsigned char LoadRecordsInfo(void) {
 
 //==============================================================================
 void IncTrHead(void) {
-  if(++trHead>=MAX_TRANSACTIONS)
+  if (++trHead>=MAX_TRANSACTIONS)
     trHead=0;
-  if(trHead==trTail)
-    if(++trTail>=MAX_TRANSACTIONS)
+  if (trHead==trTail)
+    if (++trTail>=MAX_TRANSACTIONS)
       trTail=0; 
-	if(trTail>trHead)	
+	if (trTail>trHead)	
 	{
 		//if Head and Tail come in same sector tail must jump to next sector
-		if((trHead/(4096/LEN_TRANSACTIONS))==(trTail/(4096/LEN_TRANSACTIONS)))
+		if ((trHead/(4096/LEN_TRANSACTIONS))==(trTail/(4096/LEN_TRANSACTIONS)))
 			trTail+=(4096/LEN_TRANSACTIONS)-(trTail%(4096/LEN_TRANSACTIONS));
-    if(++trTail>=MAX_TRANSACTIONS)
+    if (++trTail>=MAX_TRANSACTIONS)
       trTail=0; 
 	}
 }
@@ -389,33 +389,33 @@ unsigned char SaveTransaction(unsigned char *buf) {
 	
 	len=LEN_TRANSACTIONS;
 
-	for(i=0; i<len; i++)
-    TBuff[i]=buf[i];
+	for (i=0; i<len; i++)
+    TBuff[i] =buf[i];
   
-	TBuff[len-1]=0x50;
+	TBuff[len-1] =0x50;
 	
-	TBuff[len]=0x3C;
-  TBuff[len+1]=0x14;
-  TBuff[len+2]=0xB1;
+	TBuff[len] =0x3C;
+  TBuff[len+1] =0x14;
+  TBuff[len+2] =0xB1;
 	
   address=addTransactions+(trHead*len);
-  if(SaveFromRamToDF(address, len+3, TBuff))
-		if(SaveFromRamToDF(address, len+3, TBuff))
+  if (SaveFromRamToDF(address, len+3, TBuff))
+		if (SaveFromRamToDF(address, len+3, TBuff))
 		{
 			IncTrHead();
       address=addTransactions+(trHead*len);
-		  if(SaveFromRamToDF(address, len+3, TBuff))			
+		  if (SaveFromRamToDF(address, len+3, TBuff))			
 			{
 
 			}
 		}			
 		
 	IncTrHead();
-	 if(trHead>=MAX_TRANSACTIONS)
+	 if (trHead>=MAX_TRANSACTIONS)
   {
-    TBuff[0]=0x3C;
-    TBuff[1]=0x14;
-    TBuff[2]=0xB1;
+    TBuff[0] =0x3C;
+    TBuff[1] =0x14;
+    TBuff[2] =0xB1;
     SaveFromRamToDF(address, len+3, TBuff);
     trHead=0;
 
@@ -434,34 +434,34 @@ unsigned char SendPacket(unsigned int Len) {
 	
 	SetRX485();
   EmptyRXBuffer();
-  for(i=0; i<10; i++) if(!USART_GCF(&Byte)) break; 
-  if(i>=10) 
-		return(1);
+  for (i=0; i<10; i++) if (!USART_GCF(&Byte)) break; 
+  if (i>=10) 
+		return 1;
 	
-  if(i>1) GUI_Delay(Config.DeviceID*5);  //Wait to ensure to line is free
-  if(USART_GCF(&Byte)!=0) 
-		return(2); //Line locked for other device communication
+  if (i>1) GUI_Delay(Config.DeviceID*5);  //Wait to ensure to line is free
+  if (USART_GCF(&Byte)!=0) 
+		return 2; //Line locked for other device communication
            
   SetTX485();
   //GUI_Delay(1);
 
-  for(i=0; i<Len; i++)
+  for (i=0; i<Len; i++)
     SendByte(GlobalBuffer[i]);
 	GUI_Delay(5);
 	SetRX485();
 
-	return(0);
+	return 0;
 
 }
 
 //==============================================================================
 unsigned char GetUCMap(unsigned int UC) {
 	unsigned int i;
-  for(i=0; i<255; i++)
-    if(UCMap[i]==UC)
+  for (i=0; i<255; i++)
+    if (UCMap[i] ==UC)
       break;
-  if(i>=255) return(0xFF);
-  else       return(i);
+  if (i>=255) return 0xFF;
+  else       return i;
 }
 
 //==============================================================================
@@ -475,7 +475,7 @@ unsigned int uInt(unsigned char *data){
   i+=data[1]; i<<=8;
   i+=data[0];
   
-  return(i);
+  return i;
 }
 
 
@@ -568,9 +568,9 @@ static const GUI_POINT _aPolig3[] = {
  GUI_DrawRoundedFrame(5, 225+10, 272-5, 265,6,3); 
 
  GUI_SetColor(GUI_WHITE);  
-  if((Month>=1)&&(Month<=12))
+  if ((Month>=1) && (Month<=12))
   {
-    if(DayOfWeek<7)
+    if (DayOfWeek<7)
       sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],Day,strMonths[Month-1],Year);
     else
       sprintf(str, "%d  %s  %d ",Day,strMonths[Month-1],Year);
@@ -593,7 +593,7 @@ void ShowPaymentBox(void) {
 	{ 60, 0 },
  };	
  
- if(LCDType==LCD480_272)
+ if (LCDType==LCD480_272)
  {
 	 ShowPaymentBox2();
 	 return;
@@ -632,7 +632,7 @@ void ShowPaymentBox(void) {
  
  /*
  LoadFont(FontTahoma20);
-	if(LastCardingDateTime[0]!=0)
+	if (LastCardingDateTime[0]!=0)
 	{
     GUI_SetColor(GUI_DARKRED); 
    sprintf(str,"%d/%d/%d  %d:%d:%02d",LastCardingDateTime[0],LastCardingDateTime[1],LastCardingDateTime[2],LastCardingDateTime[3],LastCardingDateTime[4],LastCardingDateTime[5]);
@@ -655,7 +655,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	{ 60, 0 },
  };	
  //........................................................................................
- if(Mode==0)
+ if (Mode==0)
  {
 	LEDERR=1;
   HeaderColor=0x00007000;
@@ -663,7 +663,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_GREEN;		
 	BoarderColor=GUI_YELLOW;
  }
- else if(Mode==1)
+ else if (Mode==1)
  {
 	//LEDERR=1;
   HeaderColor=GUI_DARKRED;
@@ -671,7 +671,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	 BoarderColor=GUI_RED;
  }
- else if(Mode==2)
+ else if (Mode==2)
  {
 	 //LEDERR=1;
   HeaderColor=GUI_DARKRED;
@@ -679,7 +679,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	BoarderColor=GUI_RED;
  } 
- else if(Mode==3)
+ else if (Mode==3)
  {
 	//LEDERR=1; 
   HeaderColor=GUI_DARKRED;
@@ -687,7 +687,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	BoarderColor=GUI_RED;
  }  
- else if(Mode==4)  //sam error
+ else if (Mode==4)  //sam error
  {
 	//LEDERR=1; 
   HeaderColor=GUI_DARKRED;
@@ -696,7 +696,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	BoarderColor=GUI_RED;
  }   
  //.....................................................................................
- if(LCDType==LCD800_480)
+ if (LCDType==LCD800_480)
  {
    GUI_DrawGradientRoundedV(5, 20+15, 272-5+SCREENRESIZE, 225+30+15,6,  HeaderColor,HeaderColor);	
    GUI_DrawGradientRoundedV(5, 71, 272-5+SCREENRESIZE, 225+30+15,6,  TopColor,ButtomColor);	
@@ -728,7 +728,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
    GUI_FillPolygon(&_aPointHexagon1[0], 4, 135, 225+30+15-40);
  }
  //.....................................................................................
- if(Mode==0)
+ if (Mode==0)
    {
     LoadFont(FontBNazanin200);
     GUI_SetColor(GUI_BLACK);
@@ -747,7 +747,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		 
 		VOICEEN=0; 
 	 }
- else if(Mode==1)
+ else if (Mode==1)
    {
     LoadFont(FontBNazanin200);
     GUI_SetColor(GUI_BLACK);
@@ -768,7 +768,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		CheckReader=0; 
 		VOICEEN=0; 		 
 	 } 
- else if(Mode==2)
+ else if (Mode==2)
    {
     LoadFont(FontBNazanin140);
     GUI_SetColor(GUI_BLACK);
@@ -787,7 +787,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		PlayVoice("03.wav");
 		VOICEEN=0; 		 
 	 } 
- else if(Mode==3)
+ else if (Mode==3)
    {
     LoadFont(FontBNazanin200);
     GUI_SetColor(GUI_BLACK);
@@ -805,7 +805,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		CheckReader=0; 		 
 		VOICEEN=0; 		 
 	 } 	 
-  else if(Mode==4)
+  else if (Mode==4)
    {
 
     GUI_SetColor(GUI_BLACK);
@@ -819,7 +819,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	 
  WDTR;
 	 
- if(LCDType==LCD800_480)
+ if (LCDType==LCD800_480)
  {
    GUI_SetColor(GUI_BLACK);
    GUI_FillRoundedRect(5, 275, 272-5+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 275+30,6);	
@@ -833,7 +833,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 void ConnectionMark(GUI_COLOR color){		
 	GUI_SetColor(color); 
 	
-  if(LCDType==LCD480_272)
+  if (LCDType==LCD480_272)
 	{
 	  GUI_FillCircle(10+234,15+1,4);
     GUI_DrawLine(10+234,15+1,22+234,8+3);
@@ -928,7 +928,7 @@ static const GUI_POINT _aPolig3[] = {
 	
 	
 
- if(LCDType==LCD800_480)
+ if (LCDType==LCD800_480)
  {
    GUI_FillRoundedRect(9, 270, 100, 400,6); 	
    GUI_DrawGradientRoundedH(90, 270, 272-5, 400,6,  GUI_WHITE,GUI_LIGHTGRAY);	
@@ -994,22 +994,22 @@ static const GUI_POINT _aPolig3[] = {
   PutText(100, 0, 230, 25, str, GUI_TA_RIGHT);
 	 
 	GUI_SetColor(GUI_WHITE);	
-  if(Config.DeviceID==1)      sprintf(str,"درب جلو");
-  else if(Config.DeviceID==2) sprintf(str,"درب عقب");
+  if (Config.DeviceID==1)      sprintf(str,"درب جلو");
+  else if (Config.DeviceID==2) sprintf(str,"درب عقب");
   else sprintf(str,"ناصحيح");
 	PutText(5, 260, 270, 290, str, GUI_TA_CENTER);
 
 	GUI_SetColor(GUI_BLACK);	
-  Config.Title1[60]=Config.Title2[140]=0;
+  Config.Title1[60] =Config.Title2[140] =0;
 		
   PutText(10, 300, 260, 330, Config.Title1, GUI_TA_CENTER);
   PutText(10, 330, 260, 390, Config.Title2, GUI_TA_CENTER);
 	
 	
 	GUI_SetColor(GUI_WHITE);  
-  if((Month>=1)&&(Month<=12))
+  if ((Month>=1) && (Month<=12))
   {
-    if(DayOfWeek<7)
+    if (DayOfWeek<7)
       sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],Day,strMonths[Month-1],Year);
     else
       sprintf(str, "%d  %s  %d ",Day,strMonths[Month-1],Year);
@@ -1018,7 +1018,7 @@ static const GUI_POINT _aPolig3[] = {
 
   }
 	
-	if(Connected2BCU)   ConnectionMark(GUI_DARKGREEN); 
+	if (Connected2BCU)   ConnectionMark(GUI_DARKGREEN); 
 	else                ConnectionMark(GUI_RED); 
 	
 }
@@ -1083,7 +1083,7 @@ static const GUI_POINT _aFooterPoli3[] = {
 };
 
 
-  if(LCDType==LCD480_272)
+  if (LCDType==LCD480_272)
 	{
     ShowPageAlef2();
 		return;
@@ -1174,7 +1174,7 @@ static const GUI_POINT _aFooterPoli3[] = {
  GUI_SetColor(0);
  //GUI_FillPolygon(&_aPointHexagon[0], 4, 272/2, 475);
 	 
-	 //Config.GrouhPrice[0][0]=0;
+	 //Config.GrouhPrice[0][0] =0;
  LoadFont(FontBNazanin200);
  sprintf(str,"%d",Config.GrouhPrice[0][0]);
  PutText(0, 70, 272+SCREENRESIZE, 400, str, GUI_TA_CENTER);
@@ -1196,9 +1196,9 @@ static const GUI_POINT _aFooterPoli3[] = {
 
 
 	GUI_SetColor(GUI_DARKBLUE);  
-  if((Month>=1)&&(Month<=12))
+  if ((Month>=1) && (Month<=12))
   {
-    if(DayOfWeek<7)
+    if (DayOfWeek<7)
       sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],Day,strMonths[Month-1],Year);
     else
       sprintf(str, "%d  %s  %d ",Day,strMonths[Month-1],Year);
@@ -1210,7 +1210,7 @@ static const GUI_POINT _aFooterPoli3[] = {
 	/*
 	  LoadFont(FontTahoma20);
 		 GUI_SetColor(GUI_DARKRED); 
-	if(LastCardingDateTime[0]!=0)
+	if (LastCardingDateTime[0]!=0)
 	{
 	sprintf(str,"%d/%d/%d  %d:%d:%02d",LastCardingDateTime[0],LastCardingDateTime[1],LastCardingDateTime[2],LastCardingDateTime[3],LastCardingDateTime[4],LastCardingDateTime[5]);
 	//PutText(5, 275+30+10, 272-38+SCREENRESIZE, 275+30+30+10, str, GUI_TA_CENTER);
@@ -1224,7 +1224,7 @@ static const GUI_POINT _aFooterPoli3[] = {
 	GUI_FillRoundedRect(4+234+SCREENRESIZE,2+3,30+233+SCREENRESIZE,27+1,3);	
 
 	
-	if(Connected2BCU)   ConnectionMark(GUI_DARKGREEN); 
+	if (Connected2BCU)   ConnectionMark(GUI_DARKGREEN); 
 	else                ConnectionMark(GUI_RED); 
 			
  GUI_SetColor(GUI_WHITE); 
@@ -1234,7 +1234,7 @@ static const GUI_POINT _aFooterPoli3[] = {
  GUI_DrawGradientRoundedV(5, 485, 272-5+SCREENRESIZE, 795,6,  GUI_LIGHTGRAY,GUI_GRAY);	
 	 
 
- if(InTestMode)
+ if (InTestMode)
  {
 	 GUI_DrawGradientRoundedV(5, 485, 272-5+SCREENRESIZE, 795,6,  GUI_RED,GUI_RED);	 
 	 
@@ -1260,14 +1260,14 @@ static const GUI_POINT _aFooterPoli3[] = {
  GUI_SetColor(GUI_BLACK);
 	 
  LoadFont(FontBKoodak40);
- if(Config.DeviceID==1)      sprintf(str,"درب جلو");
- else if(Config.DeviceID==2) sprintf(str,"درب عقب");
+ if (Config.DeviceID==1)      sprintf(str,"درب جلو");
+ else if (Config.DeviceID==2) sprintf(str,"درب عقب");
  else sprintf(str,"ناصحيح");
 	 
  PutText(10, 490, 100, 560, str, GUI_TA_CENTER);
 
  
- Config.Title1[60]=Config.Title2[140]=0;
+ Config.Title1[60] =Config.Title2[140] =0;
 		
  GUI_SetColor(GUI_BLACK);   
  PutText(0,495, 250+SCREENRESIZE,530, Config.Title1, GUI_TA_RIGHT);
@@ -1288,11 +1288,11 @@ static const GUI_POINT _aFooterPoli3[] = {
 unsigned char SetDateAndTime(unsigned char Y, unsigned char M, unsigned char D, unsigned char h, unsigned char m, unsigned char s, unsigned char save) {
 	unsigned long int time=0;
 
-  if((s > 59) || (m > 59) || (h > 23))
+  if ((s > 59) || (m > 59) || (h > 23))
     return 1;
   
-  //if(GPSTimeAcquired)
-  //  return(2);
+  //if (GPSTimeAcquired)
+  //  return 2;
   
 
 	
@@ -1309,7 +1309,7 @@ unsigned char SetDateAndTime(unsigned char Y, unsigned char M, unsigned char D, 
   OldSec=s;
 	RTC_Set(CurrentDate.year,CurrentDate.month,CurrentDate.day,h,m,s);
 	
-  return(0);
+  return 0;
 }
 
 //========================================================================
@@ -1320,31 +1320,31 @@ unsigned char SendRequest(unsigned char type, unsigned short idx) {
 
   //printf("\n\rSend Request [%d] %d, %d",ActivePort,type,idx);
  
-  SendBuf[0]=STX;
-  SendBuf[1]=14;  
-  SendBuf[2]=Config.DeviceID%256;
-  SendBuf[3]=Config.DeviceID/256;
-  SendBuf[4]=3;//Len
-  SendBuf[5]=0;//Len
+  SendBuf[0] =STX;
+  SendBuf[1] =14;  
+  SendBuf[2] =Config.DeviceID%256;
+  SendBuf[3] =Config.DeviceID/256;
+  SendBuf[4] =3;//Len
+  SendBuf[5] =0;//Len
   indx=6;
-  if((BinPageSize==512)&&(type==Simorgh))
+  if ((BinPageSize==512) && (type==Simorgh))
   {
-    SendBuf[4]=4;//Len
-    SendBuf[indx++]=99; 
+    SendBuf[4] =4;//Len
+    SendBuf[indx++] =99; 
   }
-  SendBuf[indx++]=type; 
-  SendBuf[indx++]=idx%256;
-  SendBuf[indx++]=idx/256;
+  SendBuf[indx++] =type; 
+  SendBuf[indx++] =idx%256;
+  SendBuf[indx++] =idx/256;
   crc=crc16(0,SendBuf+1, indx-1);
-  SendBuf[indx++]=crc%256;      
-  SendBuf[indx++]=crc/256;            
-  SendBuf[indx++]=ETX; 
+  SendBuf[indx++] =crc%256;      
+  SendBuf[indx++] =crc/256;            
+  SendBuf[indx++] =ETX; 
   
-  switch(ActivePort)
+  switch (ActivePort)
   {
     case 0:
 			SetTX485();GUI_Delay(1);
-      for(i=0; i<indx; i++)
+      for (i=0; i<indx; i++)
         SendByte(SendBuf[i]);
 		
 		GUI_Delay(5);
@@ -1366,30 +1366,30 @@ unsigned char CheckNewFirmware2(void) {
 	unsigned short crc2=0;
 	unsigned int pageSize;
   
-  if(CheckFirmware==0) return(0);
+  if (CheckFirmware==0) return 0;
   //SaveTaxiInfo();
   ShowMessageDlg(mtInformation, "بررسي نسخه جديد",1,0,0,0);  
   FirmwareRequestNo=0; 
   CheckFirmware=0;
 
-  for(i=0; i<32; i++)
-    GlobalBuffer[i]=0;
+  for (i=0; i<32; i++)
+    GlobalBuffer[i] =0;
 	FLASH_UNLOCK
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
 	FLASH_LOCK
 
-  if(FirmwareLength!=Firmware.Length)
+  if (FirmwareLength!=Firmware.Length)
   {
     ShowMessageDlg(mtError, "خطا در حجم اطلاعات",1,0,0,0);   
     InfoCounter=3;
-    return(1);
+    return 1;
   }
 
   crc=0;
 	Loc=1024;
-  for(i=0; i<FirmwareLength; i++)
+  for (i=0; i<FirmwareLength; i++)
 	{
-		if(Loc==1024)
+		if (Loc==1024)
 		{
 			SPI_Flash_Read(GlobalBuffer, i+addFirmware, 1024);
 			Loc=0;
@@ -1399,21 +1399,21 @@ unsigned char CheckNewFirmware2(void) {
 		Loc++;
 	}
 	
-  if(crc!=Firmware.CheckSum)
+  if (crc!=Firmware.CheckSum)
   {
     ShowMessageDlg(mtError, "خطا صحت اطلاعات",1,0,0,0); 
     InfoCounter=3;
-    return(2);
+    return 2;
   }
   
-  GlobalBuffer[0]=0xC2;
-  GlobalBuffer[1]=(crc2)&0xFF;
-  GlobalBuffer[2]=(crc2>>8)&0xFF;
-  GlobalBuffer[3]=(FirmwareLength)&0xFF;
-  GlobalBuffer[4]=(FirmwareLength>>8)&0xFF;
-  GlobalBuffer[5]=(FirmwareLength>>16)&0xFF;
-  GlobalBuffer[6]=(FirmwareLength>>24)&0xFF;
-  GlobalBuffer[7]=0x55;
+  GlobalBuffer[0] =0xC2;
+  GlobalBuffer[1] =(crc2)&0xFF;
+  GlobalBuffer[2] =(crc2>>8)&0xFF;
+  GlobalBuffer[3] =(FirmwareLength)&0xFF;
+  GlobalBuffer[4] =(FirmwareLength>>8)&0xFF;
+  GlobalBuffer[5] =(FirmwareLength>>16)&0xFF;
+  GlobalBuffer[6] =(FirmwareLength>>24)&0xFF;
+  GlobalBuffer[7] =0x55;
 	FLASH_UNLOCK
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
 	FLASH_LOCK
@@ -1430,29 +1430,29 @@ unsigned char SendDataRequest(unsigned char Type, unsigned int Index) {
 	unsigned short crc=0;
 	unsigned char SendBuf[20];
 
-   SendBuf[0]=STX;
-   SendBuf[1]=14; //Request
-   SendBuf[2]=Config.DeviceID%256;
-   SendBuf[3]=Config.DeviceID/256;
-   SendBuf[4]=5;
-   SendBuf[5]=0;
-   SendBuf[6]=Type;
-   SendBuf[7]=Index&0xFF;
-   SendBuf[8]=(Index>>8)&0xFF;
-   SendBuf[9]=(Index>>16)&0xFF;
-   SendBuf[10]=(Index>>24)&0xFF;
+   SendBuf[0] =STX;
+   SendBuf[1] =14; //Request
+   SendBuf[2] =Config.DeviceID%256;
+   SendBuf[3] =Config.DeviceID/256;
+   SendBuf[4] =5;
+   SendBuf[5] =0;
+   SendBuf[6] =Type;
+   SendBuf[7] =Index&0xFF;
+   SendBuf[8] =(Index>>8)&0xFF;
+   SendBuf[9] =(Index>>16)&0xFF;
+   SendBuf[10] =(Index>>24)&0xFF;
    crc=crc16(0, SendBuf+1, 10);
-   SendBuf[11]=crc&0xFF;
-   SendBuf[12]=crc>>8;
-   SendBuf[13]=ETX;
+   SendBuf[11] =crc&0xFF;
+   SendBuf[12] =crc>>8;
+   SendBuf[13] =ETX;
    
 	SetTX485();GUI_Delay(1);
-   for(Byte=0; Byte<14; Byte++)
+   for (Byte=0; Byte<14; Byte++)
      SendByte(SendBuf[Byte]);
 		 
 		 GUI_Delay(5);
 SetRX485();
-   return(0);
+   return 0;
 }
 
 
@@ -1461,24 +1461,24 @@ unsigned char SendCommandResult(unsigned char Type, unsigned int Status) {
 	unsigned char i, Byte; 
 	unsigned short crc=0;
 
-   GlobalBuffer[0]=STX;
-   GlobalBuffer[1]=11; //Result
-   GlobalBuffer[2]=Config.DeviceID%256;
-   GlobalBuffer[3]=Config.DeviceID/256;
-   GlobalBuffer[4]=2;
-   GlobalBuffer[5]=0;
-   GlobalBuffer[6]=Type;
-   GlobalBuffer[7]=Status;
+   GlobalBuffer[0] =STX;
+   GlobalBuffer[1] =11; //Result
+   GlobalBuffer[2] =Config.DeviceID%256;
+   GlobalBuffer[3] =Config.DeviceID/256;
+   GlobalBuffer[4] =2;
+   GlobalBuffer[5] =0;
+   GlobalBuffer[6] =Type;
+   GlobalBuffer[7] =Status;
    crc=crc16(0, GlobalBuffer+1, 7);
-   GlobalBuffer[8]=crc&0xFF;
-   GlobalBuffer[9]=crc>>8;
-   GlobalBuffer[10]=ETX;
+   GlobalBuffer[8] =crc&0xFF;
+   GlobalBuffer[9] =crc>>8;
+   GlobalBuffer[10] =ETX;
    
-   switch(ActivePort)
+   switch (ActivePort)
    {
      case 0:
 			 SetTX485();GUI_Delay(1);
-       for(Byte=0; Byte<11; Byte++)
+       for (Byte=0; Byte<11; Byte++)
          SendByte(GlobalBuffer[Byte]);
 		 
 		 GUI_Delay(5);
@@ -1490,7 +1490,7 @@ unsigned char SendCommandResult(unsigned char Type, unsigned int Status) {
    }
 
    //printf("\n\r%d:%d:%d Send Command Result",Hour,Min,Sec);
-   return(0);
+   return 0;
 }
 
 //==============================================================================
@@ -1498,58 +1498,58 @@ unsigned int SendDeviceConfiguration(void) {
 	unsigned short Idx, i, crc;
 
   Idx=0;
-  GlobalBuffer[Idx++]=STX;
-  GlobalBuffer[Idx++]=11; //Result
-  GlobalBuffer[Idx++]=Config.DeviceID%256;
-  GlobalBuffer[Idx++]=Config.DeviceID/256;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=81;
-  GlobalBuffer[Idx++]=0;  //Group
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=Config.UC%256;
-  GlobalBuffer[Idx++]=Config.UC/256;
-  GlobalBuffer[Idx++]=Indicators.Transactions%256;
-  GlobalBuffer[Idx++]=Indicators.Transactions/256;
-  GlobalBuffer[Idx++]=Indicators.OffTransactions%256;
-  GlobalBuffer[Idx++]=Indicators.OffTransactions/256;
-  GlobalBuffer[Idx++]=Indicators.Locations%256;
-  GlobalBuffer[Idx++]=Indicators.Locations/256;
-  GlobalBuffer[Idx++]=Indicators.OffLocations%256;
-  GlobalBuffer[Idx++]=Indicators.OffLocations/256;
-  GlobalBuffer[Idx++]=Config.TransactionsSendInterval%256;
-  GlobalBuffer[Idx++]=Config.TransactionsSendInterval/256;
-  GlobalBuffer[Idx++]=Config.TrackingInterval&0xFF;
-  GlobalBuffer[Idx++]=(Config.TrackingInterval>>8)&0xFF;
-  GlobalBuffer[Idx++]=Year%256;
-  GlobalBuffer[Idx++]=Year/256;
-  GlobalBuffer[Idx++]=Month;
-  GlobalBuffer[Idx++]=Day;
-  GlobalBuffer[Idx++]=Hour;
-  GlobalBuffer[Idx++]=Min;
-  GlobalBuffer[Idx++]=Sec;
-  GlobalBuffer[Idx++]=Ver%256;
-  GlobalBuffer[Idx++]=Ver/256;
-  GlobalBuffer[Idx++]=Release%256;
-  GlobalBuffer[Idx++]=Release/256;
-  GlobalBuffer[Idx++]=Config.Password&0xFF;
-  GlobalBuffer[Idx++]=(Config.Password >> 8) & 0xFF;
-  GlobalBuffer[Idx++]=(Config.Password >> 16) & 0xFF;
-  GlobalBuffer[Idx++]=(Config.Password >> 24) & 0xFF;
-  GlobalBuffer[Idx++]=Config.DriverID&0xFF;
-  GlobalBuffer[Idx++]=(Config.DriverID>>8)&0xFF;
-  GlobalBuffer[4]=(Idx-6)%256;
-  GlobalBuffer[5]=(Idx-6)/256;
+  GlobalBuffer[Idx++] =STX;
+  GlobalBuffer[Idx++] =11; //Result
+  GlobalBuffer[Idx++] =Config.DeviceID%256;
+  GlobalBuffer[Idx++] =Config.DeviceID/256;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =81;
+  GlobalBuffer[Idx++] =0;  //Group
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =Config.UC%256;
+  GlobalBuffer[Idx++] =Config.UC/256;
+  GlobalBuffer[Idx++] =Indicators.Transactions%256;
+  GlobalBuffer[Idx++] =Indicators.Transactions/256;
+  GlobalBuffer[Idx++] =Indicators.OffTransactions%256;
+  GlobalBuffer[Idx++] =Indicators.OffTransactions/256;
+  GlobalBuffer[Idx++] =Indicators.Locations%256;
+  GlobalBuffer[Idx++] =Indicators.Locations/256;
+  GlobalBuffer[Idx++] =Indicators.OffLocations%256;
+  GlobalBuffer[Idx++] =Indicators.OffLocations/256;
+  GlobalBuffer[Idx++] =Config.TransactionsSendInterval%256;
+  GlobalBuffer[Idx++] =Config.TransactionsSendInterval/256;
+  GlobalBuffer[Idx++] =Config.TrackingInterval&0xFF;
+  GlobalBuffer[Idx++] =(Config.TrackingInterval>>8)&0xFF;
+  GlobalBuffer[Idx++] =Year%256;
+  GlobalBuffer[Idx++] =Year/256;
+  GlobalBuffer[Idx++] =Month;
+  GlobalBuffer[Idx++] =Day;
+  GlobalBuffer[Idx++] =Hour;
+  GlobalBuffer[Idx++] =Min;
+  GlobalBuffer[Idx++] =Sec;
+  GlobalBuffer[Idx++] =Ver%256;
+  GlobalBuffer[Idx++] =Ver/256;
+  GlobalBuffer[Idx++] =Release%256;
+  GlobalBuffer[Idx++] =Release/256;
+  GlobalBuffer[Idx++] =Config.Password&0xFF;
+  GlobalBuffer[Idx++] =(Config.Password >> 8) & 0xFF;
+  GlobalBuffer[Idx++] =(Config.Password >> 16) & 0xFF;
+  GlobalBuffer[Idx++] =(Config.Password >> 24) & 0xFF;
+  GlobalBuffer[Idx++] =Config.DriverID&0xFF;
+  GlobalBuffer[Idx++] =(Config.DriverID>>8)&0xFF;
+  GlobalBuffer[4] =(Idx-6)%256;
+  GlobalBuffer[5] =(Idx-6)/256;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
-  GlobalBuffer[Idx++]=crc%256;
-  GlobalBuffer[Idx++]=crc/256;
-  GlobalBuffer[Idx++]=ETX;
+  GlobalBuffer[Idx++] =crc%256;
+  GlobalBuffer[Idx++] =crc/256;
+  GlobalBuffer[Idx++] =ETX;
   
-  switch(ActivePort)
+  switch (ActivePort)
   {
   case 0:
 		SetTX485();GUI_Delay(1);
-    for(i=0; i<Idx; i++)
+    for (i=0; i<Idx; i++)
       SendByte(GlobalBuffer[i]);
 	GUI_Delay(5);
 	SetRX485();
@@ -1570,7 +1570,7 @@ void ProcessCommands(void) {
 	unsigned char read_buf[320];
 	char str[20];
 
-  switch(GlobalBuffer[6]) //Command #
+  switch (GlobalBuffer[6]) //Command #
   {
         case 1: //Connection Test
           SendCommandResult(1, 1);
@@ -1618,20 +1618,20 @@ void ProcessCommands(void) {
 
         case 12: //Set Transactions Indicator
 					
-          				if(trHead==0) 
+          				if (trHead==0) 
                Temp=(MAX_TRANSACTIONS-1);
             else
                Temp=trHead-1;
             
              i=0;
 						InvalidDateRecord=0;
-             while(i<MAX_TRANSACTIONS)
+             while (i<MAX_TRANSACTIONS)
                   {              
                    i++;  
                    
                    LoadFromDFToRam(addTransactions+(Temp*LEN_TRANSACTIONS), LEN_TRANSACTIONS, read_buf);
                       
-                   if(i==1)  Indicators.OffTransactions=0;
+                   if (i==1)  Indicators.OffTransactions=0;
 										
                    InvalidDateRecordFlag=0;
        
@@ -1639,43 +1639,43 @@ void ProcessCommands(void) {
      // printf("\n\rIndex=%03d ",Temp);
       //printf("%02d/%02d/%02d  %02d/%02d/%02d - %d",read_buf[5],read_buf[6],read_buf[7],GlobalBuffer[7],GlobalBuffer[8],GlobalBuffer[9],InvalidDateRecord);
 
-				           if(Temp==0)
+				           if (Temp==0)
 	               Temp=(MAX_TRANSACTIONS-1);
             else
                Temp=Temp-1;
 
 						
-                   if(read_buf[5]<GlobalBuffer[7])
+                   if (read_buf[5]<GlobalBuffer[7])
                       InvalidDateRecordFlag=1;
-                   else if(read_buf[5]==GlobalBuffer[7]) 
+                   else if (read_buf[5] ==GlobalBuffer[7]) 
                           {
-                           if(read_buf[6]<GlobalBuffer[8])
+                           if (read_buf[6]<GlobalBuffer[8])
                               InvalidDateRecordFlag=1;
-                           else if(read_buf[6]==GlobalBuffer[8])
+                           else if (read_buf[6] ==GlobalBuffer[8])
                                   {
-                                   if(read_buf[7]<GlobalBuffer[9])
+                                   if (read_buf[7]<GlobalBuffer[9])
                                       InvalidDateRecordFlag=1;
                                   }  
                           }
 						
-								if((read_buf[5]>=200)||(read_buf[6]>=200)||(read_buf[7]>=200))  InvalidDateRecordFlag=1;
+								if ((read_buf[5]>=200) || (read_buf[6]>=200) || (read_buf[7]>=200))  InvalidDateRecordFlag=1;
 													
 													
       //printf("** %d ",InvalidDateRecordFlag);													
 													
                    Indicators.OffTransactions++;   
 
-								   if(InvalidDateRecordFlag)
+								   if (InvalidDateRecordFlag)
                      {
-                      if(++InvalidDateRecord>=30) break;
+                      if (++InvalidDateRecord>=30) break;
                      }   
                    else InvalidDateRecord=0;  
 							
 							
-                   if(Temp)  Temp--;
+                   if (Temp)  Temp--;
                    else      Temp=MAX_TRANSACTIONS-1;
 									 
-									 if(i>MAX_TRANSACTIONS) break;
+									 if (i>MAX_TRANSACTIONS) break;
                  }
 									
 							
@@ -1686,9 +1686,9 @@ void ProcessCommands(void) {
         case 85:  //Text Message
           Idx=GlobalBuffer[4]+(GlobalBuffer[5]*256);
           Idx--;
-          for(i=0; (i<Idx) && (i<300); i++)
-            read_buf[i]=GlobalBuffer[i+7];
-          read_buf[i]=0;
+          for (i=0; (i<Idx) && (i<300); i++)
+            read_buf[i] =GlobalBuffer[i+7];
+          read_buf[i] =0;
 				  DisplayText(read_buf); 
           InfoCounter=20;
           SendCommandResult(85, 2);
@@ -1698,7 +1698,7 @@ void ProcessCommands(void) {
           //PutText(5,222,0,0, "Get SIM card charge", ALINE_LEFT);
           //G_RepaintArea(220,240);
           GetSimCardChargeAuto();
-			    if(Charge>0)
+			    if (Charge>0)
 			      DeviceInfo.Charge=Charge;
           break;
         case 87:
@@ -1706,9 +1706,9 @@ void ProcessCommands(void) {
           Idx-=2;
           //G_DrawGradianRectangle(255,255,255,255,168,0,220,20,15,1);  
           //PutText(5,222,0,0, "Recharge SIM card", ALINE_LEFT);
-          for(i=0; (i<Idx)&&(i<40); i++)
-            ChargeCode[i]=GlobalBuffer[i+6];
-          ChargeCode[i]=0;  
+          for (i=0; (i<Idx) && (i<40); i++)
+            ChargeCode[i] =GlobalBuffer[i+6];
+          ChargeCode[i] =0;  
           //G_RepaintArea(220,240);
           Byte=ChargeSimCardAuto();
           ChargeRequest=0;
@@ -1716,37 +1716,37 @@ void ProcessCommands(void) {
         case 88:
           //G_DrawGradianRectangle(255,255,255,255,168,0,220,20,15,1);  
           //PutText(5,222,0,0, "EXEC USSD command", ALINE_LEFT);
-          for(i=0; (i<(GlobalBuffer[4]+(GlobalBuffer[5]*256))-1) && (i<49); i++)
-            ChargeCode[i]=GlobalBuffer[i+7];
-          ChargeCode[i]=0;  
+          for (i=0; (i<(GlobalBuffer[4]+(GlobalBuffer[5]*256))-1) && (i<49); i++)
+            ChargeCode[i] =GlobalBuffer[i+7];
+          ChargeCode[i] =0;  
           //G_RepaintArea(220,240);
           LoadFromDFToRam(addIndicators+20+20, 50, read_buf);
-          for(j=0; j<i; j++)
-            if(ChargeCode[j]!=read_buf[j]) break;
-          if(j==i)
+          for (j=0; j<i; j++)
+            if (ChargeCode[j]!=read_buf[j]) break;
+          if (j==i)
           {
             LoadFromDFToRam(addIndicators+20+20+50, 50, read_buf);
-            GlobalBuffer[0]=STX;
-            GlobalBuffer[1]=11; //Result
-            GlobalBuffer[2]=Config.DeviceID%256;
-            GlobalBuffer[3]=Config.DeviceID/256;
-            GlobalBuffer[4]=0;
-            GlobalBuffer[5]=0;
-            GlobalBuffer[6]=32;
+            GlobalBuffer[0] =STX;
+            GlobalBuffer[1] =11; //Result
+            GlobalBuffer[2] =Config.DeviceID%256;
+            GlobalBuffer[3] =Config.DeviceID/256;
+            GlobalBuffer[4] =0;
+            GlobalBuffer[5] =0;
+            GlobalBuffer[6] =32;
             j=7;
-            for(i=0; (read_buf[i]>=32) && (read_buf[i]<=200) && (i<49); i++)
-              GlobalBuffer[j++]=read_buf[i];
-            GlobalBuffer[4]=(j-6)%256;
-            GlobalBuffer[5]=(j-6)/256;
+            for (i=0; (read_buf[i]>=32) && (read_buf[i]<=200) && (i<49); i++)
+              GlobalBuffer[j++] =read_buf[i];
+            GlobalBuffer[4] =(j-6)%256;
+            GlobalBuffer[5] =(j-6)/256;
             crc=crc16(0, GlobalBuffer+1, j-1);
-            GlobalBuffer[j++]=crc%256;
-            GlobalBuffer[j++]=crc/256;
-            GlobalBuffer[j++]=ETX;
-            switch(ActivePort)
+            GlobalBuffer[j++] =crc%256;
+            GlobalBuffer[j++] =crc/256;
+            GlobalBuffer[j++] =ETX;
+            switch (ActivePort)
             {
               case 0:
 								SetTX485();GUI_Delay(1);
-                for(i=0; i<j; i++)
+                for (i=0; i<j; i++)
                   SendByte(GlobalBuffer[i]);
 							GUI_Delay(5);
 							SetRX485();
@@ -1759,7 +1759,7 @@ void ProcessCommands(void) {
           }
             
           crc=ExecuteCommand();
-          if(crc>10)
+          if (crc>10)
           {
             Charge=crc;
             SendALive(150);
@@ -1781,9 +1781,9 @@ void ProcessCommands(void) {
           break;
         case 222:
           Idx=7;
-          for(i=0; i<10; i++)
+          for (i=0; i<10; i++)
 				  {
-				    for(j=0; j<6; j++)
+				    for (j=0; j<6; j++)
 				      GlobalBuffer[Idx+(i*6)+j]^=0x42;
 				  }
 				  MFRC531_WriteMasterKey(0x00,&GlobalBuffer[Idx]);
@@ -1838,7 +1838,7 @@ void ProcessData(void) {
 	if (GlobalBuffer[6] == 165) { //BlackList
     if (BlackList_Index == (GlobalBuffer[7] + GlobalBuffer[8] * 256)) {
       Len=(GlobalBuffer[4]+GlobalBuffer[5]*256)-3;
-			if(Len/8>64)
+			if (Len/8>64)
 				return;
 			i=(BlackList_Index-1)*(64*8);
 			i+=addBlackList;
@@ -1858,12 +1858,12 @@ void ProcessData(void) {
 			}else
 			  BlackList_Index++;
 		}
-		if(BlackList_Index)
+		if (BlackList_Index)
 			SendDataRequest(165, BlackList_Index);
 		return;
 	}
 
-	if(GlobalBuffer[6]!=DeviceType) return;
+	if (GlobalBuffer[6]!=DeviceType) return;
  	 	
  WDTR;
  
@@ -1887,7 +1887,7 @@ void ProcessData(void) {
 			New_Ver=GlobalBuffer[9]+GlobalBuffer[10]*256;
 			New_Release=GlobalBuffer[11]+GlobalBuffer[12]*256;
 
-			if((New_Ver>Ver)||((New_Release>Release)&&(New_Ver==Ver)))
+			if ((New_Ver>Ver) || ((New_Release>Release) && (New_Ver==Ver)))
 			{
 			Firmware.HaveData=0xAA;
 			Firmware.Length=GlobalBuffer[16]; Firmware.Length<<=8;
@@ -1895,7 +1895,7 @@ void ProcessData(void) {
 			Firmware.Length+=GlobalBuffer[14]; Firmware.Length<<=8;
 			Firmware.Length+=GlobalBuffer[13];
 
-			if(Firmware.Length==0) return;
+			if (Firmware.Length==0) return;
 
 			Firmware.CheckSum=GlobalBuffer[20]; Firmware.CheckSum<<=8;
 			Firmware.CheckSum+=GlobalBuffer[19]; Firmware.CheckSum<<=8;
@@ -1905,9 +1905,9 @@ void ProcessData(void) {
 			Firmware.SavedVer=New_Ver;
 			Firmware.SavedRelease=New_Release;
 
-			for(j=0; j<30; j++)
-			Firmware.FirmwareFileName[j]=GlobalBuffer[21+j];
-			Firmware.FirmwareFileName[j]=0;
+			for (j=0; j<30; j++)
+			Firmware.FirmwareFileName[j] =GlobalBuffer[21+j];
+			Firmware.FirmwareFileName[j] =0;
 			FirmwarePacketIndex=1;
 
 			FirmwarePercent=Firmware.Length/512;  
@@ -1927,18 +1927,18 @@ void ProcessData(void) {
 			//SaveConfiguration();
 
 			}
-			else if(FirmwarePacketIndex)
+			else if (FirmwarePacketIndex)
 			{
 			//	GUI_SetColor(GUI_GRAY);       		 GUI_FillCircle(15,15,5);GUI_Delay(250);
-			if(BufferLen<8) return; 
-			if(GlobalBuffer[6]!=DeviceType)  return;  
+			if (BufferLen<8) return; 
+			if (GlobalBuffer[6]!=DeviceType)  return;  
 
 
 			Data_Length=(GlobalBuffer[4]+GlobalBuffer[5]*256)-3;
 
-			if((Data_Length==0)&&(FirmwarePacketIndex==1))  {IsFileForGprsDownload=0; return; }
+			if ((Data_Length==0) && (FirmwarePacketIndex==1))  {IsFileForGprsDownload=0; return; }
 			//.....................................................................................
-			if(Data_Length==0)
+			if (Data_Length==0)
 			{
 
 			CheckNewFirmware();
@@ -1952,9 +1952,9 @@ void ProcessData(void) {
 			FLASH_UNLOCK
 
 			address=addFirmware+((FirmwarePacketIndex-1)*512);
-			if(address+512<addConfig)
+			if (address+512<addConfig)
 			{
-			if(SaveFromRamToDF(address, 512, GlobalBuffer+9))
+			if (SaveFromRamToDF(address, 512, GlobalBuffer+9))
 			{
 			FLASH_LOCK											
 			return;
@@ -1966,15 +1966,15 @@ void ProcessData(void) {
 			FLASH_LOCK
 
 
-			if(1) 
+			if (1) 
 			{   
-			if(FirmwarePacketIndex)
+			if (FirmwarePacketIndex)
 			{
-			if(FirmwarePercent) Percent=((FirmwarePacketIndex*100)/FirmwarePercent);
+			if (FirmwarePercent) Percent=((FirmwarePacketIndex*100)/FirmwarePercent);
 			else Percent=0;
 			}
 
-			if(InfoCounter==0)
+			if (InfoCounter==0)
 			{
 			GUI_SetColor(GUI_BLACK);
 			GUI_FillRect(22, 6, 150, 28);
@@ -1986,7 +1986,7 @@ void ProcessData(void) {
 			} 
 
 
-			if(Downloaded_FirmwareLength>=Firmware.Length)
+			if (Downloaded_FirmwareLength>=Firmware.Length)
 			{
 
 			CheckNewFirmware();
@@ -2013,54 +2013,54 @@ char SendDeviceInfo(void) {
 	unsigned int Idx, crc=0, i;
 	unsigned char Byte;
 
-  GlobalBuffer[0]=STX;
-  GlobalBuffer[1]=2; //Device Information
-  GlobalBuffer[2]=Config.DeviceID%256;
-  GlobalBuffer[3]=Config.DeviceID/256;
-  GlobalBuffer[4]=0; //Len;
-  GlobalBuffer[5]=0; //Len;
+  GlobalBuffer[0] =STX;
+  GlobalBuffer[1] =2; //Device Information
+  GlobalBuffer[2] =Config.DeviceID%256;
+  GlobalBuffer[3] =Config.DeviceID/256;
+  GlobalBuffer[4] =0; //Len;
+  GlobalBuffer[5] =0; //Len;
   Idx=6;
-  GlobalBuffer[Idx++]=DeviceType;  
-  GlobalBuffer[Idx++]=Ver%256;  
-  GlobalBuffer[Idx++]=Ver/256;  
-  GlobalBuffer[Idx++]=Release%256;  
-  GlobalBuffer[Idx++]=Release/256;  
-  GlobalBuffer[Idx++]=Config.UC%256;  
-  GlobalBuffer[Idx++]=Config.UC/256;  
-  GlobalBuffer[Idx++]=Year-1300;  
-  GlobalBuffer[Idx++]=Month;  
-  GlobalBuffer[Idx++]=Day;  
-  GlobalBuffer[Idx++]=Hour;  
-  GlobalBuffer[Idx++]=Min;  
-  GlobalBuffer[Idx++]=Sec;  
-  GlobalBuffer[Idx++]=Indicators.Transactions&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.Transactions>>8)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.Transactions>>16)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.Transactions>>24)&0xFF;  
-  GlobalBuffer[Idx++]=Indicators.OffTransactions&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.OffTransactions>>8)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.OffTransactions>>16)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.OffTransactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =DeviceType;  
+  GlobalBuffer[Idx++] =Ver%256;  
+  GlobalBuffer[Idx++] =Ver/256;  
+  GlobalBuffer[Idx++] =Release%256;  
+  GlobalBuffer[Idx++] =Release/256;  
+  GlobalBuffer[Idx++] =Config.UC%256;  
+  GlobalBuffer[Idx++] =Config.UC/256;  
+  GlobalBuffer[Idx++] =Year-1300;  
+  GlobalBuffer[Idx++] =Month;  
+  GlobalBuffer[Idx++] =Day;  
+  GlobalBuffer[Idx++] =Hour;  
+  GlobalBuffer[Idx++] =Min;  
+  GlobalBuffer[Idx++] =Sec;  
+  GlobalBuffer[Idx++] =Indicators.Transactions&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions>>8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions>>16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =Indicators.OffTransactions&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>24)&0xFF;  
 
-  GlobalBuffer[Idx++]=DeviceType;    
+  GlobalBuffer[Idx++] =DeviceType;    
 
-  GlobalBuffer[Idx++]=0xBB;
-  GlobalBuffer[Idx++]=BlackList_Count & 0xFF;
-  GlobalBuffer[Idx++]=(BlackList_Count >> 8) & 0xFF;
-  GlobalBuffer[Idx++]=(BlackList_Count >> 16) & 0xFF;
-  GlobalBuffer[Idx++]=BlackList_LastIdx & 0xFF;
-  GlobalBuffer[Idx++]=(BlackList_LastIdx >> 8) & 0xFF;
-  GlobalBuffer[Idx++]=(BlackList_LastIdx >> 16) & 0xFF;
-  GlobalBuffer[Idx++]=(BlackList_LastIdx >> 24) & 0xFF;
+  GlobalBuffer[Idx++] =0xBB;
+  GlobalBuffer[Idx++] =BlackList_Count & 0xFF;
+  GlobalBuffer[Idx++] =(BlackList_Count >> 8) & 0xFF;
+  GlobalBuffer[Idx++] =(BlackList_Count >> 16) & 0xFF;
+  GlobalBuffer[Idx++] =BlackList_LastIdx & 0xFF;
+  GlobalBuffer[Idx++] =(BlackList_LastIdx >> 8) & 0xFF;
+  GlobalBuffer[Idx++] =(BlackList_LastIdx >> 16) & 0xFF;
+  GlobalBuffer[Idx++] =(BlackList_LastIdx >> 24) & 0xFF;
 
-  GlobalBuffer[4]=(Idx-6)%256; //Len;
-  GlobalBuffer[5]=(Idx-6)/256; //Len;
+  GlobalBuffer[4] =(Idx-6)%256; //Len;
+  GlobalBuffer[5] =(Idx-6)/256; //Len;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
-  GlobalBuffer[Idx++]=crc&0xFF;
-  GlobalBuffer[Idx++]=crc>>8;
-  GlobalBuffer[Idx++]=ETX;
+  GlobalBuffer[Idx++] =crc&0xFF;
+  GlobalBuffer[Idx++] =crc>>8;
+  GlobalBuffer[Idx++] =ETX;
   
-	return(SendPacket(Idx));
+	return SendPacket(Idx);
 }
 
 //==============================================================================
@@ -2069,56 +2069,56 @@ unsigned char SendALive(unsigned char SpecialIndex) {
 	static unsigned char Idx=9;
 	unsigned char Byte,Index=0;
   /*
-	if(MemoryStatus==MEMERROR)     STATUSES&=~(0x40);
+	if (MemoryStatus==MEMERROR)     STATUSES&=~(0x40);
   else                           STATUSES|=0x40; 
-  if(RTCStatus==RTCOK) STATUSES|=0x20;
+  if (RTCStatus==RTCOK) STATUSES|=0x20;
   else                 STATUSES&=0xDF;
 	*/
 	
-	GlobalBuffer[0]=STX;
-  GlobalBuffer[1]=3; //Result
-  GlobalBuffer[2]=Config.DeviceID%256;
-  GlobalBuffer[3]=Config.DeviceID/256;
+	GlobalBuffer[0] =STX;
+  GlobalBuffer[1] =3; //Result
+  GlobalBuffer[2] =Config.DeviceID%256;
+  GlobalBuffer[3] =Config.DeviceID/256;
 	#ifdef WithSAMCARD
-  GlobalBuffer[4]=18;
+  GlobalBuffer[4] =18;
 	#else
-  GlobalBuffer[4]=10;
+  GlobalBuffer[4] =10;
 	#endif
-  GlobalBuffer[5]=0;
-  GlobalBuffer[6]=1; //Type
-  GlobalBuffer[7]=STATUSES; //Status
-  GlobalBuffer[8]=DeviceType;  
-  GlobalBuffer[9]=Ver%256;  
-  GlobalBuffer[10]=Ver/256;  
-  GlobalBuffer[11]=Release%256;  
-  GlobalBuffer[12]=Release/256;  
-  GlobalBuffer[13]=DeviceType;    
-	GlobalBuffer[14]=Config.GrouhPrice[0][0]%256;
-	GlobalBuffer[15]=Config.GrouhPrice[0][0]/256;
+  GlobalBuffer[5] =0;
+  GlobalBuffer[6] =1; //Type
+  GlobalBuffer[7] =STATUSES; //Status
+  GlobalBuffer[8] =DeviceType;  
+  GlobalBuffer[9] =Ver%256;  
+  GlobalBuffer[10] =Ver/256;  
+  GlobalBuffer[11] =Release%256;  
+  GlobalBuffer[12] =Release/256;  
+  GlobalBuffer[13] =DeviceType;    
+	GlobalBuffer[14] =Config.GrouhPrice[0][0]%256;
+	GlobalBuffer[15] =Config.GrouhPrice[0][0]/256;
   
 	#ifdef WithSAMCARD
-	GlobalBuffer[16]=0xBB;
-  GlobalBuffer[17]=BlackList_Count & 0xFF;
-  GlobalBuffer[18]=(BlackList_Count >> 8) & 0xFF;
-  GlobalBuffer[19]=(BlackList_Count >> 16) & 0xFF;
-  GlobalBuffer[20]=BlackList_LastIdx & 0xFF;
-  GlobalBuffer[21]=(BlackList_LastIdx >> 8) & 0xFF;
-  GlobalBuffer[22]=(BlackList_LastIdx >> 16) & 0xFF;
-  GlobalBuffer[23]=(BlackList_LastIdx >> 24) & 0xFF;
+	GlobalBuffer[16] =0xBB;
+  GlobalBuffer[17] =BlackList_Count & 0xFF;
+  GlobalBuffer[18] =(BlackList_Count >> 8) & 0xFF;
+  GlobalBuffer[19] =(BlackList_Count >> 16) & 0xFF;
+  GlobalBuffer[20] =BlackList_LastIdx & 0xFF;
+  GlobalBuffer[21] =(BlackList_LastIdx >> 8) & 0xFF;
+  GlobalBuffer[22] =(BlackList_LastIdx >> 16) & 0xFF;
+  GlobalBuffer[23] =(BlackList_LastIdx >> 24) & 0xFF;
 
   crc=crc16(0, GlobalBuffer+1, 23);
-  GlobalBuffer[24]=crc&0xFF;
-  GlobalBuffer[25]=crc>>8;
-  GlobalBuffer[26]=ETX;
+  GlobalBuffer[24] =crc&0xFF;
+  GlobalBuffer[25] =crc>>8;
+  GlobalBuffer[26] =ETX;
 	
-	return(SendPacket(27));
+	return SendPacket(27);
 	#else
   crc=crc16(0, GlobalBuffer+1, 15);
-  GlobalBuffer[16]=crc&0xFF;
-  GlobalBuffer[17]=crc>>8;
-  GlobalBuffer[18]=ETX;
+  GlobalBuffer[16] =crc&0xFF;
+  GlobalBuffer[17] =crc>>8;
+  GlobalBuffer[18] =ETX;
 	
-	return(SendPacket(19));
+	return SendPacket(19);
 	#endif
 }
 
@@ -2129,12 +2129,12 @@ void DisplayPacket(void) {
  	GUI_SetBkColor(GUI_BLACK);
  	GUI_Clear();
   GUI_SetColor(GUI_WHITE);
-	for(i=0; (i<60) && (k<BufferLen); i++)
-	  for(j=0; (j<14) && (k<BufferLen); j++)
+	for (i=0; (i<60) && (k<BufferLen); i++)
+	  for (j=0; (j<14) && (k<BufferLen); j++)
 		  GUI_DispDecAt(GlobalBuffer[k++], j*30, i*20, 4);
 	    
 	
-	//for(i=0; (i<BufferLen)&&(i<48); i++)
+	//for (i=0; (i<BufferLen) && (i<48); i++)
 	//{
 	//	GUI_DispDecAt(GlobalBuffer[i], 0, i*10, 4);
 	//}
@@ -2155,14 +2155,14 @@ unsigned char ProcessPacket(unsigned char Port) {
 	
 	//DisplayPacket();
 	
-  if(BufferLen < 9)
-    return(1);
+  if (BufferLen < 9)
+    return 1;
 	
   if (BufferLen < (GlobalBuffer[4]+(GlobalBuffer[5]*256)))
-    return(2);   
+    return 2;   
     
-  if ((GlobalBuffer[0]!=STX)||(GlobalBuffer[BufferLen-1]!=ETX))
-    return(3);   
+  if ((GlobalBuffer[0]!=STX) || (GlobalBuffer[BufferLen-1]!=ETX))
+    return 3;   
 
   for (i = 0; i < BufferLen; i++)
     if ((GlobalBuffer[i] == STX) &&
@@ -2171,28 +2171,28 @@ unsigned char ProcessPacket(unsigned char Port) {
   //..................................................
 	/*	
   Err=0;
-  if((GlobalBuffer[1]==3)&&(GlobalBuffer[2]==Config.DeviceID)&&(GlobalBuffer[3]==0)&&(GlobalBuffer[4]==2)&&(GlobalBuffer[5]==0)&&(GlobalBuffer[6]==1)) Err=1;
-  if((GlobalBuffer[1]==14)&&(GlobalBuffer[2]==Config.DeviceID)&&(GlobalBuffer[3]==0)&&(GlobalBuffer[4]==3)&&(GlobalBuffer[5]==0))  Err=1;
-  if((GlobalBuffer[1]==14)&&(GlobalBuffer[2]==Config.DeviceID)&&(GlobalBuffer[3]==0)&&(GlobalBuffer[4]==5)&&(GlobalBuffer[5]==0)) Err=1;
-  if((GlobalBuffer[1]==12)&&(GlobalBuffer[2]==Config.DeviceID)&&(GlobalBuffer[3]==0)&&(GlobalBuffer[6]==5))Err=1;      
+  if ((GlobalBuffer[1] ==3) && (GlobalBuffer[2] ==Config.DeviceID) && (GlobalBuffer[3] ==0) && (GlobalBuffer[4] ==2) && (GlobalBuffer[5] ==0) && (GlobalBuffer[6] ==1)) Err=1;
+  if ((GlobalBuffer[1] ==14) && (GlobalBuffer[2] ==Config.DeviceID) && (GlobalBuffer[3] ==0) && (GlobalBuffer[4] ==3) && (GlobalBuffer[5] ==0))  Err=1;
+  if ((GlobalBuffer[1] ==14) && (GlobalBuffer[2] ==Config.DeviceID) && (GlobalBuffer[3] ==0) && (GlobalBuffer[4] ==5) && (GlobalBuffer[5] ==0)) Err=1;
+  if ((GlobalBuffer[1] ==12) && (GlobalBuffer[2] ==Config.DeviceID) && (GlobalBuffer[3] ==0) && (GlobalBuffer[6] ==5))Err=1;      
   
-  if(Err==1)
+  if (Err==1)
   {
    ShowCardingResult(4,0,Config.UC,0,0,"کد درب ها يکسان است ");
-	 return(0);
+	 return 0;
 	}	
   */		
 	
 	
   crc = crc16(0, GlobalBuffer + 1, BufferLen - 4);
   if (crc != (GlobalBuffer[BufferLen - 3] + (GlobalBuffer[BufferLen - 2] * 256)))
-    return(4);
+    return 4;
     
   DID = GlobalBuffer[3]; 
 	DID <<= 8;
   DID = DID + GlobalBuffer[2];  
   if ((DID != Config.DeviceID) && (DID != 0xFFFF) && (GlobalBuffer[1] >= 10) && (GlobalBuffer[1] != 12))
-    return(5);	
+    return 5;	
 	
   ConnectionError = 0;
 	/*
@@ -2206,9 +2206,9 @@ unsigned char ProcessPacket(unsigned char Port) {
 */
   LEDOK=1;
   ActivePort = Port; 
-  switch(GlobalBuffer[1]) {
+  switch (GlobalBuffer[1]) {
     case 1:  //Detect Device    
-      //if((GlobalBuffer[4]+(GlobalBuffer[5]*256))==6)
+      //if ((GlobalBuffer[4]+(GlobalBuffer[5]*256))==6)
       //  SetDateAndTime(GlobalBuffer[6],GlobalBuffer[7],GlobalBuffer[8],GlobalBuffer[9],GlobalBuffer[10],GlobalBuffer[11],0);
       SendDeviceInfo();
       break;   
@@ -2233,7 +2233,7 @@ unsigned char ProcessPacket(unsigned char Port) {
         Refresh=1;
       } 
 			
-			if(Changed)
+			if (Changed)
         SaveConfiguration();
       Connected2BCU = 1;
 	 
@@ -2243,14 +2243,14 @@ unsigned char ProcessPacket(unsigned char Port) {
       i = GlobalBuffer[4]+(GlobalBuffer[5]*256); //Len    
       if (i >= 52) {  
         i=GlobalBuffer[6]+(GlobalBuffer[7]*256);
-        if(i!=Config.UC)
+        if (i!=Config.UC)
 				{
 					Config.UC=i;
 					Changed=1;
 				}
 
         i=GlobalBuffer[2]+(GlobalBuffer[3]*256);
-        if(i!=Config.BusID) 
+        if (i!=Config.BusID) 
 				{
 					Config.BusID=i;
 					Changed=1;
@@ -2261,13 +2261,13 @@ unsigned char ProcessPacket(unsigned char Port) {
         Address+=GlobalBuffer[9]; Address<<=8;  
         Address+=GlobalBuffer[8];
         
-        if(Address!=Indicators.OperatorID)
+        if (Address!=Indicators.OperatorID)
 				{
           Indicators.OperatorID=Address;    
 					Changed=1;
 				}
           
-        if((Year!=(GlobalBuffer[12]+1300))||(Month!=GlobalBuffer[13])||(Day!=GlobalBuffer[14])||(Hour!=GlobalBuffer[15])||(Min!=GlobalBuffer[16]))
+        if ((Year!=(GlobalBuffer[12]+1300)) || (Month!=GlobalBuffer[13]) || (Day!=GlobalBuffer[14]) || (Hour!=GlobalBuffer[15]) || (Min!=GlobalBuffer[16]))
         {
           SetDateAndTime(GlobalBuffer[12],GlobalBuffer[13],GlobalBuffer[14],GlobalBuffer[15],GlobalBuffer[16],GlobalBuffer[17],0);
           Refresh=1;
@@ -2277,44 +2277,44 @@ unsigned char ProcessPacket(unsigned char Port) {
         //Edited By Shafeghati
         Idx=18;
 				
-        for(i=0; i<10; i++)
+        for (i=0; i<10; i++)
         {  
           DID=GlobalBuffer[Idx++];
           DID+=(GlobalBuffer[Idx++]*256);
-          if(DID!=Config.GrouhPrice[i][0])
+          if (DID!=Config.GrouhPrice[i][0])
           {    
 						Changed=1;
             ChangePrice=1;
-            Config.GrouhPrice[i][0]=DID;
+            Config.GrouhPrice[i][0] =DID;
             Refresh=1;
           }                                                                
         }
 				
-        for(i=0; i<10; i++)
+        for (i=0; i<10; i++)
         {        
            Idx++;
            Idx++;
         }     
 					 
-        for(i=0; i<60; i++)
+        for (i=0; i<60; i++)
         {  
-    			Config.Title1[i]=GlobalBuffer[Idx++];
+    			Config.Title1[i] =GlobalBuffer[Idx++];
 				}
-				Config.Title1[i]=0;
+				Config.Title1[i] =0;
 
-				for(i=0; i<60; i++) str[i]=Config.Title1[i];
+				for (i=0; i<60; i++) str[i] =Config.Title1[i];
 			  ConvertWin1256TOUTF8(str, Config.Title1);
 					 
-			  for(i=0; i<140; i++)
+			  for (i=0; i<140; i++)
         {  
-    				Config.Title2[i]=GlobalBuffer[Idx++];
+    				Config.Title2[i] =GlobalBuffer[Idx++];
 				}
-				Config.Title2[i]=0;
+				Config.Title2[i] =0;
 				
-				for(i=0; i<140; i++) str[i]=Config.Title2[i];
+				for (i=0; i<140; i++) str[i] =Config.Title2[i];
 			  ConvertWin1256TOUTF8(str, Config.Title2);	  
 
-				if(GlobalBuffer[Idx++]==0xBB)
+				if (GlobalBuffer[Idx++] ==0xBB)
 				{
           i=GlobalBuffer[Idx+2]; i<<=8;  
           i+=GlobalBuffer[Idx+1]; i<<=8;  
@@ -2327,7 +2327,7 @@ unsigned char ProcessPacket(unsigned char Port) {
           j+=GlobalBuffer[Idx];
 					Idx+=4;
 					
-					if((i!=BlackList_Count)||(j!=BlackList_LastIdx))
+					if ((i!=BlackList_Count) || (j!=BlackList_LastIdx))
 					{
 						BlackList_Count=i;
 						BlackList_LastIdx=j;
@@ -2338,13 +2338,13 @@ unsigned char ProcessPacket(unsigned char Port) {
 					}
 				}
 					 
-        if(ChangePrice) 
+        if (ChangePrice) 
         {
 					ShowPaymentBox();
           OkBip(1);
         }
       }
-			if(Changed)
+			if (Changed)
         SaveConfiguration();   
       Connected2BCU=1;
 	 
@@ -2354,7 +2354,7 @@ unsigned char ProcessPacket(unsigned char Port) {
       ProcessCommands();  
       break;
     case 13: //Data Accepted
-      switch(GlobalBuffer[6])
+      switch (GlobalBuffer[6])
       {
         case 6: //Transactions:				
         case 7: //Transactions:
@@ -2363,23 +2363,23 @@ unsigned char ProcessPacket(unsigned char Port) {
           Address=Address+GlobalBuffer[8]; Address<<=8;
           Address=Address+GlobalBuffer[7];
 				
-          if(Address==WaitForAddress)
+          if (Address==WaitForAddress)
           {
             Sector=addTransactions+((Address==0?(MAX_TRANSACTIONS-1):Address-1)*LEN_TRANSACTIONS);
-            if(Address==trHead)
+            if (Address==trHead)
             {
-              if(trHead==0)
+              if (trHead==0)
                 Sector=addTransactions+((MAX_TRANSACTIONS-1)*LEN_TRANSACTIONS);
               else
                 Sector=addTransactions+((trHead-1)*LEN_TRANSACTIONS);
             }
 
        //printf("\n\r Data Sent Add: %d [%d]",WaitForAddress, Sector);
-            GlobalBuffer[0]=0x90;
+            GlobalBuffer[0] =0x90;
 						SaveFromRamToDF(Sector+LEN_TRANSACTIONS-1, 1, GlobalBuffer);
             Indicators.OffTransactions=(Address>trHead)?(MAX_TRANSACTIONS-Address)+trHead:trHead-Address;
 						
-            if(LCDType==LCD480_272)
+            if (LCDType==LCD480_272)
 			      {
 				      GUI_SetColor(GUI_BLACK);
 				      GUI_FillRect(100, 6, 230, 25);
@@ -2394,7 +2394,7 @@ unsigned char ProcessPacket(unsigned char Port) {
 			      }
           }
           WaitForAddress=0;
-          if(Indicators.OffTransactions)
+          if (Indicators.OffTransactions)
 					  {
 						 DataCurrentlySend=1;	
              SendOfflines();
@@ -2410,7 +2410,7 @@ unsigned char ProcessPacket(unsigned char Port) {
    }//switch
   
   LEDOK=0;
-  return(0);
+  return 0;
 
 }
 
@@ -2418,17 +2418,17 @@ unsigned char ProcessPacket(unsigned char Port) {
 unsigned char CommunicateWithHostByGPRS(void) {
 	unsigned int i;
 
-  for(i=0;i<DataBufferLen;i++)
-    if(DataBuffer[i]==2) 
+  for (i=0;i<DataBufferLen;i++)
+    if (DataBuffer[i] ==2) 
       break;
 
   BufferLen=0;
-  for(;(i<DataBufferLen) && (BufferLen<GlobalBufferLen);i++)
-    GlobalBuffer[BufferLen++]=DataBuffer[i];
+  for (;(i<DataBufferLen) && (BufferLen<GlobalBufferLen);i++)
+    GlobalBuffer[BufferLen++] =DataBuffer[i];
 
   ProcessPacket(1);
   
-  return(1);
+  return 1;
 }
 
 //==============================================================================
@@ -2445,27 +2445,27 @@ unsigned char CommunicateWithHost(void) {
   while ((USART_GCF(&Byte)) && (BufferLen < GlobalBufferLen))
     GlobalBuffer[BufferLen++] = Byte;
   ProcessPacket(0);
-  return(1);
+  return 1;
 }
 
 //==============================================================================
 unsigned char CheckCard(unsigned int UC, unsigned long int CardID) {
 	char str[100];
 	
-    if((UC==251)&&(CardID==15010)) 
+    if ((UC==251) && (CardID==15010)) 
      {
   
-       if(Config.DeviceID!=1)
+       if (Config.DeviceID!=1)
          Config.DeviceID=1;
        else
          Config.DeviceID=2;
        
    
   /*     
-       if(Config.DeviceID==1)
+       if (Config.DeviceID==1)
           Show_TextInTFT(320,85,0,85,"ÏÑÈ Ìáæ",R2L,1);    
        
-       if(Config.DeviceID==2)
+       if (Config.DeviceID==2)
           Show_TextInTFT(320,85,0,85,"ÏÑÈ ÚÞÈ",R2L,1);    
 */
             
@@ -2473,11 +2473,11 @@ unsigned char CheckCard(unsigned int UC, unsigned long int CardID) {
        
        SaveConfiguration();
        InfoCounter=1;
-       return(1);
+       return 1;
      }   
 
 		 
-  if(UC!=Config.UC)
+  if (UC!=Config.UC)
   {
 		/*
     ShowMessageDlg(mtError, "???? ????? ?? ??? ???? ????",0,0,0,0);  
@@ -2489,15 +2489,15 @@ unsigned char CheckCard(unsigned int UC, unsigned long int CardID) {
 		
 		
     InfoCounter=3;
-    return(1);
+    return 1;
   }
   
-  return(0);
+  return 0;
 }
 
 //==============================================================================
 unsigned short ShowErrorKashan(unsigned int Status) {
-  switch(Status)
+  switch (Status)
   {
     case 0x9900: ShowCardingResult(4,0,Config.UC,0,0,"خطا در ارتباط کارت"); break;
     case 0x9905: ShowCardingResult(4,0,Config.UC,0,0,"رمز کارت فعال است"); break;
@@ -2513,7 +2513,7 @@ unsigned short ShowErrorKashan(unsigned int Status) {
   	case 80:     ShowCardingResult(4,0,Config.UC,0,0,"محدوده زماني غير مجاز"); break;
   	case 81:     ShowCardingResult(4,0,Config.UC,0,0,"تعداد دفعات غير مجاز"); break;
   }
-	return(Status);
+	return Status;
 }
 
 //==============================================================================
@@ -2524,51 +2524,51 @@ unsigned int SearchForCard(unsigned long int CardID, unsigned int *LastTime){
 	unsigned char YY=Year-1300;	
 	unsigned char bufCardID[4];
 
-  bufCardID[0]=CardID & 0xFF;	
-  bufCardID[1]=CardID>>8 & 0xFF;	
-  bufCardID[2]=CardID>>16 & 0xFF;	
-  bufCardID[3]=CardID>>24 & 0xFF;	
+  bufCardID[0] =CardID & 0xFF;	
+  bufCardID[1] =CardID>>8 & 0xFF;	
+  bufCardID[2] =CardID>>16 & 0xFF;	
+  bufCardID[3] =CardID>>24 & 0xFF;	
 	
   //printf("\n\rCardID: %X %X %X %X",bufCardID[0],bufCardID[1],bufCardID[2],bufCardID[3]);
 
 	*LastTime=0;
 	Num=0;
-	if(trHead==0)  SendUsers=MAX_TRANSACTIONS-1;
+	if (trHead==0)  SendUsers=MAX_TRANSACTIONS-1;
 	else    SendUsers=trHead-1;
 
-  while(1)  
+  while (1)  
   {
-		if(++Idx>5000)
+		if (++Idx>5000)
 			break;
-		if(SendUsers==trTail) 
+		if (SendUsers==trTail) 
 			break;
 
     LoadFromDFToRam(addTransactions+(SendUsers*LEN_TRANSACTIONS), 32/*LEN_TRANSACTIONS*/, MEMBuffer);
-    if(SendUsers==0)  SendUsers=MAX_TRANSACTIONS-1;
+    if (SendUsers==0)  SendUsers=MAX_TRANSACTIONS-1;
     else    					SendUsers--;	
 
 		WDTR;
 		//printf("\n\rSU:%d %d/%d/%d", SendUsers,MEMBuffer[5],MEMBuffer[6],MEMBuffer[7]);
 
-		if((MEMBuffer[4]!=YY)||(MEMBuffer[5]!=Month)||(MEMBuffer[6]!=Day))
+		if ((MEMBuffer[4]!=YY) || (MEMBuffer[5]!=Month) || (MEMBuffer[6]!=Day))
 		{
-      //if(InvalidDateRecord>=20) 
+      //if (InvalidDateRecord>=20) 
 			//	break;
 			return Num;
 		}
      
 		//printf(" CardID: %2X%2X%2X%2X",MEMBuffer[1],MEMBuffer[2],MEMBuffer[3],MEMBuffer[30]);
 
-    if((MEMBuffer[0]!=bufCardID[0])||(MEMBuffer[1]!=bufCardID[1])||(MEMBuffer[2]!=bufCardID[2])||(MEMBuffer[30]!=bufCardID[3]))
+    if ((MEMBuffer[0]!=bufCardID[0]) || (MEMBuffer[1]!=bufCardID[1]) || (MEMBuffer[2]!=bufCardID[2]) || (MEMBuffer[30]!=bufCardID[3]))
 			continue;
 		
 		
 		Num++;
-		if(Num==1)
+		if (Num==1)
 		{
 			i=(MEMBuffer[7]*3600)+(MEMBuffer[8]*60)+MEMBuffer[9];
 			j=(Hour*3600)+(Min*60)+Sec;
-			if(j<i)
+			if (j<i)
   			*LastTime=0;
 			else
 			  *LastTime=j-i;
@@ -2584,49 +2584,49 @@ int First=0, Last=0, Address=0, OldAddress=-1;
 char i;
 unsigned char buf[8];	
 	
-	if(BlackList_Count==0)
-		return(0);
+	if (BlackList_Count==0)
+		return 0;
 	
 	//SetTX485();
 	//printf("\n\rCard PAN: ");
-	//for(i=0; i<8; i++) printf("%2X", PayInfo[7+i]);
+	//for (i=0; i<8; i++) printf("%2X", PayInfo[7+i]);
  	//printf("\n\rCount: %d", BlackList_Count);
 	
 	Last=BlackList_Count-1;
-	if(BlackList_Count==1)
+	if (BlackList_Count==1)
 		Last=1;
-	while(First!=Last)
+	while (First!=Last)
 	{
 	  Address=(First+Last)/2;
   	//printf("\n\rFirst: %d Last: %d Address: %d Old: %d>> ", First, Last, Address, OldAddress);
-		if(OldAddress==Address)
+		if (OldAddress==Address)
 		{
 			Address++;
 			First=Last=Address;
 		}
     LoadFromDFToRam(addBlackList+(Address*8), 8, buf);
 		
-	  //for(i=0; i<8; i++) printf("%2X", buf[i]);
-		for(i=0; i<8; i++)
+	  //for (i=0; i<8; i++) printf("%2X", buf[i]);
+		for (i=0; i<8; i++)
 		{
       //CardPAN in PayInfo from 7..14
-		  if(PayInfo[7+i]>buf[i])
+		  if (PayInfo[7+i]>buf[i])
 			{
 				First=Address;
 				break;
 			}	
-			else if(PayInfo[7+i]<buf[i])
+			else if (PayInfo[7+i]<buf[i])
 			{
 				Last=Address;
 				break;
 			}
 		}
-		if(i>=8)
-			return(1); //Found
+		if (i>=8)
+			return 1; //Found
 		OldAddress=Address;
 		
 	}
-	return(0);
+	return 0;
 #endif	
 }
 
@@ -2652,39 +2652,39 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
 	long int Credit=0, Temp;
 	signed long int OrgPayment=0; 
 
-  if(MifareType==2) 
+  if (MifareType==2) 
   {
     #ifdef WithSAMCARD
 		Status=0;
-    if(ISO14443_LoginE2(0,0x10))
+    if (ISO14443_LoginE2(0,0x10))
     {
-      if(ISO14443_SingleTagSelect(snr))
+      if (ISO14443_SingleTagSelect(snr))
         ISO14443_SingleTagSelect(snr);
-      if(!ISO14443_LoginE2(0,0x10))
+      if (!ISO14443_LoginE2(0,0x10))
 		    Status=1;
     }else 
 		  Status=1;
 
-		if(Status==1)
+		if (Status==1)
 		{
-      if(!ISO14443_ReadBlock(1, buf)) 
+      if (!ISO14443_ReadBlock(1, buf)) 
       {
         GenerateCardIdUC(buf,snr,&UC,&_ID);
         ID=_ID;
-        if(CheckCard(UC, ID)==0)
+        if (CheckCard(UC, ID)==0)
 				{
           ShowMessageDlg(mtInformation, "کارت مسدود شده است",1,0,0,0);  
 					InfoCounter=2; 
 				}
       }
-			return(1);
+			return 1;
     }
     #endif
   }
 	 
   Price=Config.GrouhPrice[0][0]; 
     
-  switch(Config.UC)
+  switch (Config.UC)
   {
     case 6364:   //Gorgan
     case 6374:   //Khoy
@@ -2750,20 +2750,20 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
   }
   MaxCharge=400000; /////////////// 
       
-  if(Config.UC==6356)
-    if((ID>=224076)&&(ID<=224250)) 
+  if (Config.UC==6356)
+    if ((ID>=224076) && (ID<=224250)) 
       MaxCharge=40000;
       
-  if(Config.UC==6325)  //Bojnoord
+  if (Config.UC==6325)  //Bojnoord
     MinCharge=-1200;
            
   ID=0;                             
   UC=Config.UC; 
 
  
-  for(i=0;i<30;i++) PayInfo[i]=0;
+  for (i=0;i<30;i++) PayInfo[i] =0;
 			
-  if(MifareType==2)
+  if (MifareType==2)
   {
     #ifdef WithSAMCARD
 		
@@ -2771,13 +2771,13 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
 
     //SetTX485();//////////////////////
     Status=ReadCardIDKashanMifare(&ID, Price*10,  &Etebar, &PreEtebar);
-    if((Status>=19)&&(Status<=29)) Status=ReadCardIDKashanMifare(&ID, Price*10,  &Etebar, &PreEtebar);
+    if ((Status>=19) && (Status<=29)) Status=ReadCardIDKashanMifare(&ID, Price*10,  &Etebar, &PreEtebar);
 		Etebar/=10;
 		PreEtebar/=10;
     //SetRX485();/////////////////
 
     WDTR;
-    if(LCDType==LCD800_480)
+    if (LCDType==LCD800_480)
 		{
       GUI_SetColor(GUI_BLACK);
       GUI_FillRoundedRect(5, 275-(LCDType==LCD480_272?40:0), 272-5+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 275+30-(LCDType==LCD480_272?40:0),6);	
@@ -2786,28 +2786,28 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
       GUI_DrawRoundedFrame(5, 275-(LCDType==LCD480_272?40:0), 272-5+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 275+30-(LCDType==LCD480_272?40:0),6,3); 
 		}
     InfoCounter=2;   
-    if((Status>=0x6300)&&(Status<=0x63FF))
+    if ((Status>=0x6300) && (Status<=0x63FF))
 	    ShowCardingResult(4,Etebar,Config.UC,ID,0,"ناسازگاري کارت با ماژول امنيتي");
-    else if((Status>=19)&&(Status<=29))
+    else if ((Status>=19) && (Status<=29))
     {
-      if(Status==19) 	 ShowCardingResult(4,Etebar,Config.UC,ID,0,"خطا در ماژول امنيتي");
+      if (Status==19) 	 ShowCardingResult(4,Etebar,Config.UC,ID,0,"خطا در ماژول امنيتي");
       else      	     ShowCardingResult(4,Etebar,Config.UC,ID,0,"");
    	}
     else
     {
-			if((Status!=0)&&(Status!=0x9714))
+			if ((Status!=0) && (Status!=0x9714))
 				Status=ShowErrorKashan(Status);
 		}
 		#else
     Status=ExecTransaction(2, &ID, &UC, Price, MinCharge, MaxCharge, Config.BusID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
 
-    if(Status==6) //Is Old Format  
+    if (Status==6) //Is Old Format  
     {
       ID=0;                             
       UC=Config.UC;
       Status=Old_ExecTransaction(2, &ID, &UC, Price, MinCharge, MaxCharge, Config.BusID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
 
-      if(Status==1) //Is Old Format  
+      if (Status==1) //Is Old Format  
       {
         ID=0;                             
         UC=Config.UC;
@@ -2816,16 +2816,16 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
     }
 		#endif
   }
-  else if(MifareType==3)
+  else if (MifareType==3)
   {
     #ifdef WithSAMCARD
     Price=Config.GrouhPrice[0][0]; 
 
     Status=ReadCardIDKashan(&ID, Price*10,  &Etebar, &PreEtebar);
-    if((Status>=19)&&(Status<=29)) Status=ReadCardIDKashan(&ID, Price*10,  &Etebar, &PreEtebar);
+    if ((Status>=19) && (Status<=29)) Status=ReadCardIDKashan(&ID, Price*10,  &Etebar, &PreEtebar);
 
     WDTR;
-    if(LCDType==LCD800_480)
+    if (LCDType==LCD800_480)
 		{
       GUI_SetColor(GUI_BLACK);
       GUI_FillRoundedRect(5, 275-(LCDType==LCD480_272?40:0), 272-5+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 275+30-(LCDType==LCD480_272?40:0),6);	
@@ -2837,56 +2837,56 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
     #endif
 
     InfoCounter=2;   
-    if((Status>=0x6300)&&(Status<=0x63FF))
+    if ((Status>=0x6300) && (Status<=0x63FF))
 	    ShowCardingResult(4,Etebar,Config.UC,ID,0,"ناسازگاري کارت با ماژول امنيتي");
-    else if((Status>=19)&&(Status<=29))
+    else if ((Status>=19) && (Status<=29))
     {
-      if(Status==19) 	  ShowCardingResult(4,Etebar,Config.UC,ID,0,"خطا در ماژول امنيتي");
+      if (Status==19) 	  ShowCardingResult(4,Etebar,Config.UC,ID,0,"خطا در ماژول امنيتي");
       else      	     ShowCardingResult(4,Etebar,Config.UC,ID,0,"");
       InfoCounter=2;          
    	}
     else
     {
 			
-			if((Status!=0)&&(Status!=0x9714))
+			if ((Status!=0) && (Status!=0x9714))
 				Status=ShowErrorKashan(Status);
 			else	
 			{
         #ifdef CLRC_CHIP
-        if((MifareType==3)&&(InTestMode==0))  phpalI14443p4_Deselect(&palI14443p4); 
+        if ((MifareType==3) && (InTestMode==0))  phpalI14443p4_Deselect(&palI14443p4); 
         #endif
 			}
   	}
   
   }
      
-  if(Status==11)
-    if(CheckCard(UC, ID))
-      return(1);
+  if (Status==11)
+    if (CheckCard(UC, ID))
+      return 1;
 
-  TicketBuffer[0]=ID&0xFF;
-  TicketBuffer[1]=(ID>>8)&0xFF;
-  TicketBuffer[2]=(ID>>16)&0xFF;
+  TicketBuffer[0] =ID&0xFF;
+  TicketBuffer[1] =(ID>>8)&0xFF;
+  TicketBuffer[2] =(ID>>16)&0xFF;
 			
-  TicketBuffer[3]=GetUCMap(UC);
+  TicketBuffer[3] =GetUCMap(UC);
 			
-  TicketBuffer[4]=Year-1300;
-  TicketBuffer[5]=Month;
-  TicketBuffer[6]=Day;
-  TicketBuffer[7]=Hour;
-  TicketBuffer[8]=Min;
-  TicketBuffer[9]=Sec;
+  TicketBuffer[4] =Year-1300;
+  TicketBuffer[5] =Month;
+  TicketBuffer[6] =Day;
+  TicketBuffer[7] =Hour;
+  TicketBuffer[8] =Min;
+  TicketBuffer[9] =Sec;
 
-  if(Status==0xABCD)
+  if (Status==0xABCD)
  	  Grouh=200;
 				
-  TicketBuffer[10]=Grouh&0xFF;
-  TicketBuffer[11]=(Grouh>>8)&0xFF;
+  TicketBuffer[10] =Grouh&0xFF;
+  TicketBuffer[11] =(Grouh>>8)&0xFF;
       
-  TicketBuffer[12]=Price&0xFF;
-  TicketBuffer[13]=(Price>>8)&0xFF;
+  TicketBuffer[12] =Price&0xFF;
+  TicketBuffer[13] =(Price>>8)&0xFF;
       
-  if(PreEtebar<0)
+  if (PreEtebar<0)
   {
     TempInt=0x100000000-PreEtebar;
     TempInt|=(0x800000);
@@ -2894,12 +2894,12 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
   else
     TempInt=PreEtebar;
       
-  TicketBuffer[14]=TempInt&0xFF;
-  TicketBuffer[15]=(TempInt>>8)&0xFF;
-  TicketBuffer[16]=(TempInt>>16)&0xFF;
-  TicketBuffer[17]=(TempInt>>24)&0xFF;
+  TicketBuffer[14] =TempInt&0xFF;
+  TicketBuffer[15] =(TempInt>>8)&0xFF;
+  TicketBuffer[16] =(TempInt>>16)&0xFF;
+  TicketBuffer[17] =(TempInt>>24)&0xFF;
       
-  if(Etebar<0)
+  if (Etebar<0)
   {
     TempInt=0x100000000-Etebar;
     TempInt|=(0x800000);
@@ -2907,75 +2907,75 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
   else
     TempInt=Etebar;     
       
-  TicketBuffer[18]=TempInt&0xFF;
-  TicketBuffer[19]=(TempInt>>8)&0xFF;
-  TicketBuffer[20]=(TempInt>>16)&0xFF;
+  TicketBuffer[18] =TempInt&0xFF;
+  TicketBuffer[19] =(TempInt>>8)&0xFF;
+  TicketBuffer[20] =(TempInt>>16)&0xFF;
       
-  TicketBuffer[22]=0xE9;
-  TicketBuffer[23]=Config.BusID%256;
-  TicketBuffer[24]=Config.BusID/256; 
-  TicketBuffer[25]=Indicators.OperatorID&0xFF;
-  TicketBuffer[26]=(Indicators.OperatorID>>8)&0xFF;
-  TicketBuffer[27]=(Indicators.OperatorID>>16)&0xFF;
-  TicketBuffer[21]=LastOP;
-  TicketBuffer[28]=LastDevice%256;
-  TicketBuffer[29]=LastDevice/256;
+  TicketBuffer[22] =0xE9;
+  TicketBuffer[23] =Config.BusID%256;
+  TicketBuffer[24] =Config.BusID/256; 
+  TicketBuffer[25] =Indicators.OperatorID&0xFF;
+  TicketBuffer[26] =(Indicators.OperatorID>>8)&0xFF;
+  TicketBuffer[27] =(Indicators.OperatorID>>16)&0xFF;
+  TicketBuffer[21] =LastOP;
+  TicketBuffer[28] =LastDevice%256;
+  TicketBuffer[29] =LastDevice/256;
 
   #ifdef WithSAMCARD
-  TicketBuffer[21]=Config.BusID&0xFF;  
-  TicketBuffer[28]=Indicators.TransactionUID%256;
-  TicketBuffer[29]=Indicators.TransactionUID/256;
+  TicketBuffer[21] =Config.BusID&0xFF;  
+  TicketBuffer[28] =Indicators.TransactionUID%256;
+  TicketBuffer[29] =Indicators.TransactionUID/256;
       
-  TicketBuffer[30]=(ID>>24)&0xFF;
-  for(i=0;i<30;i++) TicketBuffer[31+i]=PayInfo[i];
+  TicketBuffer[30] =(ID>>24)&0xFF;
+  for (i=0;i<30;i++) TicketBuffer[31+i] =PayInfo[i];
   #endif
  
-  switch(Status)
+  switch (Status)
   {
 		case 0x9714:
       Grouh=250;
-		  TicketBuffer[10]=Grouh&0xFF;
-      TicketBuffer[11]=(Grouh>>8)&0xFF;
+		  TicketBuffer[10] =Grouh&0xFF;
+      TicketBuffer[11] =(Grouh>>8)&0xFF;
       SaveTransaction(TicketBuffer);
       Indicators.OffTransactions++; 
-    	if(Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
+    	if (Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
 			Status=ShowErrorKashan(34);
 		  return 0;
 			break;
     case S_Success:
 			#ifdef WithSAMCARD
-			if(IsBlocked())
+			if (IsBlocked())
  			{
 				Status=ShowErrorKashan(34);
 	  		return 0;
 		  }
 			#endif
-      LastCardingDateTime[0]=Year-1300;
-      LastCardingDateTime[1]=Month;
-      LastCardingDateTime[2]=Day;
-      LastCardingDateTime[3]=Hour;
-      LastCardingDateTime[4]=Min;
-      LastCardingDateTime[5]=Sec;
-      if(LastCardSec>Sec)  CardTimeout2=(60-LastCardSec)+Sec;
+      LastCardingDateTime[0] =Year-1300;
+      LastCardingDateTime[1] =Month;
+      LastCardingDateTime[2] =Day;
+      LastCardingDateTime[3] =Hour;
+      LastCardingDateTime[4] =Min;
+      LastCardingDateTime[5] =Sec;
+      if (LastCardSec>Sec)  CardTimeout2=(60-LastCardSec)+Sec;
       else                 CardTimeout2=Sec-LastCardSec;
 
-      if((CardTimeout2<10) &&((snr[0]==LastCardSnr[0])&&(snr[1]==LastCardSnr[1])&&(snr[2]==LastCardSnr[2])&&(snr[3]==LastCardSnr[3])))
+      if ((CardTimeout2<10) &&((snr[0] ==LastCardSnr[0]) && (snr[1] ==LastCardSnr[1]) && (snr[2] ==LastCardSnr[2]) && (snr[3] ==LastCardSnr[3])))
         RepeatedCard_Counter++;
       else
         RepeatedCard_Counter=0;
           
       #ifdef WithSAMCARD
-      if(MifareType==3)  {TicketBuffer[10]=14;TicketBuffer[11]=14;}
+      if (MifareType==3)  {TicketBuffer[10] =14;TicketBuffer[11] =14;}
       #endif
 					
       SaveTransaction(TicketBuffer);
           
       Indicators.OffTransactions++; 
-    	if(Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
+    	if (Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
 
       Indicators.TransactionUID++;
         
-      if((Indicators.TransactionUID&0x000000FFFF)>=65536) 
+      if ((Indicators.TransactionUID&0x000000FFFF)>=65536) 
         Indicators.TransactionUID=0;     
 					
       ///////////////////////SaveIndicators();
@@ -2985,14 +2985,14 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
           
 			ShowCardingResult(0,Etebar,Config.UC,ID,0,"");
           
-      LastCardSnr[0]=snr[0];
-      LastCardSnr[1]=snr[1];
-      LastCardSnr[2]=snr[2];
-      LastCardSnr[3]=snr[3];
+      LastCardSnr[0] =snr[0];
+      LastCardSnr[1] =snr[1];
+      LastCardSnr[2] =snr[2];
+      LastCardSnr[3] =snr[3];
       LastCardSec=Sec;
       Grouh=0; //Default
    
-      if(LCDType==LCD480_272)
+      if (LCDType==LCD480_272)
 			{
 				GUI_SetColor(GUI_BLACK);
 				GUI_FillRect(100, 6, 230, 25);
@@ -3045,65 +3045,65 @@ void SendOfflines(void) {
 
   Idx=11;
   SendUsers=Start;
-  while(1)  
+  while (1)  
   {
-    if(SendUsers==trHead)
+    if (SendUsers==trHead)
       break;
 		
     LoadFromDFToRam(addTransactions+(SendUsers*LEN_TRANSACTIONS), LEN_TRANSACTIONS, MEMBuffer);
 		
     Byte=MEMBuffer[30];
-    MEMBuffer[30]=MEMBuffer[29];
-    MEMBuffer[29]=MEMBuffer[28];
-    MEMBuffer[28]=MEMBuffer[21];
-    MEMBuffer[21]=0;   
+    MEMBuffer[30] =MEMBuffer[29];
+    MEMBuffer[29] =MEMBuffer[28];
+    MEMBuffer[28] =MEMBuffer[21];
+    MEMBuffer[21] =0;   
 
-    for(i=0; i<31; i++)
+    for (i=0; i<31; i++)
     {
-      GlobalBuffer[Idx++]=MEMBuffer[i];
+      GlobalBuffer[Idx++] =MEMBuffer[i];
     }
       
     #ifdef WithSAMCARD
-    GlobalBuffer[Idx++]=Byte;//30 ID>>4
-    for(i=0; i<30; i++)
-      GlobalBuffer[Idx++]=MEMBuffer[31+i];//PayInfo
+    GlobalBuffer[Idx++] =Byte;//30 ID>>4
+    for (i=0; i<30; i++)
+      GlobalBuffer[Idx++] =MEMBuffer[31+i];//PayInfo
     #endif		
 
-	  //for(i=0; i<70; i++)
-    //  GlobalBuffer[Idx++]=MEMBuffer[i];
+	  //for (i=0; i<70; i++)
+    //  GlobalBuffer[Idx++] =MEMBuffer[i];
     
     SendUsers++;
-    if(SendUsers>=MAX_TRANSACTIONS)
+    if (SendUsers>=MAX_TRANSACTIONS)
       SendUsers=0;
-    if(++NumRecords>=5) break;
+    if (++NumRecords>=5) break;
   }                 
   
   Temp=SendUsers;
 
 	
-	GlobalBuffer[0]=STX;
-  GlobalBuffer[1]=12;
-  GlobalBuffer[2]=Config.DeviceID%256;
-  GlobalBuffer[3]=Config.DeviceID/256;
-  GlobalBuffer[4]=0;
-  GlobalBuffer[5]=0;
+	GlobalBuffer[0] =STX;
+  GlobalBuffer[1] =12;
+  GlobalBuffer[2] =Config.DeviceID%256;
+  GlobalBuffer[3] =Config.DeviceID/256;
+  GlobalBuffer[4] =0;
+  GlobalBuffer[5] =0;
   
   #ifdef WithSAMCARD
-  GlobalBuffer[6]=7;  //BD90 New Transactions + SAMCARD   62 Byte
+  GlobalBuffer[6] =7;  //BD90 New Transactions + SAMCARD   62 Byte
   #else
-  GlobalBuffer[6]=6;  //BD90 New Transactions  31 Byte
+  GlobalBuffer[6] =6;  //BD90 New Transactions  31 Byte
   #endif
-  GlobalBuffer[7]=Temp&0xFF;
-  GlobalBuffer[8]=(Temp>>8)&0xFF;
-  GlobalBuffer[9]=(Temp>>16)&0xFF;
-  GlobalBuffer[10]=(Temp>>24)&0xFF; 
+  GlobalBuffer[7] =Temp&0xFF;
+  GlobalBuffer[8] =(Temp>>8)&0xFF;
+  GlobalBuffer[9] =(Temp>>16)&0xFF;
+  GlobalBuffer[10] =(Temp>>24)&0xFF; 
   WaitForAddress=Temp;
-  GlobalBuffer[4]=(Idx-6)%256;
-  GlobalBuffer[5]=(Idx-6)/256;
+  GlobalBuffer[4] =(Idx-6)%256;
+  GlobalBuffer[5] =(Idx-6)/256;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
-  GlobalBuffer[Idx++]=crc%256;
-  GlobalBuffer[Idx++]=crc/256;
-  GlobalBuffer[Idx++]=ETX;
+  GlobalBuffer[Idx++] =crc%256;
+  GlobalBuffer[Idx++] =crc/256;
+  GlobalBuffer[Idx++] =ETX;
 	
 
   ActivePort=0;
@@ -3123,7 +3123,7 @@ void ProcessPeriodicTasks(void) {
 
   ++Sec;
 	
-  if(OldSec>Sec)
+  if (OldSec>Sec)
     OldSec = (60 - OldSec) + Sec;
   else
     OldSec = Sec - OldSec;
@@ -3132,17 +3132,17 @@ void ProcessPeriodicTasks(void) {
 		 OldSec = Sec;
 	}
 
-  if(GPSTimeAcquired)
+  if (GPSTimeAcquired)
     GPSTimeAcquired--;
   
-  if(OldSec>Sec)
+  if (OldSec>Sec)
     elapsed=(60-OldSec)+Sec;
   else
     elapsed=Sec-OldSec;
   LivingTime+=elapsed;
 
 	/*
-  if(Connected2BCU)
+  if (Connected2BCU)
   {
 	   LEDERR=!LEDERR;
 	}
@@ -3150,14 +3150,14 @@ void ProcessPeriodicTasks(void) {
 	*/
 		
 	
-  if(Hour!=OldHour)
+  if (Hour!=OldHour)
 	{
 		RTC_Get();
 		ShowPageAlef();
 		OldHour=Hour;
   }
 	
-  if(Min != OldMin) {
+  if (Min != OldMin) {
    RTC_Get();
 	 //ShowPageAlef();
 	 GUI_SetColor(0);
@@ -3179,7 +3179,7 @@ void ProcessPeriodicTasks(void) {
    OldMin=Min;
 		
    GUI_SetColor(0);
-	 if(LCDType==LCD800_480)
+	 if (LCDType==LCD800_480)
      GUI_FillRect(SecLocation, 350, 263, 390);
 		
 	 GUI_SetColor(GUI_WHITE);	
@@ -3194,9 +3194,9 @@ void ProcessPeriodicTasks(void) {
 
   }
 	
-	if(InfoCounter==0)
+	if (InfoCounter==0)
 	{
-  	if(l)
+  	if (l)
 	  {
       GUI_SetColor(RGB(0,0,0));  
 		  l=0;
@@ -3218,8 +3218,8 @@ void ProcessPeriodicTasks(void) {
 	LoadFont(FontBKoodak40);
   
 	
-  if(InfoCounter)
-    if(--InfoCounter==0)
+  if (InfoCounter)
+    if (--InfoCounter==0)
     {
       Guest=0;
       PaymentPage=0;
@@ -3250,17 +3250,17 @@ void ProcessPeriodicTasks(void) {
 			else {
         if (BlackList_Index)
    				SendDataRequest(165, BlackList_Index);
-				else if(Download_NewFirmwares()) {
+				else if (Download_NewFirmwares()) {
            DataCurrentlySend = 1;
 			  } else
-    		  if(++SendAliveInterval>3) .
+    		  if (++SendAliveInterval>3) .
 					{
             SendAliveInterval=0;  
 				    SendALive(150);
 				  }
 			}
 		}else			
-		  if(++SendAliveInterval>3)
+		  if (++SendAliveInterval>3)
 		  {
         SendAliveInterval=0;  
   		  SendALive(150);
@@ -3302,7 +3302,7 @@ void InitializeAlef(void) {
 
  
   LoadFromDFToRam(addFirmwareInfo, 32, GlobalBuffer);
-  if((GlobalBuffer[0]==0xE2)&&(GlobalBuffer[7]==0xE9))
+  if ((GlobalBuffer[0] ==0xE2) && (GlobalBuffer[7] ==0xE9))
   {
     FirmwareRequestNo=GlobalBuffer[2]; FirmwareRequestNo<<=8;
     FirmwareRequestNo+=GlobalBuffer[1];
@@ -3312,12 +3312,12 @@ void InitializeAlef(void) {
     FirmwareLength+=GlobalBuffer[3];
     _FirmwareVer=GlobalBuffer[9]+(GlobalBuffer[10]*256);
     _FirmwareRelease=GlobalBuffer[11]+(GlobalBuffer[12]*256);
-    if((FirmwareLength>512*1024)||(_FirmwareVer!=Ver)||((_FirmwareVer==Ver)&&(_FirmwareRelease<=Release)))
+    if ((FirmwareLength>512*1024) || (_FirmwareVer!=Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
     {
       FirmwareRequestNo=0; 
       FirmwareLength=0;
-      for(i=0; i<32; i++)
-        GlobalBuffer[i]=0;
+      for (i=0; i<32; i++)
+        GlobalBuffer[i] =0;
      	FLASH_UNLOCK
       SaveFromRamToDF(addFirmwareInfo, 32, &GlobalBuffer[0]);
      	FLASH_LOCK
@@ -3330,14 +3330,14 @@ void InitializeAlef(void) {
       Firmware.CheckSum+=GlobalBuffer[19]; Firmware.CheckSum<<=8;
       Firmware.CheckSum+=GlobalBuffer[18]; Firmware.CheckSum<<=8;
       Firmware.CheckSum+=GlobalBuffer[17];  
-      for(i=0; i<15; i++)
-        Firmware.FirmwareFileName[i]=GlobalBuffer[i+21];
+      for (i=0; i<15; i++)
+        Firmware.FirmwareFileName[i] =GlobalBuffer[i+21];
     }
   }
-	else if((GlobalBuffer[0]==0xC2)&&(GlobalBuffer[7]==0x55))
+	else if ((GlobalBuffer[0] ==0xC2) && (GlobalBuffer[7] ==0x55))
 	{
-    for(i=0; i<32; i++)
-      GlobalBuffer[i]=0;
+    for (i=0; i<32; i++)
+      GlobalBuffer[i] =0;
    	FLASH_UNLOCK
     SaveFromRamToDF(addFirmwareInfo, 32, &GlobalBuffer[0]);
    	FLASH_LOCK
@@ -3352,22 +3352,22 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
 	unsigned short CurX, CurY;
 	unsigned char Refresh, Key;
 	unsigned char Loc=0;
-	unsigned char Stream[]="0000000000000000";
+	unsigned char Stream[] ="0000000000000000";
 
   
-  Stream[0]=(*SYear/10)%10;
-  Stream[1]=*SYear%10;
-  Stream[2]=*SMonth/10;
-  Stream[3]=*SMonth%10;
-  Stream[4]=*SDay/10;
-  Stream[5]=*SDay%10;
+  Stream[0] =(*SYear/10)%10;
+  Stream[1] =*SYear%10;
+  Stream[2] =*SMonth/10;
+  Stream[3] =*SMonth%10;
+  Stream[4] =*SDay/10;
+  Stream[5] =*SDay%10;
   
-  Stream[6]=(*EYear/10)%10;
-  Stream[7]=*EYear%10;
-  Stream[8]=*EMonth/10;
-  Stream[9]=*EMonth%10;
-  Stream[10]=*EDay/10;
-  Stream[11]=*EDay%10;
+  Stream[6] =(*EYear/10)%10;
+  Stream[7] =*EYear%10;
+  Stream[8] =*EMonth/10;
+  Stream[9] =*EMonth%10;
+  Stream[10] =*EDay/10;
+  Stream[11] =*EDay%10;
 
   GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+272, GUI_MAKE_ALPHA(0x00, 0xA02020), GUI_MAKE_ALPHA(0x00, 0x000000));
   GUI_SetColor(RGB(237,237,237));
@@ -3403,12 +3403,12 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
 
   CurX=140;
 	CurY=80;
-  while(Loc<=11)
+  while (Loc<=11)
   {
-    switch(Key=ScanKeyboard())
+    switch (Key=ScanKeyboard())
     {
        case BUP:
-         if(Stream[Loc]<9)
+         if (Stream[Loc]<9)
          {
            GUI_SetColor(GUI_WHITE);
            GUI_FillRect(CurX, CurY+8, CurX+15, CurY+25);
@@ -3418,7 +3418,7 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
          }
       	 break;
        case BDOWN : 
-         if(Stream[Loc]>0)
+         if (Stream[Loc]>0)
          {
            GUI_SetColor(GUI_WHITE);
            GUI_FillRect(CurX, CurY+8, CurX+15, CurY+25);
@@ -3428,7 +3428,7 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
          }
       	 break;
        case BRIGHT:
-         if(Loc<11)
+         if (Loc<11)
          {
            GUI_SetColor(GUI_BLACK);
            GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
@@ -3437,7 +3437,7 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
          }
          break;
        case BLEFT:
-         if(Loc>0)
+         if (Loc>0)
          {
            GUI_SetColor(GUI_BLACK);
            GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
@@ -3450,7 +3450,7 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
          GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
          Loc++;
          Refresh=1;
-         if((Loc>11)||(Key==BF3))  
+         if ((Loc>11) || (Key==BF3))  
          {
            Loc=12;
            *SYear=(Stream[0]*10)+Stream[1];
@@ -3465,19 +3465,19 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
          }  
 	       break;
        case BF1:
-         return(1);
+         return 1;
 			 case BOK:
 				 Loc=12;
 				 break;
        case BCANCEL:
-         return(1);
+         return 1;
     }
-		if(Refresh)
+		if (Refresh)
 		{
 			Refresh=0;
-      if(Loc>=6) CurY=150;
+      if (Loc>=6) CurY=150;
 			else       CurY=80;  
-			switch(Loc%6)
+			switch (Loc%6)
 			{
 			  case 0: CurX=140; break;
 				case 1: CurX=160; break;
@@ -3490,7 +3490,7 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
       GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
     }
   }
-  return(0);
+  return 0;
   
 }
 
@@ -3498,7 +3498,7 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
 void ProcessKeysAlef(unsigned int Key) {
   char  str[50];
 
-  switch(Key) 
+  switch (Key) 
   {
     case BOK:
 			Setup();
@@ -3544,18 +3544,18 @@ unsigned int DumpMem(void) {
 	unsigned char MEMBuffer[LEN_TRANSACTIONS+5];
 	unsigned int Li;
 	
-	if(trHead==0)  
+	if (trHead==0)  
 		SendUsers=MAX_TRANSACTIONS-1;
 	else    
 		SendUsers=trHead-1;
   Counter=0;
 	SetTX485();
-  while(1)  
+  while (1)  
   {
-		if(SendUsers==trTail) break;
+		if (SendUsers==trTail) break;
 
     LoadFromDFToRam(addTransactions+(SendUsers*LEN_TRANSACTIONS), LEN_TRANSACTIONS, MEMBuffer);
-	  if(SendUsers==0)  SendUsers=MAX_TRANSACTIONS-1;
+	  if (SendUsers==0)  SendUsers=MAX_TRANSACTIONS-1;
 	  else    SendUsers=SendUsers-1;		
 
 		WDTR;
@@ -3573,7 +3573,7 @@ unsigned int DumpMem(void) {
   }//while     
 	
    
-  return(Counter);
+  return Counter;
 }
 
 //================================================================================================
@@ -3582,13 +3582,13 @@ void DumpArea() {
 	int i, j, idx=0;
   
 	LoadFromDFToRam(addConfig2, 4096, SPI_FLASH_BUF);
-  for(i=0; i<256; i++)
+  for (i=0; i<256; i++)
 	{
 	  printf("\n\r");
-		for(j=0; j<16; j++)
+		for (j=0; j<16; j++)
       printf("%02X ",SPI_FLASH_BUF[idx+j]);
 		printf(" > ");
-		for(j=0; j<16; j++)
+		for (j=0; j<16; j++)
       printf("%c",SPI_FLASH_BUF[idx+j]);
 		idx+=16;
 	}
@@ -3605,13 +3605,13 @@ void MainAlef(void) {
 
 	
 	//DumpArea();
-	//while(1) WDTR;
+	//while (1) WDTR;
 	
-	#if(DeviceType==BUSDOOR)
-	if((Config.DeviceID!=1)&&(Config.DeviceID!=2)) Config.DeviceID=1;
+	#if (DeviceType==BUSDOOR)
+	if ((Config.DeviceID!=1) && (Config.DeviceID!=2)) Config.DeviceID=1;
 	#endif
 
-	if((Indicators.TransactionUID&0x000000FFFF)>=65536) 
+	if ((Indicators.TransactionUID&0x000000FFFF)>=65536) 
     {
      Indicators.TransactionUID=0;     
     }
@@ -3626,7 +3626,7 @@ void MainAlef(void) {
 		
 	//DumpMem();/////////////////////////
 	
-	while(1)
+	while (1)
 	{
 		
     #ifdef WithSAMCARD
@@ -3635,37 +3635,37 @@ void MainAlef(void) {
 		#ifdef CLRC_CHIP
     Byte=ISO14443_SingleTagSelect2(snr);
 		#else
-    if(!ISO14443_SingleTagSelect(snr))
+    if (!ISO14443_SingleTagSelect(snr))
 			Byte=2;
 		else
 			Byte=0;
 		#endif	
-    if(Byte)		
+    if (Byte)		
     {
-      if((lastsnr[0]!=snr[0])||(lastsnr[1]!=snr[1])||(lastsnr[2]!=snr[2])||(lastsnr[3]!=snr[3]))
-        if(ProcessCard(Byte,snr))
+      if ((lastsnr[0]!=snr[0]) || (lastsnr[1]!=snr[1]) || (lastsnr[2]!=snr[2]) || (lastsnr[3]!=snr[3]))
+        if (ProcessCard(Byte,snr))
 				{
-					lastsnr[0]=snr[0];lastsnr[1]=snr[1];lastsnr[2]=snr[2];lastsnr[3]=snr[3];lastsnr[4]=2;
+					lastsnr[0] =snr[0];lastsnr[1] =snr[1];lastsnr[2] =snr[2];lastsnr[3] =snr[3];lastsnr[4] =2;
 				}
     }
     #else
-    if(!ISO14443_SingleTagSelect(snr)) 
+    if (!ISO14443_SingleTagSelect(snr)) 
     {
-      if((lastsnr[0]!=snr[0])||(lastsnr[1]!=snr[1])||(lastsnr[2]!=snr[2])||(lastsnr[3]!=snr[3]))
-        if(ProcessCard(2,snr))
+      if ((lastsnr[0]!=snr[0]) || (lastsnr[1]!=snr[1]) || (lastsnr[2]!=snr[2]) || (lastsnr[3]!=snr[3]))
+        if (ProcessCard(2,snr))
 				{
-					lastsnr[0]=snr[0];lastsnr[1]=snr[1];lastsnr[2]=snr[2];lastsnr[3]=snr[3];lastsnr[4]=2;
+					lastsnr[0] =snr[0];lastsnr[1] =snr[1];lastsnr[2] =snr[2];lastsnr[3] =snr[3];lastsnr[4] =2;
 				}
     } 
     #endif
 		
 		 
-		if(Tick>=1000)
+		if (Tick>=1000)
 		{
-			if(lastsnr[4])
-				if(--lastsnr[4]==0)
+			if (lastsnr[4])
+				if (--lastsnr[4] ==0)
 				{
-					lastsnr[0]=0;lastsnr[1]=0;lastsnr[2]=0;lastsnr[3]=0;
+					lastsnr[0] =0;lastsnr[1] =0;lastsnr[2] =0;lastsnr[3] =0;
 				}
       SetRX485();
 	    ProcessPeriodicTasks();
@@ -3674,10 +3674,10 @@ void MainAlef(void) {
 		}
 
 		Key=ScanKeyboard();
-    if(Key)
+    if (Key)
 			ProcessKeysAlef(Key);
 		
-    if(rxd_counter)
+    if (rxd_counter)
     {
       CommunicateWithHost();
       EmptyRXBuffer();

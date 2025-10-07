@@ -52,8 +52,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     // Initialization of 'Edit'
     //
-	  if(defValue==0)
-			str[0]=0; 
+	  if (defValue==0)
+			str[0] =0; 
 		else
   	  sprintf(str, "%d", defValue);
     hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
@@ -81,9 +81,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    switch(Id) {
+    switch (Id) {
     case ID_EDIT_0: // Notifications sent by 'Edit'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
@@ -101,7 +101,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_BUTTON_0: // Notifications sent by 'Button'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
 			  Released=1;
   			break;
@@ -110,12 +110,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_BUTTON_1: // Notifications sent by 'Button'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
         hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
         EDIT_GetText(hItem, str, 15);
 			  defValue=0;
-			  for(i=0; (i<15) && (str[i]!=0); i++)
+			  for (i=0; (i<15) && (str[i]!=0); i++)
 			  {
 			    defValue*=10;
 					defValue+=(str[i]-48);
@@ -146,7 +146,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
         EDIT_GetText(hItem, str, 15);
 			  defValue=0;
-			  for(i=0; (i<15) && (str[i]!=0); i++)
+			  for (i=0; (i<15) && (str[i]!=0); i++)
 			  {
 			    defValue*=10;
 					defValue+=(str[i]-48);
@@ -173,7 +173,7 @@ WM_HWIN hWin;
 	hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
 	//GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
   HandleForm(hWin, 0);
-	return(defValue);
+	return defValue;
 }
 
 

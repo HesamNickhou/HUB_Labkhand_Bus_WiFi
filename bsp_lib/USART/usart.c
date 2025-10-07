@@ -51,17 +51,17 @@ unsigned char WaitForC(void)
 unsigned int i;
 	
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=500) //5 Sec
-			return(0);
-    if(rxd_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=500) //5 Sec
+			return 0;
+    if (rxd_counter!=0) 
       break;
 		GUI_Delay(1);
 		WDTR;
 	}		
-  return(1);
+  return 1;
 }
 
 //=============================================================================
@@ -70,19 +70,19 @@ unsigned char USART_GCL(unsigned char *c)
 unsigned int i;
 	
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=5000) //5 Sec
-			return(0);
-    if(rxd_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=5000) //5 Sec
+			return 0;
+    if (rxd_counter!=0) 
       break;
   	WDTR;
 }		
   *c=RXDBuffer[rxd_rd_index];
-  if(++rxd_rd_index >= BUFFER_SIZE) rxd_rd_index=0;
-  if(rxd_counter) rxd_counter--;
-  return(1);
+  if (++rxd_rd_index >= BUFFER_SIZE) rxd_rd_index=0;
+  if (rxd_counter) rxd_counter--;
+  return 1;
 }
 
 //=============================================================================
@@ -91,19 +91,19 @@ unsigned char USART_GCM(unsigned char *c)
 unsigned int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=2000) //2 sec
-			return(0);
-    if(rxd_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=2000) //2 sec
+			return 0;
+    if (rxd_counter!=0) 
       break;
 		WDTR;
 	}		
   *c=RXDBuffer[rxd_rd_index];
-  if(++rxd_rd_index >= BUFFER_SIZE) rxd_rd_index=0;
-  if(rxd_counter) rxd_counter--;
-  return(1);
+  if (++rxd_rd_index >= BUFFER_SIZE) rxd_rd_index=0;
+  if (rxd_counter) rxd_counter--;
+  return 1;
 }
 
 //=============================================================================
@@ -112,19 +112,19 @@ unsigned char USART_GCF(unsigned char *c)
 unsigned int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=100) //100 msec
-			return(0);
-    if(rxd_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=100) //100 msec
+			return 0;
+    if (rxd_counter!=0) 
       break;
 		WDTR;
 	}		
   *c=RXDBuffer[rxd_rd_index];
-  if(++rxd_rd_index >= BUFFER_SIZE) rxd_rd_index=0;
-  if(rxd_counter) rxd_counter--;
-  return(1);
+  if (++rxd_rd_index >= BUFFER_SIZE) rxd_rd_index=0;
+  if (rxd_counter) rxd_counter--;
+  return 1;
 }
 
 //=============================================================================
@@ -148,11 +148,11 @@ u8 Byte;
 	{     
     //USART_ITConfig(UART4, USART_IT_RXNE, DISABLE);
 		Byte=(USART1->DR & 0x1FF);
-    RXDBuffer[rxd_wr_index]=Byte;
-    if(++rxd_wr_index >= BUFFER_SIZE) rxd_wr_index=0;
+    RXDBuffer[rxd_wr_index] =Byte;
+    if (++rxd_wr_index >= BUFFER_SIZE) rxd_wr_index=0;
     USART1->SR &= ~USART_FLAG_RXNE;	          // clear interrupt
 		//USART_SendData(USART2, Byte);
-    if(++rxd_counter >= BUFFER_SIZE)
+    if (++rxd_counter >= BUFFER_SIZE)
     {
        rxd_rd_index=0;
 			 rxd_counter=0;

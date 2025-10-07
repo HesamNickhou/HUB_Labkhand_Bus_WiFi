@@ -219,7 +219,7 @@ CONFIG_FLEXCOLOR Config = {0};
 GUI_PORT_API PortAPI = {0};
 
 #ifdef WVGA
-  if(LCDType == LCD480_272) {
+  if (LCDType == LCD480_272) {
     XSIZE_PHYS = 480;
     YSIZE_PHYS = 272;
   }

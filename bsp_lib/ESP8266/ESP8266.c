@@ -90,9 +90,9 @@ unsigned char WIFI_GCL(unsigned char *c) {
 	int i = OS_TimeMS;
 	while (1) {
   	if (i > OS_TimeMS) 
-			return(0);
+			return 0;
 	  if ((OS_TimeMS - i) >= 1000) //3 sec
-			return(0);
+			return 0;
     if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
@@ -103,16 +103,16 @@ unsigned char WIFI_GCL(unsigned char *c) {
 		rxd3_rd_index = 0;
   if (rxd3_counter)
 		rxd3_counter--;
-  return(1);
+  return 1;
 }
 //==============================================================================
 unsigned char WIFI_GCF(unsigned char *c) {
 	unsigned int i = OS_TimeMS;
-	while(1) {
+	while (1) {
   	if (i > OS_TimeMS) 
-			return(0);
+			return 0;
 	  if ((OS_TimeMS - i) >= 200)
-			return(0);
+			return 0;
     if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
@@ -123,16 +123,16 @@ unsigned char WIFI_GCF(unsigned char *c) {
 		rxd3_rd_index = 0;
   if (rxd3_counter) 
 		rxd3_counter--;
-  return(1);
+  return 1;
 }
 //==============================================================================
 unsigned char WIFI_GCVF(unsigned char *c) {
 	unsigned int i = OS_TimeMS;
-	while(1) {
+	while (1) {
   	if (i > OS_TimeMS) 
-			return(0);
+			return 0;
 	  if ((OS_TimeMS - i) >= 50)
-			return(0);
+			return 0;
     if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
@@ -143,7 +143,7 @@ unsigned char WIFI_GCVF(unsigned char *c) {
 		rxd3_rd_index = 0;
   if (rxd3_counter) 
 		rxd3_counter--;
-  return(1);
+  return 1;
 }	 
 //==============================================================================
 void EmptyWIFIRXBuffer(void) { 
@@ -166,7 +166,7 @@ unsigned char GetWiFiResponse(const char* Response) {
 		    WIFIReceiveBuf[WIFIReceiveBufLen++] = Byte;  
     } 
 		else 
-      return(1);
+      return 1;
   }
 
   while ((WIFI_GCF(&Byte)) && (WIFIReceiveBufLen < 1020)) 
@@ -174,15 +174,15 @@ unsigned char GetWiFiResponse(const char* Response) {
   WIFIReceiveBuf[WIFIReceiveBufLen] = 0;
   
   j = 0;
-  for(i = 0; i<WIFIReceiveBufLen; i++) {
+  for (i = 0; i<WIFIReceiveBufLen; i++) {
     if (Response[j] == '\0')
-			return(0);
+			return 0;
     if (Response[j] == WIFIReceiveBuf[i]) 
 			j++;
 		else 
 			j = 0;
   }          
-  return(2);
+  return 2;
 }
 
 //==================================================================
@@ -199,7 +199,7 @@ unsigned char GetWiFiResponse2(const char *Response1, const char* Response2) {
 		    WIFIReceiveBuf[WIFIReceiveBufLen++] = Byte;  
     } 
 		else 
-      return(1);
+      return 1;
   }
 
   while ((WIFI_GCF(&Byte)) && (WIFIReceiveBufLen < 1020)) 
@@ -207,9 +207,9 @@ unsigned char GetWiFiResponse2(const char *Response1, const char* Response2) {
   WIFIReceiveBuf[WIFIReceiveBufLen] = 0;
   
   k = j = 0;
-  for(i = 0; i<WIFIReceiveBufLen; i++) {
+  for (i = 0; i<WIFIReceiveBufLen; i++) {
     if ((Response1[j] == '\0') || (Response2[k] == '\0'))
-			return(0);
+			return 0;
     if (Response1[j] == WIFIReceiveBuf[i]) 
 			j++;
 		else 
@@ -219,7 +219,7 @@ unsigned char GetWiFiResponse2(const char *Response1, const char* Response2) {
     else 
 			k = 0;
   }          
-  return(2);
+  return 2;
 }
 //==================================================================
 char CheckWiFi(void) {
@@ -229,7 +229,7 @@ char CheckWiFi(void) {
 	if (WiFiStep == 10) {
 		GUI_SetColor(GUI_CYAN);
 		GUI_FillRoundedRect(4 + 234, 2 + 3, 30 + 233, 27 + 1, 3);		
-		if(ConnectedToServer)   GUI_SetColor(GUI_DARKGREEN); 
+		if (ConnectedToServer)   GUI_SetColor(GUI_DARKGREEN); 
 		else                    GUI_SetColor(GUI_RED); 	
 		GUI_FillCircle(10 + 234, 15 + 1, 4);
 		GUI_DrawLine  (10 + 234, 15 + 1, 22 + 234, 8 + 3);
@@ -388,7 +388,7 @@ char CheckWiFi(void) {
 		}
 		case 10: {
 			DebugX = 1;
-  		if(++WifiConnectionError > 36) {
+  		if (++WifiConnectionError > 36) {
 				DebugX   = 0;
 				WiFiStep = 0;
 			}
@@ -432,13 +432,13 @@ unsigned char ExecSSIDList(unsigned char List[20][30]) {
  	GUI_DrawGradientV(0, 0, 272, 35, GUI_MAKE_ALPHA(0x00, RGB(0xe3, 0xe6, 0xea)), GUI_MAKE_ALPHA(0x00, RGB(10, 10, 10)));
   DisplaySSIDList(List, 0, MenuCurPos, 1);
 	Timeout = OS_TimeMS;
-  while(1) {
+  while (1) {
   	if (OS_TimeMS-Timeout >= 15000) 
-		  return(255);
+		  return 255;
     Key = ScanKeyboard();
-		if(Key)
+		if (Key)
 			Timeout = OS_TimeMS;
-    switch(Key) {
+    switch (Key) {
       case BDOWN:
       case 'R': 
 	      if (List[MenuCurPos+1][0] == '\0') {
@@ -454,10 +454,10 @@ unsigned char ExecSSIDList(unsigned char List[20][30]) {
         List[MenuCurPos][29] = 0;
         strcpy((char *)Config.SSID, (const  char *)List[MenuCurPos]);
         Config.SSID[29] = 0;
-        return(MenuCurPos);
+        return MenuCurPos;
 			case BLEFT:	
 			case BCANCEL:	
-        return(255);
+        return 255;
     }//switch
   }//while
 }
@@ -496,7 +496,7 @@ unsigned char SearchAndSelectSSID(void) {
 		j /= 8000;			
 		GUI_FillRoundedRect(5, 70, 5+j, 145,0);
 		if ((OS_TimeMS - Li) > 8000)
-			return(0);
+			return 0;
 	}
  
   GetWiFiResponse("OK");
@@ -546,7 +546,7 @@ unsigned char SearchAndSelectSSID(void) {
   GUI_SetFont(&GUI_Font20B_1);
 	ExecSSIDList(SSID_List);
  	LoadFont(FontBKoodak40);
-  return(3);
+  return 3;
 }
 
 //=========================================================================

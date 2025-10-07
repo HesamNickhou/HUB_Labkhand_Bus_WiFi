@@ -68,7 +68,7 @@ remove CLRC_CHIP >= in C++ Configuration
 	#define CoderType   ctNone
 #endif
 
-#if(DeviceType==APARK)
+#if (DeviceType==APARK)
 	#define SCREENRESIZE  0
 	#define ReaderType   RC522Routine
 	#define CoderType   ctSABA

@@ -50,7 +50,7 @@
 #define SetMOSI()  GPIO_SetBits(GPIOA,GPIO_Pin_7)
 #define ClearMOSI() GPIO_ResetBits(GPIOA,GPIO_Pin_7)
 #define ReadMISO() GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_6)*/
-#define WaitTPReady() while(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)==0)
+#define WaitTPReady() while (GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)==0)
 /*
 *********************************************************************************************************
 *                                             INCLUDE FILES

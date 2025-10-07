@@ -22,8 +22,8 @@ extern unsigned int GPSSpeed;
 #define GPSDataFreez                              \
           {                                       \
             GPSDataWaitTimeout=0;                 \
-            while(GPSDataWrite)                   \
-              if(GPSDataWaitTimeout++>1000000)    \
+            while (GPSDataWrite)                   \
+              if (GPSDataWaitTimeout++>1000000)    \
                 break;                            \
             GPSDataWrite=1;                       \
           }

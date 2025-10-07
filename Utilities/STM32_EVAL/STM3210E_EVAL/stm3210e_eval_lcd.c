@@ -165,7 +165,7 @@ unsigned int VPS=24;
 unsigned int FPS=23;
 unsigned int VPW=3;
 
-  if(LCDType==LCD480_272)
+  if (LCDType==LCD480_272)
   {
     HDP=479;
     HT=525;
@@ -235,7 +235,7 @@ unsigned int VPW=3;
   LCD_WriteRAM(0x00D9);
   LCD_WriteRAM(0x0016);
 	#else
-	if(LCDType==LCD480_272)
+	if (LCDType==LCD480_272)
 	{
 	  LCD_WriteCom(0x00E6);					//PLL setting for PCLK, depends on resolution
 	  LCD_WriteRAM(0x0000);
@@ -280,7 +280,7 @@ unsigned int VPW=3;
 	LCD_WriteRAM(0x0005);//0x000F);    //GPIO[3:0] out 1
 
 	LCD_WriteCom(0x00B8);
-	LCD_WriteRAM(0x0007);    //GPIO3=input, GPIO[2:0]=output
+	LCD_WriteRAM(0x0007);    //GPIO3=input, GPIO[2:0] =output
 	LCD_WriteRAM(0x0001);    //GPIO0 normal
 
 	LCD_WriteCom(0x0036); //rotation
@@ -455,7 +455,7 @@ FSMC_NORSRAMTimingInitTypeDef  p;
 static void delay(vu32 nCount)
 {
   vu32 index = 0; 
-  for(index = (100000 * nCount); index != 0; index--)
+  for (index = (100000 * nCount); index != 0; index--)
   {
   }
 }

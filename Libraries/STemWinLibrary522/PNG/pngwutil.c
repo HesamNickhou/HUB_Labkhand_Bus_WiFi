@@ -62,7 +62,7 @@ void PNGAPI
 png_write_chunk(png_structp png_ptr, png_bytep chunk_name,
    png_bytep data, png_size_t length)
 {
-   if(png_ptr == NULL) return;
+   if (png_ptr == NULL) return;
    png_write_chunk_start(png_ptr, chunk_name, (png_uint_32)length);
    png_write_chunk_data(png_ptr, data, length);
    png_write_chunk_end(png_ptr);
@@ -78,7 +78,7 @@ png_write_chunk_start(png_structp png_ptr, png_bytep chunk_name,
 {
    png_byte buf[4];
    png_debug2(0, "Writing %s chunk (%lu bytes)\n", chunk_name, length);
-   if(png_ptr == NULL) return;
+   if (png_ptr == NULL) return;
 
    /* write the length */
    png_save_uint_32(buf, length);
@@ -100,7 +100,7 @@ void PNGAPI
 png_write_chunk_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    /* write the data, and run the CRC over it */
-   if(png_ptr == NULL) return;
+   if (png_ptr == NULL) return;
    if (data != NULL && length > 0)
    {
       png_calculate_crc(png_ptr, data, length);
@@ -114,7 +114,7 @@ png_write_chunk_end(png_structp png_ptr)
 {
    png_byte buf[4];
 
-   if(png_ptr == NULL) return;
+   if (png_ptr == NULL) return;
 
    /* write the crc */
    png_save_uint_32(buf, png_ptr->crc);
@@ -135,7 +135,7 @@ png_write_sig(png_structp png_ptr)
    /* write the rest of the 8 byte signature */
    png_write_data(png_ptr, &png_signature[png_ptr->sig_bytes],
       (png_size_t)8 - png_ptr->sig_bytes);
-   if(png_ptr->sig_bytes < 3)
+   if (png_ptr->sig_bytes < 3)
       png_ptr->mode |= PNG_HAVE_PNG_SIGNATURE;
 }
 
@@ -352,7 +352,7 @@ png_write_compressed_data_out(png_structp png_ptr, compression_state *comp)
       png_write_chunk_data(png_ptr,(png_bytep)comp->output_ptr[i],
          png_ptr->zbuf_size);
       png_free(png_ptr, comp->output_ptr[i]);
-      comp->output_ptr[i]=NULL;
+      comp->output_ptr[i] =NULL;
    }
    if (comp->max_output_ptr != 0)
       png_free(png_ptr, comp->output_ptr);
@@ -713,10 +713,10 @@ png_write_sRGB(png_structp png_ptr, int srgb_intent)
    png_byte buf[1];
 
    png_debug(1, "in png_write_sRGB\n");
-   if(srgb_intent >= PNG_sRGB_INTENT_LAST)
+   if (srgb_intent >= PNG_sRGB_INTENT_LAST)
          png_warning(png_ptr,
             "Invalid sRGB rendering intent specified");
-   buf[0]=(png_byte)srgb_intent;
+   buf[0] =(png_byte)srgb_intent;
    png_write_chunk(png_ptr, (png_bytep)png_sRGB, buf, (png_size_t)1);
 }
 #endif
@@ -784,7 +784,7 @@ png_write_iCCP(png_structp png_ptr, png_charp name, int compression_type,
    /* make sure we include the NULL after the name and the compression type */
    png_write_chunk_start(png_ptr, (png_bytep)png_iCCP,
           (png_uint_32)name_len+profile_len+2);
-   new_name[name_len+1]=0x00;
+   new_name[name_len+1] =0x00;
    png_write_chunk_data(png_ptr, (png_bytep)new_name, name_len + 2);
 
    if (profile_len)
@@ -1076,7 +1076,7 @@ png_write_tRNS(png_structp png_ptr, png_bytep trans, png_color_16p tran,
    else if (color_type == PNG_COLOR_TYPE_GRAY)
    {
       /* one 16 bit value */
-      if(tran->gray >= (1 << png_ptr->bit_depth))
+      if (tran->gray >= (1 << png_ptr->bit_depth))
       {
          png_warning(png_ptr,
            "Ignoring attempt to write tRNS chunk out-of-range for bit_depth");
@@ -1091,7 +1091,7 @@ png_write_tRNS(png_structp png_ptr, png_bytep trans, png_color_16p tran,
       png_save_uint_16(buf, tran->red);
       png_save_uint_16(buf + 2, tran->green);
       png_save_uint_16(buf + 4, tran->blue);
-      if(png_ptr->bit_depth == 8 && (buf[0] | buf[2] | buf[4]))
+      if (png_ptr->bit_depth == 8 && (buf[0] | buf[2] | buf[4]))
          {
             png_warning(png_ptr,
               "Ignoring attempt to write 16-bit tRNS chunk when bit_depth is 8");
@@ -1137,7 +1137,7 @@ png_write_bKGD(png_structp png_ptr, png_color_16p back, int color_type)
       png_save_uint_16(buf, back->red);
       png_save_uint_16(buf + 2, back->green);
       png_save_uint_16(buf + 4, back->blue);
-      if(png_ptr->bit_depth == 8 && (buf[0] | buf[2] | buf[4]))
+      if (png_ptr->bit_depth == 8 && (buf[0] | buf[2] | buf[4]))
          {
             png_warning(png_ptr,
               "Ignoring attempt to write 16-bit bKGD chunk when bit_depth is 8");
@@ -1147,7 +1147,7 @@ png_write_bKGD(png_structp png_ptr, png_color_16p back, int color_type)
    }
    else
    {
-      if(back->gray >= (1 << png_ptr->bit_depth))
+      if (back->gray >= (1 << png_ptr->bit_depth))
       {
          png_warning(png_ptr,
            "Ignoring attempt to write bKGD chunk out-of-range for bit_depth");
@@ -1297,7 +1297,7 @@ png_check_keyword(png_structp png_ptr, png_charp key, png_charpp new_key)
       }
    }
    *dp = '\0';
-   if(kwarn)
+   if (kwarn)
       png_warning(png_ptr, "extra interior spaces removed from keyword");
 
    if (key_len == 0)

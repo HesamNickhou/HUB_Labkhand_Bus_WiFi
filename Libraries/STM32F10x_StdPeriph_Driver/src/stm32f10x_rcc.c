@@ -283,7 +283,7 @@ void RCC_HSEConfig(uint32_t RCC_HSE)
   /* Reset HSEBYP bit */
   RCC->CR &= CR_HSEBYP_Reset;
   /* Configure HSE (RCC_HSE_OFF is already covered by the code section above) */
-  switch(RCC_HSE)
+  switch (RCC_HSE)
   {
     case RCC_HSE_ON:
       /* Set HSEON bit */
@@ -318,7 +318,7 @@ ErrorStatus RCC_WaitForHSEStartUp(void)
   {
     HSEStatus = RCC_GetFlagStatus(RCC_FLAG_HSERDY);
     StartUpCounter++;  
-  } while((StartUpCounter != HSE_STARTUP_TIMEOUT) && (HSEStatus == RESET));
+  } while ((StartUpCounter != HSE_STARTUP_TIMEOUT) && (HSEStatus == RESET));
   
   if (RCC_GetFlagStatus(RCC_FLAG_HSERDY) != RESET)
   {
@@ -842,7 +842,7 @@ void RCC_LSEConfig(uint8_t RCC_LSE)
   /* Reset LSEBYP bit */
   *(__IO uint8_t *) BDCR_ADDRESS = RCC_LSE_OFF;
   /* Configure LSE (RCC_LSE_OFF is already covered by the code section above) */
-  switch(RCC_LSE)
+  switch (RCC_LSE)
   {
     case RCC_LSE_ON:
       /* Set LSEON bit */

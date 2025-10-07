@@ -20,16 +20,16 @@ unsigned char c;
 unsigned long int i;
   /*
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-		if(USART2->SR & USART_FLAG_RXNE)
+		if (USART2->SR & USART_FLAG_RXNE)
 		{
   	  USART2->SR &= ~USART_FLAG_RXNE;
       c=(USART2->DR & 0x1FF);
 			i=OS_TimeMS;
 		}
-  	if(i>OS_TimeMS) return;
-	  if(OS_TimeMS-i>=5) 
+  	if (i>OS_TimeMS) return;
+	  if (OS_TimeMS-i>=5) 
 			return;
 	}
   */
@@ -42,33 +42,33 @@ unsigned char SAM_GCL(unsigned char *c)
 unsigned long int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=2000) //5 Sec
-			return(0);
-    if(rxd2_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=2000) //5 Sec
+			return 0;
+    if (rxd2_counter!=0) 
       break;
 		GUI_Delay(1);
   	WDTR;
   }		
   *c=RXD2Buffer[rxd2_rd_index];
-  if(++rxd2_rd_index >= BUFFER2_SIZE) rxd2_rd_index=0;
-  if(rxd2_counter) rxd2_counter--;
-  return(1);
+  if (++rxd2_rd_index >= BUFFER2_SIZE) rxd2_rd_index=0;
+  if (rxd2_counter) rxd2_counter--;
+  return 1;
 
   /*
   i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=2000)
-			return(0);
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=2000)
+			return 0;
     if (USART2->SR & USART_FLAG_RXNE) 
 		{
 			USART2->SR &= ~USART_FLAG_RXNE;
       *c=(USART2->DR & 0x1FF);
-			return(1);
+			return 1;
 		}
   	WDTR;
   }	
@@ -81,33 +81,33 @@ unsigned char SAM_GCF(unsigned char *c)
 unsigned long int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=300) 
-			return(0);
-    if(rxd2_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=300) 
+			return 0;
+    if (rxd2_counter!=0) 
       break;
 		GUI_Delay(1);
   	WDTR;
   }		
   *c=RXD2Buffer[rxd2_rd_index];
-  if(++rxd2_rd_index >= BUFFER2_SIZE) rxd2_rd_index=0;
-  if(rxd2_counter) rxd2_counter--;
-  return(1);
+  if (++rxd2_rd_index >= BUFFER2_SIZE) rxd2_rd_index=0;
+  if (rxd2_counter) rxd2_counter--;
+  return 1;
 
 	/*
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=50) //5 Sec
-			return(0);
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=50) //5 Sec
+			return 0;
     if (USART2->SR & USART_FLAG_RXNE) 
 		{
 			USART2->SR &= ~USART_FLAG_RXNE;
       *c=(USART2->DR & 0x1FF);
-			return(1);
+			return 1;
 		}
   	WDTR;
   }		
@@ -130,7 +130,7 @@ GPIO_InitTypeDef GPIO_InitStructure;
   USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
   USART_DeInit(USART2);   
 	
-  if(pinConfig)
+  if (pinConfig)
 	{
   	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
@@ -389,13 +389,13 @@ unsigned short SAM_SendAPDU_T0_Send(const unsigned char *pAPDU,
 unsigned char i;
 	
   //printf("\n\r[S>] ");
-  //for(i=0; i<wLength; i++)
+  //for (i=0; i<wLength; i++)
   //  printf("%X ", pAPDU[i]);
 	
-  for(i=0; i<5; i++)
+  for (i=0; i<5; i++)
     USART_SendData(USART2, pAPDU[i]);  
 	GUI_Delay(10);//50
-  for(i=5; i<wLength; i++)
+  for (i=5; i<wLength; i++)
 	  USART_SendData(USART2, pAPDU[i]);
 }
 
@@ -416,18 +416,18 @@ unsigned long int Li;
   
   index=0;
 	Li=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(Li>OS_TimeMS) return(0);
-	  if(OS_TimeMS-Li>=1000)
+  	if (Li>OS_TimeMS) return 0;
+	  if (OS_TimeMS-Li>=1000)
 		{		
       //printf("\n\rTimeOut RxC: %d Data: %d",rxd2_wr_index,wRxLength+wLength);			
-			return(0);
+			return 0;
 		}
-    if(rxd2_wr_index>wRxLength+wLength) 
+    if (rxd2_wr_index>wRxLength+wLength) 
 		{
-			for(index=0; index<=wRxLength+wLength; index++)
-        sendstr[index]=RXD2Buffer[rxd2_rd_index++];
+			for (index=0; index<=wRxLength+wLength; index++)
+        sendstr[index] =RXD2Buffer[rxd2_rd_index++];
   	  break;
 		}
 		GUI_Delay(1);
@@ -436,20 +436,20 @@ unsigned long int Li;
 
   //printf("\n\rXXX: ");
   
-	//for(i=0; i<index; i++)
+	//for (i=0; i<index; i++)
     //SendByte(sendstr[i]);
 	
   //printf("\n\r[S<] ");
 	
 	j=0;
 	i=wLength+1;
-  for(; i<index; i++)
+  for (; i<index; i++)
   {
-    pMessage[j++]=sendstr[i];
+    pMessage[j++] =sendstr[i];
     //printf("%X ", sendstr[i]);
   }
 
-  return(j);
+  return j;
 }
 
 //=============================================================================
@@ -457,8 +457,8 @@ void SAM_Init(void)
 {
 unsigned char p_atr[256];
 unsigned char i, size;
-unsigned char ApduCmd[100]={0};
-unsigned char ResBuff[256]={0};
+unsigned char ApduCmd[100] ={0};
+unsigned char ResBuff[256] ={0};
 	
 	SmartCardUsartEnable(1);
 	GUI_Delay(500);

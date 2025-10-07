@@ -25,7 +25,7 @@
 
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 
@@ -865,7 +865,7 @@ phStatus_t phpalI14443p3b_DecideBaudRateEx( uint8_t bBitRateCapability, uint8_t*
             }
 
             /* Start with the desired bit rate and break, as soon as a supported one is found. */
-            switch(bMaxSymBitRate)
+            switch (bMaxSymBitRate)
             {
             case PHPAL_I14443P3B_DATARATE_848:
                 if ( 0x44 == (bBitRateCapability & 0x44))
@@ -903,7 +903,7 @@ phStatus_t phpalI14443p3b_DecideBaudRateEx( uint8_t bBitRateCapability, uint8_t*
     else
     {
         /* Start with the desired bit rate and break, as soon as a supported one is found. */
-        switch(*pbDsi)
+        switch (*pbDsi)
         {
         case PHPAL_I14443P3B_DATARATE_848:
             if (bBitRateCapability & 0x40)
@@ -936,7 +936,7 @@ phStatus_t phpalI14443p3b_DecideBaudRateEx( uint8_t bBitRateCapability, uint8_t*
     else
     {
         /* Start with the desired bit rate and break, as soon as a supported one is found. */
-        switch(*pbDri)
+        switch (*pbDri)
         {
         case PHPAL_I14443P3B_DATARATE_848:
             if (bBitRateCapability & 0x04)

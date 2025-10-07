@@ -1,6 +1,6 @@
 #include "config.h"
 
-#if(DeviceType==BUSDOOR)
+#if (DeviceType==BUSDOOR)
 #include "DIALOG.h"
 #include "futil.h"
 
@@ -65,11 +65,11 @@ unsigned short i, Idx, ID;
 unsigned char j, k;
 char str[40];
 
-  if(0)
+  if (0)
 	{
 		//ShowMessageDlg(mtWarning, "رکوردي وجود ندارد",0);
 		GUI_Delay(2000);
-    return(255);
+    return 255;
 	}
 	//LoadFont(FontTahoma20);
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
@@ -79,9 +79,9 @@ char str[40];
 	i=0;
 	Idx=0;
 	
-	for(i=0; i<30; i++)
+	for (i=0; i<30; i++)
 	{
-		//if(Kalas[i].ID==0)
+		//if (Kalas[i].ID==0)
 		//	break;
 		
     LISTVIEW_AddRow(hItem, NULL);
@@ -97,7 +97,7 @@ char str[40];
 	}
 	
 	HandleForm(hWin, 0);
-	return(0);
+	return 0;
 }
 #endif
 

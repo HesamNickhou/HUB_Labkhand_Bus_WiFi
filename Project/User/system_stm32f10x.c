@@ -516,7 +516,7 @@ static void SetSysClockToHSE(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;  
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while ((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -595,7 +595,7 @@ static void SetSysClockTo24(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;  
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while ((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -643,7 +643,7 @@ static void SetSysClockTo24(void)
     /* Enable PLL2 */
     RCC->CR |= RCC_CR_PLL2ON;
     /* Wait till PLL2 is ready */
-    while((RCC->CR & RCC_CR_PLL2RDY) == 0)
+    while ((RCC->CR & RCC_CR_PLL2RDY) == 0)
     {
     }   
 #elif defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
@@ -660,7 +660,7 @@ static void SetSysClockTo24(void)
     RCC->CR |= RCC_CR_PLLON;
 
     /* Wait till PLL is ready */
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+    while ((RCC->CR & RCC_CR_PLLRDY) == 0)
     {
     }
 
@@ -699,7 +699,7 @@ static void SetSysClockTo36(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;  
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while ((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -747,7 +747,7 @@ static void SetSysClockTo36(void)
     /* Enable PLL2 */
     RCC->CR |= RCC_CR_PLL2ON;
     /* Wait till PLL2 is ready */
-    while((RCC->CR & RCC_CR_PLL2RDY) == 0)
+    while ((RCC->CR & RCC_CR_PLL2RDY) == 0)
     {
     }
     
@@ -761,7 +761,7 @@ static void SetSysClockTo36(void)
     RCC->CR |= RCC_CR_PLLON;
 
     /* Wait till PLL is ready */
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+    while ((RCC->CR & RCC_CR_PLLRDY) == 0)
     {
     }
 
@@ -800,7 +800,7 @@ static void SetSysClockTo48(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;  
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while ((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -842,7 +842,7 @@ static void SetSysClockTo48(void)
     /* Enable PLL2 */
     RCC->CR |= RCC_CR_PLL2ON;
     /* Wait till PLL2 is ready */
-    while((RCC->CR & RCC_CR_PLL2RDY) == 0)
+    while ((RCC->CR & RCC_CR_PLL2RDY) == 0)
     {
     }
     
@@ -861,7 +861,7 @@ static void SetSysClockTo48(void)
     RCC->CR |= RCC_CR_PLLON;
 
     /* Wait till PLL is ready */
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+    while ((RCC->CR & RCC_CR_PLLRDY) == 0)
     {
     }
 
@@ -901,7 +901,7 @@ static void SetSysClockTo56(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;  
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while ((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -943,7 +943,7 @@ static void SetSysClockTo56(void)
     /* Enable PLL2 */
     RCC->CR |= RCC_CR_PLL2ON;
     /* Wait till PLL2 is ready */
-    while((RCC->CR & RCC_CR_PLL2RDY) == 0)
+    while ((RCC->CR & RCC_CR_PLL2RDY) == 0)
     {
     }
     
@@ -963,7 +963,7 @@ static void SetSysClockTo56(void)
     RCC->CR |= RCC_CR_PLLON;
 
     /* Wait till PLL is ready */
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+    while ((RCC->CR & RCC_CR_PLLRDY) == 0)
     {
     }
 
@@ -1003,7 +1003,7 @@ static void SetSysClockTo72(void)
   {
     HSEStatus = RCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;  
-  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+  } while ((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
   if ((RCC->CR & RCC_CR_HSERDY) != RESET)
   {
@@ -1046,7 +1046,7 @@ static void SetSysClockTo72(void)
     /* Enable PLL2 */
     RCC->CR |= RCC_CR_PLL2ON;
     /* Wait till PLL2 is ready */
-    while((RCC->CR & RCC_CR_PLL2RDY) == 0)
+    while ((RCC->CR & RCC_CR_PLL2RDY) == 0)
     {
     }
     
@@ -1066,7 +1066,7 @@ static void SetSysClockTo72(void)
     RCC->CR |= RCC_CR_PLLON;
 
     /* Wait till PLL is ready */
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+    while ((RCC->CR & RCC_CR_PLLRDY) == 0)
     {
     }
     

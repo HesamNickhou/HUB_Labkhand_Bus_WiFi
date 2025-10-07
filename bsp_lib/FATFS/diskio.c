@@ -46,7 +46,7 @@ DSTATUS disk_initialize (
     //Status = SD_SetDeviceMode(SD_INTERRUPT_MODE);
 	  Status = SD_SetDeviceMode(SD_POLLING_MODE);
   }
-  if(Status == SD_OK)return 0;
+  if (Status == SD_OK)return 0;
   else return STA_NOINIT;
 }
 
@@ -75,7 +75,7 @@ DRESULT disk_read (
 )
 {
   //memset(buff2, 0, sizeof(buff2));
-	if(count==1)
+	if (count==1)
         {
           SD_ReadBlock(sector << 9 ,(u32 *)(&buff[0]),BlockSize);
           //memcpy(buff,buff2,SECTOR_SIZE);
@@ -102,7 +102,7 @@ DRESULT disk_write (
 )
 {
   //memset(buff2, 0, sizeof(buff2));
-	if(count==1)
+	if (count==1)
         {
           //memcpy(buff2,buff,SECTOR_SIZE);
           SD_WriteBlock(sector << 9 ,(u32 *)(&buff[0]),BlockSize);

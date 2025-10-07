@@ -41,7 +41,7 @@ FSMC_NORSRAMTimingInitTypeDef  readWriteTiming;
 	  														  
 void FSMC_SRAM_WriteBuffer(u8* pBuffer,u32 WriteAddr,u32 n)
 {
-	for(;n!=0;n--)  
+	for (;n!=0;n--)  
 	{										    
 		*(vu8*)(Bank1_SRAM3_ADDR+WriteAddr)=*pBuffer;	  
 		WriteAddr+=2;
@@ -51,7 +51,7 @@ void FSMC_SRAM_WriteBuffer(u8* pBuffer,u32 WriteAddr,u32 n)
 
 void FSMC_SRAM_ReadBuffer(u8* pBuffer,u32 ReadAddr,u32 n)
 {
-	for(;n!=0;n--)  
+	for (;n!=0;n--)  
 	{											    
 		*pBuffer++=*(vu8*)(Bank1_SRAM3_ADDR+ReadAddr);    
 		ReadAddr+=2;

@@ -156,28 +156,28 @@ int  I, J;
 unsigned long int T;
 unsigned long int W0, W1, W2, W3;
 
-  ExpandedKey[0]=Key[3]; ExpandedKey[0]<<=8;
+  ExpandedKey[0] =Key[3]; ExpandedKey[0]<<=8;
   ExpandedKey[0]+=Key[2]; ExpandedKey[0]<<=8;
   ExpandedKey[0]+=Key[1]; ExpandedKey[0]<<=8;
   ExpandedKey[0]+=Key[0];
   
-  ExpandedKey[1]=Key[7]; ExpandedKey[1]<<=8;
+  ExpandedKey[1] =Key[7]; ExpandedKey[1]<<=8;
   ExpandedKey[1]+=Key[6]; ExpandedKey[1]<<=8;
   ExpandedKey[1]+=Key[5]; ExpandedKey[1]<<=8;
   ExpandedKey[1]+=Key[4];
 
-  ExpandedKey[2]=Key[11]; ExpandedKey[2]<<=8;
+  ExpandedKey[2] =Key[11]; ExpandedKey[2]<<=8;
   ExpandedKey[2]+=Key[10]; ExpandedKey[2]<<=8;
   ExpandedKey[2]+=Key[9]; ExpandedKey[2]<<=8;
   ExpandedKey[2]+=Key[8];
 
-  ExpandedKey[3]=Key[15]; ExpandedKey[3]<<=8;
+  ExpandedKey[3] =Key[15]; ExpandedKey[3]<<=8;
   ExpandedKey[3]+=Key[14]; ExpandedKey[3]<<=8;
   ExpandedKey[3]+=Key[13]; ExpandedKey[3]<<=8;
   ExpandedKey[3]+=Key[12];
 
   I = 0; J = 1;
-  while(1)
+  while (1)
   {
     T = (ExpandedKey[I + 3] << 24) | (ExpandedKey[I + 3] >> 8); 
     W0 = LastForwardTable[T & 0xFF]; W1 = LastForwardTable[(T >> 8)&0xFF];
@@ -190,7 +190,7 @@ unsigned long int W0, W1, W2, W3;
     ExpandedKey[I + 6] = ExpandedKey[I + 2] ^ ExpandedKey[I + 5];
     ExpandedKey[I + 7] = ExpandedKey[I + 3] ^ ExpandedKey[I + 6];
     I+= 4;
-    if(I>=40) break;
+    if (I>=40) break;
   }
 };
 
@@ -203,25 +203,25 @@ unsigned long int T1[4];
 unsigned long int W0, W1, W2, W3;
 
   // initializing
-  T0[0]=InBuf[3]; T0[0]<<=8;
+  T0[0] =InBuf[3]; T0[0]<<=8;
   T0[0]+=InBuf[2]; T0[0]<<=8;
   T0[0]+=InBuf[1]; T0[0]<<=8;
   T0[0]+=InBuf[0];
   T0[0]^=Key[0];
   
-  T0[1]=InBuf[7]; T0[1]<<=8;
+  T0[1] =InBuf[7]; T0[1]<<=8;
   T0[1]+=InBuf[6]; T0[1]<<=8;
   T0[1]+=InBuf[5]; T0[1]<<=8;
   T0[1]+=InBuf[4];
   T0[1]^=Key[1];
 
-  T0[2]=InBuf[11]; T0[2]<<=8;
+  T0[2] =InBuf[11]; T0[2]<<=8;
   T0[2]+=InBuf[10]; T0[2]<<=8;
   T0[2]+=InBuf[9]; T0[2]<<=8;
   T0[2]+=InBuf[8];
   T0[2]^=Key[2];
 
-  T0[3]=InBuf[15]; T0[3]<<=8;
+  T0[3] =InBuf[15]; T0[3]<<=8;
   T0[3]+=InBuf[14]; T0[3]<<=8;
   T0[3]+=InBuf[13]; T0[3]<<=8;
   T0[3]+=InBuf[12];
@@ -399,25 +399,25 @@ unsigned long int W0, W1, W2, W3;
   T0[3] = (W0 ^ ((W1 << 8) | (W1 >> 24)) ^ ((W2 << 16) | (W2 >> 16))
     ^ ((W3 << 24) | (W3 >> 8))) ^ Key[43];
   // finalizing   
-  OutBuf[3]=(T0[0]>>24)&0xFF;
-  OutBuf[2]=(T0[0]>>16)&0xFF;
-  OutBuf[1]=(T0[0]>>8)&0xFF;
-  OutBuf[0]=(T0[0])&0xFF;
+  OutBuf[3] =(T0[0]>>24)&0xFF;
+  OutBuf[2] =(T0[0]>>16)&0xFF;
+  OutBuf[1] =(T0[0]>>8)&0xFF;
+  OutBuf[0] =(T0[0])&0xFF;
 
-  OutBuf[7]=(T0[1]>>24)&0xFF;
-  OutBuf[6]=(T0[1]>>16)&0xFF;
-  OutBuf[5]=(T0[1]>>8)&0xFF;
-  OutBuf[4]=(T0[1])&0xFF;
+  OutBuf[7] =(T0[1]>>24)&0xFF;
+  OutBuf[6] =(T0[1]>>16)&0xFF;
+  OutBuf[5] =(T0[1]>>8)&0xFF;
+  OutBuf[4] =(T0[1])&0xFF;
 
-  OutBuf[11]=(T0[2]>>24)&0xFF;
-  OutBuf[10]=(T0[2]>>16)&0xFF;
-  OutBuf[9]=(T0[2]>>8)&0xFF;
-  OutBuf[8]=(T0[2])&0xFF;
+  OutBuf[11] =(T0[2]>>24)&0xFF;
+  OutBuf[10] =(T0[2]>>16)&0xFF;
+  OutBuf[9] =(T0[2]>>8)&0xFF;
+  OutBuf[8] =(T0[2])&0xFF;
 
-  OutBuf[15]=(T0[3]>>24)&0xFF;
-  OutBuf[14]=(T0[3]>>16)&0xFF;
-  OutBuf[13]=(T0[3]>>8)&0xFF;
-  OutBuf[12]=(T0[3])&0xFF;
+  OutBuf[15] =(T0[3]>>24)&0xFF;
+  OutBuf[14] =(T0[3]>>16)&0xFF;
+  OutBuf[13] =(T0[3]>>8)&0xFF;
+  OutBuf[12] =(T0[3])&0xFF;
 };
 
 //===================================================================================
@@ -426,7 +426,7 @@ void ExpandAESKeyForDecryption(unsigned long int ExpandedKey[44])
 unsigned int I;
 unsigned long int U, F2, F4, F8, F9;
 
-  for(I=1; I<=9; I++)
+  for (I=1; I<=9; I++)
   {
     F9 = ExpandedKey[I * 4];
     U = F9 & 0x80808080;
@@ -491,25 +491,25 @@ unsigned long int T1[4];
 unsigned long int W0, W1, W2, W3;
  
   // initializing
-  T0[0]=InBuf[3]; T0[0]<<=8;
+  T0[0] =InBuf[3]; T0[0]<<=8;
   T0[0]+=InBuf[2]; T0[0]<<=8;
   T0[0]+=InBuf[1]; T0[0]<<=8;
   T0[0]+=InBuf[0];
   T0[0]^=Key[40];
   
-  T0[1]=InBuf[7]; T0[1]<<=8;
+  T0[1] =InBuf[7]; T0[1]<<=8;
   T0[1]+=InBuf[6]; T0[1]<<=8;
   T0[1]+=InBuf[5]; T0[1]<<=8;
   T0[1]+=InBuf[4];
   T0[1]^=Key[41];
 
-  T0[2]=InBuf[11]; T0[2]<<=8;
+  T0[2] =InBuf[11]; T0[2]<<=8;
   T0[2]+=InBuf[10]; T0[2]<<=8;
   T0[2]+=InBuf[9]; T0[2]<<=8;
   T0[2]+=InBuf[8];
   T0[2]^=Key[42];
 
-  T0[3]=InBuf[15]; T0[3]<<=8;
+  T0[3] =InBuf[15]; T0[3]<<=8;
   T0[3]+=InBuf[14]; T0[3]<<=8;
   T0[3]+=InBuf[13]; T0[3]<<=8;
   T0[3]+=InBuf[12];
@@ -687,24 +687,24 @@ unsigned long int W0, W1, W2, W3;
   T0[3] = (W0 ^ ((W1 << 8) | (W1 >> 24)) ^ ((W2 << 16) | (W2 >> 16))
     ^ ((W3 << 24) | (W3 >> 8))) ^ Key[3];
   // finalizing
-  OutBuf[3]=(T0[0]>>24)&0xFF;
-  OutBuf[2]=(T0[0]>>16)&0xFF;
-  OutBuf[1]=(T0[0]>>8)&0xFF;
-  OutBuf[0]=(T0[0])&0xFF;
+  OutBuf[3] =(T0[0]>>24)&0xFF;
+  OutBuf[2] =(T0[0]>>16)&0xFF;
+  OutBuf[1] =(T0[0]>>8)&0xFF;
+  OutBuf[0] =(T0[0])&0xFF;
 
-  OutBuf[7]=(T0[1]>>24)&0xFF;
-  OutBuf[6]=(T0[1]>>16)&0xFF;
-  OutBuf[5]=(T0[1]>>8)&0xFF;
-  OutBuf[4]=(T0[1])&0xFF;
+  OutBuf[7] =(T0[1]>>24)&0xFF;
+  OutBuf[6] =(T0[1]>>16)&0xFF;
+  OutBuf[5] =(T0[1]>>8)&0xFF;
+  OutBuf[4] =(T0[1])&0xFF;
 
-  OutBuf[11]=(T0[2]>>24)&0xFF;
-  OutBuf[10]=(T0[2]>>16)&0xFF;
-  OutBuf[9]=(T0[2]>>8)&0xFF;
-  OutBuf[8]=(T0[2])&0xFF;
+  OutBuf[11] =(T0[2]>>24)&0xFF;
+  OutBuf[10] =(T0[2]>>16)&0xFF;
+  OutBuf[9] =(T0[2]>>8)&0xFF;
+  OutBuf[8] =(T0[2])&0xFF;
 
-  OutBuf[15]=(T0[3]>>24)&0xFF;
-  OutBuf[14]=(T0[3]>>16)&0xFF;
-  OutBuf[13]=(T0[3]>>8)&0xFF;
-  OutBuf[12]=(T0[3])&0xFF;
+  OutBuf[15] =(T0[3]>>24)&0xFF;
+  OutBuf[14] =(T0[3]>>16)&0xFF;
+  OutBuf[13] =(T0[3]>>8)&0xFF;
+  OutBuf[12] =(T0[3])&0xFF;
 };
 

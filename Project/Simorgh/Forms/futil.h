@@ -5,11 +5,11 @@
 #include <WM.h>
 #include <config.h>
 
-#if(DeviceType==Basket)
+#if (DeviceType==Basket)
 extern unsigned char frmKalas(void);
 extern unsigned char frmSahmiye(unsigned char KalaIndex);
 #endif
-#if(DeviceType==BUSDOOR)
+#if (DeviceType==BUSDOOR)
 unsigned char frmTransactionsList(void);
 #endif
 

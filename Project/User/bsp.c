@@ -144,12 +144,12 @@ void GPIO_Config(void) {
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	
   GPIO_Init(GPIOG, &GPIO_InitStructure);	  		
 	
-	//if((PGin(3) == 0)&&(PGin(4) == 0))
+	//if ((PGin(3) == 0) && (PGin(4) == 0))
 	//	BOARD_VER=VII;
 	//else
 	//	BOARD_VER=VI;
 	BOARD_VER = VII;
-	if(BOARD_VER==VII) {
+	if (BOARD_VER==VII) {
 	  //--------------------------PORT A
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
@@ -657,7 +657,7 @@ void  BSP_Init(void) {
 
 	GPIO_Config();
 
-	if(LCDCHECK == 0)
+	if (LCDCHECK == 0)
 		LCDType = LCD800_480;
 	else
 		LCDType = LCD480_272;
@@ -702,7 +702,7 @@ void  BSP_Init(void) {
 
 
 	GUI_SetColor(GUI_LIGHTGREEN);
- 	switch(BOARD_VER)	{
+ 	switch (BOARD_VER)	{
 		case  VI : GUI_DispStringAt("HW: V1", 10, 460); break;
 		case VII : GUI_DispStringAt("HW: V2", 10, 460); break;
 		default  : GUI_SetColor(GUI_RED); GUI_DispStringAt("HW: Unknown", 80, 220); break;
@@ -721,10 +721,10 @@ void  BSP_Init(void) {
   GUI_SetColor(GUI_MAGENTA);
 	PutText(0, 15, 270+201, 50, "سيمرغ جهانگستر", GUI_TA_RIGHT);
   GUI_SetColor(GUI_WHITE);
-	#if(DeviceType == BUSDOOR)
+	#if (DeviceType == BUSDOOR)
 	PutText(0, -10, 270, 25, "درب اتوبوس", GUI_TA_RIGHT);
 	#endif
-	#if(DeviceType==APARK)
+	#if (DeviceType==APARK)
 		//PutText(0, -10, 270, 25, "شهر شهربازي", GUI_TA_RIGHT);
 		PutText(0, 10, 270, 45, "شهربازي پالاديوم", GUI_TA_CENTER);
 	#endif
@@ -773,7 +773,7 @@ void  BSP_Init(void) {
 	
 	
 /*
-	while(1)
+	while (1)
 	{
  		WDTR;
 		VOICEEN=1;
@@ -787,7 +787,7 @@ void  BSP_Init(void) {
 	}
 */
 	
-	for(i=40; i<80; i++) {
+	for (i=40; i<80; i++) {
     PROGBAR_SetValue(ahProgBar, i);
 	  GUI_Delay(20);
 	}	
@@ -816,7 +816,7 @@ void  BSP_Init(void) {
 	GUI_Exec();
 
 	
-	#if(DeviceType == Simorgh)
+	#if (DeviceType == Simorgh)
 	stm32_IwdgSetup();
 	#endif
 	
@@ -835,12 +835,12 @@ unsigned char SPI_WriteByte(unsigned char data)
  unsigned char Data = 0; 
 
    //Wait until the transmit buffer is empty 
-  while(SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_TXE)==RESET); 
+  while (SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_TXE)==RESET); 
   // Send the byte  
   SPI_I2S_SendData(SPI2,data); 
 
    //Wait until a data is received 
-  while(SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_RXNE)==RESET); 
+  while (SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_RXNE)==RESET); 
   // Get the received data 
   Data = SPI_I2S_ReceiveData(SPI2); 
 

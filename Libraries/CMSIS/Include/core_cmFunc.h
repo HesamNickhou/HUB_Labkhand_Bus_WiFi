@@ -64,7 +64,7 @@
 __STATIC_INLINE uint32_t __get_CONTROL(void)
 {
   register uint32_t __regControl         __ASM("control");
-  return(__regControl);
+  return __regControl;
 }
 
 
@@ -90,7 +90,7 @@ __STATIC_INLINE void __set_CONTROL(uint32_t control)
 __STATIC_INLINE uint32_t __get_IPSR(void)
 {
   register uint32_t __regIPSR          __ASM("ipsr");
-  return(__regIPSR);
+  return __regIPSR;
 }
 
 
@@ -103,7 +103,7 @@ __STATIC_INLINE uint32_t __get_IPSR(void)
 __STATIC_INLINE uint32_t __get_APSR(void)
 {
   register uint32_t __regAPSR          __ASM("apsr");
-  return(__regAPSR);
+  return __regAPSR;
 }
 
 
@@ -116,7 +116,7 @@ __STATIC_INLINE uint32_t __get_APSR(void)
 __STATIC_INLINE uint32_t __get_xPSR(void)
 {
   register uint32_t __regXPSR          __ASM("xpsr");
-  return(__regXPSR);
+  return __regXPSR;
 }
 
 
@@ -129,7 +129,7 @@ __STATIC_INLINE uint32_t __get_xPSR(void)
 __STATIC_INLINE uint32_t __get_PSP(void)
 {
   register uint32_t __regProcessStackPointer  __ASM("psp");
-  return(__regProcessStackPointer);
+  return __regProcessStackPointer;
 }
 
 
@@ -155,7 +155,7 @@ __STATIC_INLINE void __set_PSP(uint32_t topOfProcStack)
 __STATIC_INLINE uint32_t __get_MSP(void)
 {
   register uint32_t __regMainStackPointer     __ASM("msp");
-  return(__regMainStackPointer);
+  return __regMainStackPointer;
 }
 
 
@@ -181,7 +181,7 @@ __STATIC_INLINE void __set_MSP(uint32_t topOfMainStack)
 __STATIC_INLINE uint32_t __get_PRIMASK(void)
 {
   register uint32_t __regPriMask         __ASM("primask");
-  return(__regPriMask);
+  return __regPriMask;
 }
 
 
@@ -225,7 +225,7 @@ __STATIC_INLINE void __set_PRIMASK(uint32_t priMask)
 __STATIC_INLINE uint32_t  __get_BASEPRI(void)
 {
   register uint32_t __regBasePri         __ASM("basepri");
-  return(__regBasePri);
+  return __regBasePri;
 }
 
 
@@ -251,7 +251,7 @@ __STATIC_INLINE void __set_BASEPRI(uint32_t basePri)
 __STATIC_INLINE uint32_t __get_FAULTMASK(void)
 {
   register uint32_t __regFaultMask       __ASM("faultmask");
-  return(__regFaultMask);
+  return __regFaultMask;
 }
 
 
@@ -282,9 +282,9 @@ __STATIC_INLINE uint32_t __get_FPSCR(void)
 {
 #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
   register uint32_t __regfpscr         __ASM("fpscr");
-  return(__regfpscr);
+  return __regfpscr;
 #else
-   return(0);
+   return 0;
 #endif
 }
 
@@ -354,7 +354,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_CONTROL(void)
   uint32_t result;
 
   __ASM volatile ("MRS %0, control" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -381,7 +381,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_IPSR(void)
   uint32_t result;
 
   __ASM volatile ("MRS %0, ipsr" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -396,7 +396,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_APSR(void)
   uint32_t result;
 
   __ASM volatile ("MRS %0, apsr" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -411,7 +411,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_xPSR(void)
   uint32_t result;
 
   __ASM volatile ("MRS %0, xpsr" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -426,7 +426,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_PSP(void)
   register uint32_t result;
 
   __ASM volatile ("MRS %0, psp\n"  : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -453,7 +453,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_MSP(void)
   register uint32_t result;
 
   __ASM volatile ("MRS %0, msp\n" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -480,7 +480,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_PRIMASK(void)
   uint32_t result;
 
   __ASM volatile ("MRS %0, primask" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -531,7 +531,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_BASEPRI(void)
   uint32_t result;
 
   __ASM volatile ("MRS %0, basepri_max" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -558,7 +558,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FAULTMASK(void
   uint32_t result;
 
   __ASM volatile ("MRS %0, faultmask" : "=r" (result) );
-  return(result);
+  return result;
 }
 
 
@@ -593,9 +593,9 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FPSCR(void)
   __ASM volatile ("");
   __ASM volatile ("VMRS %0, fpscr" : "=r" (result) );
   __ASM volatile ("");
-  return(result);
+  return result;
 #else
-   return(0);
+   return 0;
 #endif
 }
 

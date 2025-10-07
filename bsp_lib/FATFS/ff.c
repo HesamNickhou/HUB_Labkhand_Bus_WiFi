@@ -374,9 +374,9 @@ typedef struct {
 
 
 /* Character code support macros */
-#define IsUpper(c)	(((c)>='A')&&((c)<='Z'))
-#define IsLower(c)	(((c)>='a')&&((c)<='z'))
-#define IsDigit(c)	(((c)>='0')&&((c)<='9'))
+#define IsUpper(c)	(((c)>='A') && ((c)<='Z'))
+#define IsLower(c)	(((c)>='a') && ((c)<='z'))
+#define IsDigit(c)	(((c)>='0') && ((c)<='9'))
 
 #if _DF1S		/* Code page is DBCS */
 
@@ -1511,10 +1511,10 @@ FRESULT dir_find (
 		dir = dp->dir;					/* Ptr to the directory entry of current index */
                 /*
                 printf("\n\rdir: ");
-                for(int k=0; k<11; k++)
+                for (int k=0; k<11; k++)
                   printf("%c",dir[k]);
                 printf("\n\rfn: ");
-                for(int k=0; k<11; k++)
+                for (int k=0; k<11; k++)
                   printf("%c",dp->fn[k]);
                 */
 		c = dir[DIR_Name];
@@ -2579,7 +2579,7 @@ FRESULT f_open (
 	}
 
 	LEAVE_FF(dj.fs, res);
-	if(res==5)
+	if (res==5)
 	{
     memset(&fs, 0, sizeof(FATFS));      // Clear file system object
     f_mount(&fs, "", 0); 		 			

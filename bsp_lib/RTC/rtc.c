@@ -37,19 +37,19 @@ unsigned int days, i, m;
 
   days=Day-1;
   
-  for(i=1385; i<Year; i++)
-    if((i-1383)%4) days+=365;
+  for (i=1385; i<Year; i++)
+    if ((i-1383)%4) days+=365;
     else              days+=366;
   
   m=Month;
-  if(m>6) {
+  if (m>6) {
     days+=((m-7)*30);
     m=7;
   }    
   
   days+=((m-1)*31);
   
-  return((days + 3)%7); 
+  return (days + 3%7); 
  
 }
 
@@ -60,14 +60,14 @@ unsigned short days;
  
   days=Day;
   
-  if(Month<=6)
+  if (Month<=6)
     days+=(Month-1)*31;
-  else if(Month==12)
+  else if (Month==12)
     days+=(6*31)+(5*30);
   else
     days+=(6*31)+((Month-7)*30);
 
-  return(days); 
+  return days; 
  
 }
 
@@ -188,10 +188,10 @@ static void RTC_NVIC_Config(void)
 unsigned char RTC_STEP=0;
 u8 RTC_Wait4Init(void)
 {
-	if(RTC_STEP==1)
+	if (RTC_STEP==1)
 	{
 		if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)	
-			return(1);
+			return 1;
 
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
 		RCC_RTCCLKCmd(ENABLE);
@@ -208,19 +208,19 @@ u8 RTC_Wait4Init(void)
 		RTC_Get();
   }
 
-  if(RTC_STEP==2)
+  if (RTC_STEP==2)
 	{
 		RTC->CRL &= (uint16_t)~RTC_FLAG_RSF;
 		/* Loop until RSF flag is set */
-		if((RTC->CRL & RTC_FLAG_RSF) == (uint16_t)RESET)
-			return(1);
+		if ((RTC->CRL & RTC_FLAG_RSF) == (uint16_t)RESET)
+			return 1;
 		RTC_ITConfig(RTC_IT_SEC, DISABLE);
-    if((RTC->CRL & RTC_FLAG_RTOFF) == (uint16_t)RESET)
-			return(1);
+    if ((RTC->CRL & RTC_FLAG_RTOFF) == (uint16_t)RESET)
+			return 1;
 		RTC_Get();
 	}
 
-	return(0);
+	return 0;
 
 }
 
@@ -229,7 +229,7 @@ u8 RTC_Init(void)
 {
 u8 temp=0;
  
-	if(BKP_ReadBackupRegister(BKP_DR1) != 0x5050)	
+	if (BKP_ReadBackupRegister(BKP_DR1) != 0x5050)	
 	{	 			
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	
 		PWR_BackupAccessCmd(ENABLE);
@@ -237,15 +237,15 @@ u8 temp=0;
 		RCC_LSEConfig(RCC_LSE_ON);
 		RTC_STEP=1;
 		
-    #if(DeviceType==APARK)
-		return(0);
+    #if (DeviceType==APARK)
+		return 0;
 		#endif
 
 		while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)	
 		{
 			temp++;
 			GUI_Delay(10);
-			if(temp>=250) break;
+			if (temp>=250) break;
 		}
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
 		RCC_RTCCLKCmd(ENABLE);
@@ -263,8 +263,8 @@ u8 temp=0;
 	else
 	{
 		RTC_STEP=2;
-    #if(DeviceType==APARK)
-		return(0);
+    #if (DeviceType==APARK)
+		return 0;
 		#endif
 		RTC_WaitForSynchro();	
 		RTC_ITConfig(RTC_IT_SEC, DISABLE);
@@ -281,7 +281,7 @@ void RTC_IRQHandler(void)
 {		 
 	if (RTC_GetITStatus(RTC_IT_SEC) != RESET)
 		RTC_Get();
-	if(RTC_GetITStatus(RTC_IT_ALR)!= RESET)
+	if (RTC_GetITStatus(RTC_IT_ALR)!= RESET)
 		RTC_ClearITPendingBit(RTC_IT_ALR);		
 	RTC_ClearITPendingBit(RTC_IT_SEC|RTC_IT_OW);	
 	RTC_WaitForLastTask();	  	    						 	   	 
@@ -290,47 +290,47 @@ void RTC_IRQHandler(void)
 //=========================================================================
 u8 Is_Leap_Year(u16 year)
 {		
-	if(year<2000)
+	if (year<2000)
 		year+=2000;
-	if(year%4==0) 
+	if (year%4==0) 
 	{ 
-		if(year%100==0) 
+		if (year%100==0) 
 		{ 
-			if(year%400==0)return 1;
+			if (year%400==0)return 1;
 			else return 0;   
 		}else return 1;   
 	}else return 0;	
 }	 			   
 
 //=========================================================================
-u8 const table_week[12]={0,3,3,6,1,4,6,2,5,0,3,5}; 
-const u8 mon_table[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+u8 const table_week[12] ={0,3,3,6,1,4,6,2,5,0,3,5}; 
+const u8 mon_table[12] ={31,28,31,30,31,30,31,31,30,31,30,31};
 u8 RTC_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
 {
 u16 t;
 u32 seccount=0;
 	
 	daycnt=0;
-	if(syear<1970||syear>2099)return 1;	   
-	for(t=MinYear;t<syear;t++)	
+	if (syear<1970||syear>2099)return 1;	   
+	for (t=MinYear;t<syear;t++)	
 	{
-		if(Is_Leap_Year(t))seccount+=31622400;
+		if (Is_Leap_Year(t))seccount+=31622400;
 		else seccount+=31536000;			 
 	}
 	smon-=1;
-	if(smon>11)return -2;	
-	for(t=0;t<smon;t++)	  
+	if (smon>11)return -2;	
+	for (t=0;t<smon;t++)	  
 	{
 		seccount+=(u32)mon_table[t]*86400;
-		if(Is_Leap_Year(syear)&&t==1)seccount+=86400;
+		if (Is_Leap_Year(syear)&&t==1)seccount+=86400;
 	}
-	if(sday>31)return -3;	
+	if (sday>31)return -3;	
 	seccount+=(u32)(sday-1)*86400;								//
-	if(hour>23)return -4;	
+	if (hour>23)return -4;	
 	seccount+=(u32)hour*3600;									//
-	if(min>59)return -5;	
+	if (min>59)return -5;	
 	seccount+=(u32)min*60;	 									//
-	if(sec>59)return -6;	
+	if (sec>59)return -6;	
 	seccount+=sec;													//
 
 	RTC_WaitForLastTask();	
@@ -354,15 +354,15 @@ u16 temp1=0;
 	timecount|=RTC->CNTL;	
 
  	temp=timecount/86400;
-	if(daycnt!=temp)
+	if (daycnt!=temp)
 	{	  
 		daycnt=temp;
 		temp1=MinYear; //1970;	
-		while(temp>=365)
+		while (temp>=365)
 		{				 
-			if(Is_Leap_Year(temp1))
+			if (Is_Leap_Year(temp1))
 			{
-				if(temp>=366)temp-=366;
+				if (temp>=366)temp-=366;
 				else {/*temp1++;*/break;}  
 			}
 			else temp-=365;	 
@@ -370,16 +370,16 @@ u16 temp1=0;
 		}   
 		Year=temp1;
 		temp1=0;
-		while(temp>=28)
+		while (temp>=28)
 		{
-			if(Is_Leap_Year(Year)&&temp1==1)
+			if (Is_Leap_Year(Year)&&temp1==1)
 			{
-				if(temp>=29)temp-=29;
+				if (temp>=29)temp-=29;
 				else break; 
 			}
 			else 
 			{
-				if(temp>=mon_table[temp1])temp-=mon_table[temp1];
+				if (temp>=mon_table[temp1])temp-=mon_table[temp1];
 				else break;
 			}
 			temp1++;  
@@ -431,6 +431,6 @@ u8 RTC_Get_Week(u16 year,u8 month,u8 day)
 	temp2=temp2%7; 
 	temp2=temp2+day+table_week[month-1];
 	if (yearL%4==0&&month<3)temp2--;
-	return(temp2%7);
+	return temp2%7;
 }			  
 

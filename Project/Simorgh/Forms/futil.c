@@ -6,7 +6,7 @@
 #include <GUI.h>
 #include <WM.h>
 
-int KeyMap[10][8]=
+int KeyMap[10][8] =
 {
   {'1',0,0,0,0,0,0,0},	          //1
   {1576,1662,1578,1579,'2',0,0,0},	  //2
@@ -34,10 +34,10 @@ unsigned long int Timeout;
   WM_HWIN hItem;
 	
 	Timeout=OS_TimeMS;
-	while(1) 
+	while (1) 
 	{  
 		
-		 if(Released==1)
+		 if (Released==1)
 		 {
 			  WM_DeleteWindow(hWin);
 			  WM_InvalidateWindow(WM_HBKWIN);
@@ -48,12 +48,12 @@ unsigned long int Timeout;
 		 }
 		
 		 Key=ScanKeyboard();
-		 if((Key)&&(func!=0))
-         if((*func)(Key)==0xAA)
+		 if ((Key) && (func!=0))
+         if ((*func)(Key)==0xAA)
            Key=0;					 
-     switch(Key) 
+     switch (Key) 
      {
-			 #if(DeviceType==Basket)
+			 #if (DeviceType==Basket)
 			 case BP1: GUI_StoreKeyMsg('4', 1); break;
 			 case BP2: GUI_StoreKeyMsg('3', 1); break;
 			 case BP3: GUI_StoreKeyMsg('2', 1); break;
@@ -83,17 +83,17 @@ unsigned long int Timeout;
 			 case 4: case 5: case 6:
 			 case 7: case 8: case 9:
 			 case 10:
-				 if(NumericInput)
+				 if (NumericInput)
 				 {
-					 if(Key==10)
+					 if (Key==10)
   	  		   GUI_StoreKeyMsg('0', 1);
 					 else
   	  		   GUI_StoreKeyMsg(Key+'0', 1);
 				 }else{
-  				 if((Tick<1000)&&(LastKey==Key))
+  				 if ((Tick<1000) && (LastKey==Key))
 	  			 {
 		  			 GUI_StoreKeyMsg(GUI_KEY_BACKSPACE, 1);
-			  		 if(KeyMap[Key-1][cntKey]==0)
+			  		 if (KeyMap[Key-1][cntKey] ==0)
 				  		   cntKey=0;
   				 }else
 	  			   cntKey=0;
@@ -126,13 +126,13 @@ unsigned long int Timeout;
 			//	 GUI_StoreKeyMsg(GUI_KEY_BACKSPACE, 1);
 			//	 break;
      }
-		 if(Key)
+		 if (Key)
 		 {
      	 Timeout=OS_TimeMS;
 			 LastKey=Key;
 			 Tick=0;
 		 }
-  	 if(OS_TimeMS-Timeout>=30000) 
+  	 if (OS_TimeMS-Timeout>=30000) 
 			 Released=1;
 		 GUI_Delay(10);
 	}

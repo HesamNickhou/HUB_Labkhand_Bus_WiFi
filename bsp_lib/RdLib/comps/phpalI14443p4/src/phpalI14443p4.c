@@ -24,7 +24,7 @@
 */
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 
@@ -293,7 +293,7 @@ phStatus_t phpalI14443p4_PresCheck(
     return PH_ADD_COMPCODE(PH_ERR_SUCCESS, PH_COMP_PAL_ISO14443P4);
 }
 
-#if(DeviceUC==UC_KASHAN)
+#if (DeviceUC==UC_KASHAN)
 phStatus_t phpalI14443p4_Exchange(
                                      phpalI14443p4_DataParams_t * pDataParams,
                                      uint16_t wOption,
@@ -496,8 +496,8 @@ phStatus_t phpalI14443p4_Exchange(
 
                 /* Write Frame to HAL TxBuffer but do not preform Exchange */
 								statusTmp = phhalHw_Rc632_Exchange(pParams, PH_EXCHANGE_BUFFER_FIRST, bIsoFrame, wIsoFrameLen, NULL, NULL);
-								if(statusTmp!=PH_ERR_SUCCESS)
-								  return(statusTmp);	
+								if (statusTmp!=PH_ERR_SUCCESS)
+								  return statusTmp;	
                 //PH_CHECK_SUCCESS_FCT(statusTmp, phhalHw_Exchange(
                 //    pDataParams->pHalDataParams,
                 //    PH_EXCHANGE_BUFFER_FIRST,

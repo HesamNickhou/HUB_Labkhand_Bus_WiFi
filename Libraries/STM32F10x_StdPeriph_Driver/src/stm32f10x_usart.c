@@ -602,10 +602,10 @@ unsigned int i;
   //assert_param(IS_USART_ALL_PERIPH(USARTx));
   //assert_param(IS_USART_DATA(Data)); 
     
-  for(i=0; i<10000000; i++)
+  for (i=0; i<10000000; i++)
 	{
 		WDTR;
-		if(USARTx->SR & USART_FLAG_TXE)
+		if (USARTx->SR & USART_FLAG_TXE)
 			break;
 	}
   /* Transmit Data */
@@ -1002,7 +1002,7 @@ ITStatus USART_GetITStatus(USART_TypeDef* USARTx, uint16_t USART_IT)
   bitpos = USART_IT >> 0x08;
   bitpos = (uint32_t)0x01 << bitpos;
   bitpos &= USARTx->SR;
-  if ((itmask != (uint16_t)RESET)&&(bitpos != (uint16_t)RESET))
+  if ((itmask != (uint16_t)RESET) && (bitpos != (uint16_t)RESET))
   {
     bitstatus = SET;
   }

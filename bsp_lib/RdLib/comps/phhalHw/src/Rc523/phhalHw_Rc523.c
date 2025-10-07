@@ -26,7 +26,7 @@
 #ifdef Torgheh
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 #include <math.h>
@@ -121,18 +121,18 @@ u8 i=0;
 	
 	SCK=0;	
 	MOSI=0;
-	for(count=0;count<8;count++)  
+	for (count=0;count<8;count++)  
 	{ 	  
-		if(data&0x80)MOSI=1;  
+		if (data&0x80)MOSI=1;  
 		else MOSI=0;   
 		data<<=1;    
 		SCK=1; 	 
 		Num<<=1; 	 
-		if(MISO) Num++; 		 
+		if (MISO) Num++; 		 
 		SCK=0;		       
 	}		 			    
 	//Num>>=4;
-	return(Num);   
+	return Num;   
 }
 
 phStatus_t phhalHw_Rc523_Init(
@@ -496,7 +496,7 @@ phStatus_t phhalHw_Rc523_ApplyProtocolSettings(
 
     /* configure the gain factor to 23dB for Target and 38dB for Initiator*/
 
-    if(pDataParams->bCardType == PHHAL_HW_CARDTYPE_I18092MPT)
+    if (pDataParams->bCardType == PHHAL_HW_CARDTYPE_I18092MPT)
     {
         PH_CHECK_SUCCESS_FCT(statusTmp, phhalHw_WriteRegister(pDataParams, PHHAL_HW_RC523_REG_RFCFG, 0x30));
     }

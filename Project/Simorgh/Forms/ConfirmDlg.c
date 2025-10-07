@@ -82,9 +82,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    switch(Id) {
+    switch (Id) {
     case ID_BUTTON_1: // Notifications sent by 'Button'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
 			  Released=1;
 			  ConfirmDlgResult=0;
@@ -92,7 +92,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_BUTTON_0: // Notifications sent by 'Button'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
 			  Released=1;
 			  ConfirmDlgResult=1;
@@ -123,7 +123,7 @@ WM_HWIN hItem;
 
   HandleForm(hWin, 0);
 	
-	return(ConfirmDlgResult);
+	return ConfirmDlgResult;
 }
 
 /*************************** End of file ****************************/

@@ -190,7 +190,7 @@ void SRAM_Init(void)
   */
 void SRAM_WriteBuffer(uint16_t* pBuffer, uint32_t WriteAddr, uint32_t NumHalfwordToWrite)
 {
-  for(; NumHalfwordToWrite != 0; NumHalfwordToWrite--) /*!< while there is data to write */
+  for (; NumHalfwordToWrite != 0; NumHalfwordToWrite--) /*!< while there is data to write */
   {
     /*!< Transfer data to the memory */
     *(uint16_t *) (Bank1_SRAM3_ADDR + WriteAddr) = *pBuffer++;
@@ -210,7 +210,7 @@ void SRAM_WriteBuffer(uint16_t* pBuffer, uint32_t WriteAddr, uint32_t NumHalfwor
   */
 void SRAM_ReadBuffer(uint16_t* pBuffer, uint32_t ReadAddr, uint32_t NumHalfwordToRead)
 {
-  for(; NumHalfwordToRead != 0; NumHalfwordToRead--) /*!< while there is data to read */
+  for (; NumHalfwordToRead != 0; NumHalfwordToRead--) /*!< while there is data to read */
   {
     /*!< Read a half-word from the memory */
     *pBuffer++ = *(__IO uint16_t*) (Bank1_SRAM3_ADDR + ReadAddr);

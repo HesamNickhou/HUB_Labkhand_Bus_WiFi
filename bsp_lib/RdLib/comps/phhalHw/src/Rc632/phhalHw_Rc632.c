@@ -24,7 +24,7 @@
 
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 #include <math.h>
@@ -107,18 +107,18 @@ u8 i=0;
 	
 	SCK=0;	
 	MOSI=0;
-	for(count=0;count<8;count++)  
+	for (count=0;count<8;count++)  
 	{ 	  
-		if(data&0x80)MOSI=1;  
+		if (data&0x80)MOSI=1;  
 		else MOSI=0;   
 		data<<=1;    
 		SCK=1; 	 
 		Num<<=1; 	 
-		if(MISO) Num++; 		 
+		if (MISO) Num++; 		 
 		SCK=0;		       
 	}		 			    
 	//Num>>=4;
-	return(Num);   
+	return Num;   
 }
 
 
@@ -453,7 +453,7 @@ phStatus_t phhalHw_Rc632_Exchange(
         {
             status = PH_ERR_FRAMING_ERROR;
         }
-        else if(bError & PHHAL_HW_RC632_BIT_COLL_ERR)
+        else if (bError & PHHAL_HW_RC632_BIT_COLL_ERR)
         {
             /* No bytes received -> timeout */
             if (wRxBufLen == 0)
@@ -467,7 +467,7 @@ phStatus_t phhalHw_Rc632_Exchange(
 
                 /* Retreive collision position*/
                 phhalHw_Rc632_ReadRegister(PHHAL_HW_RC632_REG_COLL_POS,&bRegister);
-                if(bRegister == 0x0)
+                if (bRegister == 0x0)
                 {
                     wRxBufLen = 0;
 
@@ -507,7 +507,7 @@ phStatus_t phhalHw_Rc632_Exchange(
         {
             status = PH_ERR_PROTOCOL_ERROR;
         }
-        else if(bError & PHHAL_HW_RC632_BIT_CRC_ERR)
+        else if (bError & PHHAL_HW_RC632_BIT_CRC_ERR)
         {
             status = PH_ERR_INTEGRITY_ERROR;
         }
@@ -1306,7 +1306,7 @@ phStatus_t phhalHw_Rc632_SetConfig(phhalHw_Rc632_DataParams_t * pDataParams, uin
             case PHHAL_HW_RF_DATARATE_848:
                 wOtherDataRate = pDataParams->wCfgShadow[PHHAL_HW_CONFIG_TXDATARATE];
                 /* set reader send baudrate */
-                if(wValue != PHHAL_HW_RF_DATARATE_212)
+                if (wValue != PHHAL_HW_RF_DATARATE_212)
                 {
                    phhalHw_Rc632_WriteRegister(PHHAL_HW_RC632_REG_CODER_CONTROL, 0x19);
                 }
@@ -1325,7 +1325,7 @@ phStatus_t phhalHw_Rc632_SetConfig(phhalHw_Rc632_DataParams_t * pDataParams, uin
                 return PH_ADD_COMPCODE(PH_ERR_INVALID_PARAMETER, PH_COMP_HAL);
             }
         }
-        else if(pDataParams->bCardType == PHHAL_HW_CARDTYPE_ICODEEPCUID)
+        else if (pDataParams->bCardType == PHHAL_HW_CARDTYPE_ICODEEPCUID)
         {
             if (wValue == PHHAL_HW_RF_DATARATE_EPCUID)
             {
@@ -1459,7 +1459,7 @@ phStatus_t phhalHw_Rc632_SetConfig(phhalHw_Rc632_DataParams_t * pDataParams, uin
                 return PH_ADD_COMPCODE(PH_ERR_INVALID_PARAMETER, PH_COMP_HAL);
             }
         }
-        else if(pDataParams->bCardType == PHHAL_HW_CARDTYPE_ICODEEPCUID)
+        else if (pDataParams->bCardType == PHHAL_HW_CARDTYPE_ICODEEPCUID)
         {
             if (wValue == PHHAL_HW_RF_DATARATE_EPCUID)
             {
@@ -1488,7 +1488,7 @@ phStatus_t phhalHw_Rc632_SetConfig(phhalHw_Rc632_DataParams_t * pDataParams, uin
     case PHHAL_HW_CONFIG_MODINDEX:
 
         /* Set ModConductance register */
-        if(wValue > 0x3F)
+        if (wValue > 0x3F)
         {
             return PH_ADD_COMPCODE(PH_ERR_INVALID_PARAMETER, PH_COMP_HAL);
         }
@@ -1656,7 +1656,7 @@ phStatus_t phhalHw_Rc632_SetConfig(phhalHw_Rc632_DataParams_t * pDataParams, uin
         }
 
         /* Update Subcarrier setting */
-        if(wValue > 1)
+        if (wValue > 1)
         {
             return PH_ADD_COMPCODE(PH_ERR_UNSUPPORTED_PARAMETER, PH_COMP_HAL);
         }
@@ -2141,7 +2141,7 @@ phStatus_t phhalHw_Rc632_SetMinFDT(
         /* Get the data rate */
         PH_CHECK_SUCCESS_FCT(status, phhalHw_Rc632_GetConfig(pDataParams,
                 PHHAL_HW_CONFIG_TXDATARATE, &wTxRate));
-        switch(wTxRate)
+        switch (wTxRate)
         {
             case PHHAL_HW_RF_DATARATE_106:
                 wTimer = PHHAL_HW_MINFDT_106_US;

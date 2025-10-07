@@ -35,7 +35,7 @@ void BSP_Background (void) {
   if (POINTER_ticks++ > 50){
     POINTER_ticks = 0;
     /* Capture input event and updade cursor */
-    if(GUI_Initialized == 1)
+    if (GUI_Initialized == 1)
     {
       // BSP_Pointer_Update();
     }

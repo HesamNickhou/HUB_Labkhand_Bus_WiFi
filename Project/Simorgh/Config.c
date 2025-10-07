@@ -33,7 +33,7 @@ unsigned char SDCardPresent = 0;
 unsigned char _acBuffer[DATA_SIZE];
 
 #ifdef Simorgh50N
-const TResource Resources[]= 
+const TResource Resources[] = 
 {
 {"0:ani/A0000/0028.bmp",0,20792},
 {"0:desktop/00010.bmp",20792,6968},
@@ -113,7 +113,7 @@ const TResource Resources[]=
 };
 #endif
 #ifdef Torgheh
-const TResource Resources[]= 
+const TResource Resources[] = 
 {
 {"0:ani/A0000/0028.bmp",0,20790},
 {"0:Cent20.sif",20790,2812},
@@ -191,8 +191,7 @@ const TResource Resources[]=
 #endif
 
 #define SIZE_UTF8Table 36
-static const u16 TableUTF8[SIZE_UTF8Table] = 
-{
+static const u16 TableUTF8[SIZE_UTF8Table] = {
 	0xD8A7 , 0xD8A2 , 0xD8A8 , 0xD9BE , 0xD8AA , 0xD8AB ,
 	0xD8AC , 0xD8AD , 0xD8AE , 0xDA86 , 0xD8AF , 0xD8B0 ,
 	0xD8B1 , 0xD8B2 , 0xDA98 , 0xD8B3 , 0xD8B4 , 0xD8B5 ,
@@ -201,8 +200,7 @@ static const u16 TableUTF8[SIZE_UTF8Table] =
 	0xD988 , 0xD987 , 0xD98A , 0xD8A4 , 0xD8A1 , 0xDB8C 
 };
 
-static const u8 TableWin1256[SIZE_UTF8Table] = 
-{
+static const u8 TableWin1256[SIZE_UTF8Table] = {
 	0xC7 , 0xC2 , 0xC8 , 0x81 , 0xCA , 0xCB ,
 	0xCC , 0xCD , 0xCE , 0x8d , 0xCF , 0xD0 , 
 	0xD1 , 0xD2 , 0x8E , 0xD3 , 0xD4 , 0xD5 ,
@@ -246,8 +244,7 @@ const unsigned int CRC16_table[256] = {
 	0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
 };
 
-const unsigned char KeyTable[256]=
-{
+const unsigned char KeyTable[256] = {
     0xf4, 0x41, 0x17, 0x27, 0xab, 0x9d, 0xfa, 0xe3, 0x30, 0x76, 0xcc, 0x02, 0xe5, 0x2a, 0x35, 0x62,
     0xb1, 0xba, 0xea, 0xfe, 0x2f, 0x4c, 0x46, 0xd3, 0x8f, 0x92, 0x6d, 0x52, 0xbe, 0x74, 0xe0, 0xc9,
     0xc2, 0x8e, 0x58, 0xb9, 0xe1, 0x88, 0x20, 0xce, 0xdf, 0x1a, 0x51, 0x53, 0x7c, 0x42, 0x84, 0x00,
@@ -317,11 +314,10 @@ const unsigned int UCMap[255] = {
 	6572, 6573, 6574
 };
 
-
 unsigned char  TFT_START_Y = 0; 
 unsigned short TFT_HEIGHT  = 480;
 
-#if(DeviceType == Basket)
+#if (DeviceType == Basket)
 TPerson Person;
 TSeries Series[30];
 TKalas Kalas[30];
@@ -336,65 +332,64 @@ void IntToByte(unsigned int INT,unsigned char *BYTE) {
   BYTE[3] = (INT >> 24) & 0xFF; 
 }
 //================================================================================
-void GenerateCardIdUC(unsigned char *buf,unsigned char *snr,unsigned int *UC,unsigned int *CardID) {
-	unsigned char BCC, data[16];
+void GenerateCardIdUC(unsigned char *buf, unsigned char *snr, unsigned int *UC, 
+	unsigned int *CardID) {
+	unsigned char 
+		BCC, 
+		data[16];
 	unsigned int i;
-  
-  for(i=0; i<16; i++)
-    data[i]=buf[i];
-  
-  BCC=0xC9;
-  for(i=0; i<15; i++)
-    BCC^=data[i];
-    if(BCC==data[15])
-    {      
-      for(i=0; i<15; i++) 
-      {
-        data[i]^=KeyTable[snr[i%4]/((i/4)+1)]^snr[3-(i%4)];
-      }
-      BCC=0xE2;  
-      for(i=0; i<14; i++)
-        BCC^=data[i];
-      if(BCC!=data[14])  
-      {
-        for(i=0; i<16; i++)
-          data[i]=buf[i];
-        BCC=data[15]+1;  
-      }else{  
-        *UC=data[1]; *UC<<=8;
-        *UC+=data[0];
 
-        *CardID=data[5]; *CardID<<=8;
-        *CardID+=data[4]; *CardID<<=8;
-        *CardID+=data[3]; *CardID<<=8;
-        *CardID+=data[2];
-        BCC=data[15];  
-      }
-    }  
+  for (i=0; i<16; i++)
+    data[i] = buf[i];
 
-    if(BCC!=data[15])
-    {      
-      *UC=buf[1];  *UC<<=8;
-      *UC+=buf[0];
-      *CardID=buf[5];  *CardID<<=8;
-      *CardID+=buf[4]; *CardID<<=8;
-      *CardID+=buf[3]; *CardID<<=8;
-      *CardID+=buf[2];
-      if((*UC & 0x8000)==0x8000)
-      {
+  BCC = 0xC9;
+  for (i=0; i<15; i++)
+    BCC ^= data[i];
+    if (BCC == data[15]) {
+      for (i=0; i<15; i++)
+        data[i] ^= KeyTable[snr[i % 4] / ((i / 4) + 1)] ^ snr[3 - (i % 4)];
+
+      BCC = 0xE2;
+      for (i=0; i<14; i++)
+        BCC ^= data[i];
+      if (BCC != data[14]) {
+        for (i=0; i<16; i++)
+          data[i] = buf[i];
+        BCC = data[15] + 1;
+      }
+			else {
+        *UC  = data[1]; *UC <<= 8;
+        *UC += data[0];
+
+        *CardID  = data[5]; *CardID <<= 8;
+        *CardID += data[4]; *CardID <<= 8;
+        *CardID += data[3]; *CardID <<= 8;
+        *CardID += data[2];
+        BCC 		 = data[15];
+      }
+    }
+
+    if (BCC != data[15]) {
+      *UC  = buf[1];  *UC <<= 8;
+      *UC += buf[0];
+      *CardID  = buf[5]; *CardID <<= 8;
+      *CardID += buf[4]; *CardID <<= 8;
+      *CardID += buf[3]; *CardID <<= 8;
+      *CardID += buf[2];
+      if ((*UC & 0x8000) == 0x8000) {
         *UC = *UC & 0x7FFF;
         *UC = *UC ^ 0x6A29;
-        *CardID= *CardID ^ 0xB2A6;
-      }              
+        *CardID = *CardID ^ 0xB2A6;
+      }
     }
 }
 
 //==============================================================================
-unsigned char LoadFromDFToRam(unsigned int memoryOffset, unsigned int sizeToCopy, unsigned char *pDest) {
+unsigned char LoadFromDFToRam(unsigned int memoryOffset, unsigned int sizeToCopy, 
+	unsigned char *pDest) {
 	WDTR;
 	SPI_Flash_Read(pDest, memoryOffset, sizeToCopy);
 }
-
 //==============================================================================
 unsigned char SaveFromRamToDF(unsigned int memoryOffset, 
 	unsigned int sizeToCopy, unsigned char *pDest) {
@@ -408,7 +403,7 @@ union {
   TConfig Cfg;
 } ConfigTransfer;
 unsigned char SaveConfiguration(void) {
-	#if(DeviceType==BUSDOOR)
+	#if (DeviceType==BUSDOOR)
   Config.Type=DeviceType+0xCA;
   ConfigTransfer.Cfg=Config;
   SaveFromRamToDF(addConfig2, 4*512, ConfigTransfer.Buf);
@@ -423,10 +418,10 @@ unsigned char SaveConfiguration(void) {
 
 //==============================================================================
 unsigned char LoadConfiguration(void) {
-	#if(DeviceType==BUSDOOR)
+	#if (DeviceType==BUSDOOR)
   LoadFromDFToRam(addConfig2, 4*512, ConfigTransfer.Buf);
   Config=ConfigTransfer.Cfg;
-	if(Config.Type!=DeviceType+0xCA)
+	if (Config.Type!=DeviceType+0xCA)
 	{
 		LoadFromDFToRam(addConfig, 4*512, ConfigTransfer.Buf);
 		Config=ConfigTransfer.Cfg;
@@ -437,7 +432,7 @@ unsigned char LoadConfiguration(void) {
   Config=ConfigTransfer.Cfg;
 	#endif
 
-  if(Config.Type!=DeviceType+0xCA)
+  if (Config.Type!=DeviceType+0xCA)
   {
     Indicators.Transactions=0;
     Indicators.Locations=0;
@@ -455,18 +450,18 @@ unsigned char LoadConfiguration(void) {
     SaveConfiguration();
   }
 	
-	if(Config.TFTType == 2)	{
+	if (Config.TFTType == 2)	{
 		TFT_START_Y = 12; 
     TFT_HEIGHT  = 240;
 	}	
 
-  return(0);
+  return 0;
 }
 
 //==============================================================================
-unsigned char SaveIndicators(void) { return(0);}
+unsigned char SaveIndicators(void) {return 0;}
 //==============================================================================
-unsigned char LoadIndicators(void) { return(0); }
+unsigned char LoadIndicators(void) {return 0;}
 //==============================================================================
 unsigned char GetResourceAddress(char *title, unsigned int *StartAddress, 
 	unsigned int *Len) {
@@ -479,13 +474,13 @@ unsigned char GetResourceAddress(char *title, unsigned int *StartAddress,
       if (title[j] == 0) {
         *Len = Resources[i].Len;
 				*StartAddress = addResources+Resources[i].StartAddress;
-        return(0);
+        return 0;
       }
       if (Resources[i].Title[j] != title[j])
         break;
     }
   }
-  return(1);
+  return 1;
 }
 
 
@@ -498,19 +493,19 @@ void LoadFont(unsigned char FileType)
 char FileName[20];
 unsigned int StartAddress, Len;
 
-	if(RequestType==0xF1) 
+	if (RequestType==0xF1) 
 		return;
 	
-	switch(FileType)
+	switch (FileType)
 	{
 		case 0: sprintf(FileName, "0:Yekan30.sif"); break;
 		case 1: sprintf(FileName, "0:Yekan80.sif"); break;
 		default: sprintf(FileName, "0:Cent20.sif"); break;
 	}
-  if(GetResourceAddress((char *)FileName, &StartAddress, &Len))
+  if (GetResourceAddress((char *)FileName, &StartAddress, &Len))
 	  return;
 	
-	if(Len>10*1024)
+	if (Len>10*1024)
     Len=10*1024; 
 		//return;
 	
@@ -522,16 +517,16 @@ unsigned int StartAddress, Len;
   SPI2_ReadWriteByte((u8)((StartAddress)>>8));   
   SPI2_ReadWriteByte((u8)StartAddress);   
 
-	for(StartAddress=0;StartAddress<Len; StartAddress++)	
+	for (StartAddress=0;StartAddress<Len; StartAddress++)	
 	{
     while ((SPI2->SR&SPI_I2S_FLAG_TXE) != SPI_I2S_FLAG_TXE);
     SPI2->DR = 0xFF; 
     while ((SPI2->SR&SPI_I2S_FLAG_RXNE) != SPI_I2S_FLAG_RXNE);
-    fontBuffer[StartAddress]=SPI2->DR;  
+    fontBuffer[StartAddress] =SPI2->DR;  
   }
   SPI_FLASH_CS=1;      
 
-	if((fontBuffer[0]!='G')||(fontBuffer[1]!='U')||(fontBuffer[2]!='I')||(fontBuffer[3]!='P'))
+	if ((fontBuffer[0]!='G') || (fontBuffer[1]!='U') || (fontBuffer[2]!='I') || (fontBuffer[3]!='P'))
 		return;
 	
   GUI_SIF_CreateFont(fontBuffer, &ExtFont, GUI_SIF_TYPE_PROP);
@@ -542,11 +537,11 @@ unsigned int StartAddress, Len;
 //==============================================================================
 void LoadFont(const unsigned char* Data)
 {
-	if((Data[0]!='G')||(Data[1]!='U')||(Data[2]!='I')||(Data[3]!='P'))
+	if ((Data[0]!='G') || (Data[1]!='U') || (Data[2]!='I') || (Data[3]!='P'))
 	{
-		if(Data==FontBNazanin140)
+		if (Data==FontBNazanin140)
 			Data=FontBKoodak40;
-		//else if(Data==FontTahoma20)
+		//else if (Data==FontTahoma20)
 		//	Data=FontTahoma20;
 		else
 		  GUI_SetFont(&GUI_Font6x8);
@@ -559,40 +554,39 @@ void LoadFont(const unsigned char* Data)
 #endif
 
 //==============================================================================
-void LoadResourceFromSD2DF(void)
-{
-unsigned int i,j;
-unsigned short Loc;
-unsigned int ByteRead;
-FRESULT res;
-DIR dirs;
-FIL FileObject;
-unsigned int address=addResources;
+void LoadResourceFromSD2DF(void) {
+	unsigned int i,j;
+	unsigned short Loc;
+	unsigned int ByteRead;
+	FRESULT res;
+	DIR dirs;
+	FIL FileObject;
+	unsigned int address=addResources;
    
     // Open the file
 	/*
 	  res = f_open(&FileObject, "0:Simorgh.res", FA_OPEN_EXISTING|FA_READ);
-    if( res != FR_OK ) 
+    if ( res != FR_OK ) 
       return;
 
     ShowMessageDlg(mtError, "در حال انتقال",0,0,0,0);  
-    while(1)
+    while (1)
     {
       res = f_read(&FileObject, _acBuffer, DATA_SIZE, &ByteRead);
 			WDTR;
-      if(res==FR_OK) 
+      if (res==FR_OK) 
       {
         SaveFromRamToDF(address, ByteRead, _acBuffer);
 				address+=ByteRead;
       }
-      if(ByteRead<DATA_SIZE)
+      if (ByteRead<DATA_SIZE)
         break;
     }
 
     //ShowMessageDlg(mtError, "انجام شد",1,1,2000,3);  
     // Close the file
     res = f_close(&FileObject);
-    if( res != FR_OK )
+    if ( res != FR_OK )
       return;
 		
 		ShowMessageDlg(mtError, "انجام شد",1,1,2000,3);  
@@ -602,23 +596,23 @@ unsigned int address=addResources;
 		
     // Open the file
 	  res = f_open(&FileObject, "0:Simorgh.res", FA_OPEN_EXISTING|FA_READ);
-    if( res != FR_OK ) 
+    if ( res != FR_OK ) 
       return;
 
     ShowMessageDlg(mtError, "در حال انتقال صدا",0,0,0,0);  
 		
 			FLASH_UNLOCK
 		
-    while(1)
+    while (1)
     {
       res = f_read(&FileObject, _acBuffer, DATA_SIZE, &ByteRead);
 			WDTR;
-      if(res==FR_OK) 
+      if (res==FR_OK) 
       {
         SaveFromRamToDF(address, ByteRead, _acBuffer);
 				address+=ByteRead;
       }
-      if(ByteRead<DATA_SIZE)
+      if (ByteRead<DATA_SIZE)
         break;
     }
 
@@ -626,67 +620,63 @@ unsigned int address=addResources;
     //ShowMessageDlg(mtError, "انجام شد",1,1,2000,3);  
     // Close the file
     res = f_close(&FileObject);
-    if( res != FR_OK )
+    if ( res != FR_OK )
       return;
 		
 		ShowMessageDlg(mtError, "انجام شد",1,1,2000,3); 		
 }
 
 //==============================================================================
-s8 ConvertUTF8TOWin1256(u8 *StringUTF8, u8 *BuffStrWin1256)
-{
-u16 i=0, j=0;
-u16 CountLen=0;
-u16 CStrUtf8=0;
+s8 ConvertUTF8TOWin1256(u8 *StringUTF8, u8 *BuffStrWin1256) {
+	u16 i=0, j=0;
+	u16 CountLen=0;
+	u16 CStrUtf8=0;
 
-	for(i=0; (StringUTF8[i]!=0)&&(i<100); )
+	for (i=0; (StringUTF8[i]!=0) && (i<100); )
 	{
-		if(StringUTF8[i]<=122)
+		if (StringUTF8[i]<=122)
 		{
-			BuffStrWin1256[CountLen++]=StringUTF8[i];
+			BuffStrWin1256[CountLen++] =StringUTF8[i];
 			i++;
 			continue;
 		}
 		CStrUtf8= ((u16)(StringUTF8[i] << 8)) + StringUTF8[i+1];
-		for(j=0; j<SIZE_UTF8Table; j++)
+		for (j=0; j<SIZE_UTF8Table; j++)
 		{
-			if(CStrUtf8 == TableUTF8[j])
+			if (CStrUtf8 == TableUTF8[j])
 				break;
 		}
-		BuffStrWin1256[CountLen++]= TableWin1256[j];
+		BuffStrWin1256[CountLen++] = TableWin1256[j];
 		i+= 2;
 	}
-	BuffStrWin1256[CountLen++]= 0;
-	return(0);
+	BuffStrWin1256[CountLen++] = 0;
+	return 0;
 }
 
-//==============================================================================
-s8 ConvertWin1256TOUTF8(u8 *StringWin1256, u8 *BuffStrUTF8)
-{
-u16 i=0,j=0;
-u16 CountLen=0;
-u16 CStrUtf8=0;
+//========= = == = == = ==============================================================
+s8 ConvertWin1256TOUTF8(u8 *StringWin1256, u8 *BuffStrUTF8) {
+	u16 i = 0 , 
+			j = 0;
+	u16 CountLen = 0;
+	u16 CStrUtf8 = 0;
 	
-	for(i=0; (StringWin1256[i]!=0)&&(i<200); i++)
-	{
-		if(StringWin1256[i]<=122)
-		{
-			BuffStrUTF8[CountLen++]=StringWin1256[i];
+	for (i=0; (StringWin1256[i] != 0) && (i < 200); i++) {
+		if (StringWin1256[i] <= 122) {
+			BuffStrUTF8[CountLen++] = StringWin1256[i];
 			continue;
 		}
-		for(j=0; j<SIZE_UTF8Table; j++)
-			if(StringWin1256[i]==TableWin1256[j]) 
+		for (j=0; j<SIZE_UTF8Table; j++)
+			if (StringWin1256[i] == TableWin1256[j]) 
 				break;
-		if(j>=SIZE_UTF8Table)
-		{
-			BuffStrUTF8[CountLen++]=' ';
+		if (j>=SIZE_UTF8Table) {
+			BuffStrUTF8[CountLen++] = ' ';
 			continue;
 		}
-		CStrUtf8= TableUTF8[j];
-		BuffStrUTF8[CountLen++]= CStrUtf8 >> 8;
-		BuffStrUTF8[CountLen++]= CStrUtf8 & 0x00FF;
+		CStrUtf8 = TableUTF8[j];
+		BuffStrUTF8[CountLen++] = CStrUtf8 >> 8;
+		BuffStrUTF8[CountLen++] = CStrUtf8 & 0x00FF;
 	}
-	BuffStrUTF8[CountLen++]= 0;
+	BuffStrUTF8[CountLen++] = 0;
 	return 0;
 }
 

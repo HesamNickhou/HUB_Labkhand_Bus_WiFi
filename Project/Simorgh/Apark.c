@@ -995,8 +995,8 @@ unsigned short PassengerTargetID=0;
 
 signed short int CurrentCourse=-1, OldCourse=-1;
 
-const unsigned char* strDays[7]={{"يکشنبه"},{"دوشنبه"},{"سه شنبه"},{"چهارشنبه"},{"پنج شنبه"},{"جمعه"},{"شنبه"}};
-const unsigned char* strMonths[13]={{"فروردين"},{"ارديبهشت"},{"خرداد"},{"تير"},{"مرداد"},{"شهريور"},{"مهر"},{"آبان"},{"آذر"},{"دي"},{"بهمن"},{"اسفند"}};
+const unsigned char* strDays[7] ={{"يکشنبه"},{"دوشنبه"},{"سه شنبه"},{"چهارشنبه"},{"پنج شنبه"},{"جمعه"},{"شنبه"}};
+const unsigned char* strMonths[13] ={{"فروردين"},{"ارديبهشت"},{"خرداد"},{"تير"},{"مرداد"},{"شهريور"},{"مهر"},{"آبان"},{"آذر"},{"دي"},{"بهمن"},{"اسفند"}};
 	
 void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int _ID,unsigned char Result,unsigned char *);
 
@@ -1028,29 +1028,29 @@ unsigned int i;
 unsigned short crc=0;
 unsigned char buf[20];
 	
-  buf[0]=trHead & 0xFF;
-  buf[1]=(trHead>>8) & 0xFF;
-  buf[2]=(trHead>>16) & 0xFF;
-  buf[3]=(trHead>>24) & 0xFF;
-  buf[4]=trTail & 0xFF;
-  buf[5]=(trTail>>8) & 0xFF;
-  buf[6]=(trTail>>16) & 0xFF;
-  buf[7]=(trTail>>24) & 0xFF;
-  buf[8]=loHead & 0xFF;
-  buf[9]=(loHead>>8) & 0xFF;
-  buf[10]=(loHead>>16) & 0xFF;
-  buf[11]=(loHead>>24) & 0xFF;
-  buf[12]=loTail & 0xFF;
-  buf[13]=(loTail>>8) & 0xFF;
-  buf[14]=(loTail>>16) & 0xFF;
-  buf[15]=(loTail>>24) & 0xFF;
+  buf[0] =trHead & 0xFF;
+  buf[1] =(trHead>>8) & 0xFF;
+  buf[2] =(trHead>>16) & 0xFF;
+  buf[3] =(trHead>>24) & 0xFF;
+  buf[4] =trTail & 0xFF;
+  buf[5] =(trTail>>8) & 0xFF;
+  buf[6] =(trTail>>16) & 0xFF;
+  buf[7] =(trTail>>24) & 0xFF;
+  buf[8] =loHead & 0xFF;
+  buf[9] =(loHead>>8) & 0xFF;
+  buf[10] =(loHead>>16) & 0xFF;
+  buf[11] =(loHead>>24) & 0xFF;
+  buf[12] =loTail & 0xFF;
+  buf[13] =(loTail>>8) & 0xFF;
+  buf[14] =(loTail>>16) & 0xFF;
+  buf[15] =(loTail>>24) & 0xFF;
   crc=0;
-  for(i=0; i<16; i++)
+  for (i=0; i<16; i++)
     crc+=buf[i];
-  buf[16]=crc & 0xFF;
-  buf[17]=(crc>>8) & 0xFF;
-  buf[18]='N';
-  buf[19]='W';
+  buf[16] =crc & 0xFF;
+  buf[17] =(crc>>8) & 0xFF;
+  buf[18] ='N';
+  buf[19] ='W';
  	FLASH_UNLOCK
   SaveFromRamToDF(addIndicators, 20, buf);
  	FLASH_LOCK
@@ -1085,9 +1085,9 @@ unsigned char buf[LEN_TRANSACTIONS];
   //prHead+=buf[8];
 	
 	crc=0;
-  for(i=0; i<16; i++)
+  for (i=0; i<16; i++)
     crc+=buf[i];
-  if((buf[16]+(buf[17]*256))!=crc)
+  if ((buf[16]+(buf[17]*256))!=crc)
   {
     trHead=0;
     trTail=0;
@@ -1099,20 +1099,20 @@ unsigned char buf[LEN_TRANSACTIONS];
 	
   printf("\n\r===================================");
   printf("\n\rFirst Values: trHead: %d trTail: %d", trHead, trTail);
-  if((trHead>MAX_TRANSACTIONS)||(trTail>MAX_TRANSACTIONS))
+  if ((trHead>MAX_TRANSACTIONS) || (trTail>MAX_TRANSACTIONS))
   {
     trHead=0;
     trTail=0;
   }
   Idx=trHead; Idx2=trTail;
 
-  for(i=0; i<MAX_TRANSACTIONS; i++) 
+  for (i=0; i<MAX_TRANSACTIONS; i++) 
   {
    
     Address=addTransactions+((Idx+1)*LEN_TRANSACTIONS)-2; 
     LoadFromDFToRam(Address, 2, buf);
-		//printf("\n\r%d,buf[0]=%x,buf[1]=%x,buf[2]=%x,buf[3]=%x",Idx,buf[0],buf[1],buf[2],buf[3]);
-    if((buf[0]==0xff)&&(buf[1]==0xff))  //3c 14
+		//printf("\n\r%d,buf[0] =%x,buf[1] =%x,buf[2] =%x,buf[3] =%x",Idx,buf[0],buf[1],buf[2],buf[3]);
+    if ((buf[0] ==0xff) && (buf[1] ==0xff))  //3c 14
     {
       printf("\n\rFound");
       trHead=Idx;
@@ -1120,46 +1120,46 @@ unsigned char buf[LEN_TRANSACTIONS];
       break;
     }
     Idx++;
-    if(Idx>=MAX_TRANSACTIONS) Idx=0;
-    if(Idx==Idx2)
-      if(++Idx2>=MAX_TRANSACTIONS)
+    if (Idx>=MAX_TRANSACTIONS) Idx=0;
+    if (Idx==Idx2)
+      if (++Idx2>=MAX_TRANSACTIONS)
         Idx2=0;
   }
   printf("\n\rFound Values: trHead: %d trTail: %d", trHead, trTail);
-  if(i>=MAX_TRANSACTIONS)
+  if (i>=MAX_TRANSACTIONS)
   {
     trHead=0;
     trTail=0;
   }
   
   //-----------------------------
-  if(trHead!=trTail)
+  if (trHead!=trTail)
   {
     Idx=trHead;
     OfflineStart=trTail;
-    if(Idx>0)
+    if (Idx>0)
       Idx--;
-    else if(trTail!=0)
+    else if (trTail!=0)
       Idx=MAX_TRANSACTIONS-1;
     
     printf("\n\rCheck Offline ");
-    for(i=0; i<MAX_TRANSACTIONS; i++)
+    for (i=0; i<MAX_TRANSACTIONS; i++)
     {
-      if(Idx==trTail)
+      if (Idx==trTail)
         break;
 			
 
       Address=addTransactions+(Idx*LEN_TRANSACTIONS); 
       LoadFromDFToRam(Address+LEN_TRANSACTIONS-1, 1, buf);
       //printf("- %d, buf[0] =%x ",Idx,buf[0]);			
-      if(buf[0]==0x90)
+      if (buf[0] ==0x90)
       {
         printf("\n\rOff Found");
         OfflineStart=Idx+1;
-        if(OfflineStart>=MAX_TRANSACTIONS) OfflineStart=0;
+        if (OfflineStart>=MAX_TRANSACTIONS) OfflineStart=0;
         break;
       }
-      if(Idx==0)
+      if (Idx==0)
         Idx=MAX_TRANSACTIONS-1;
       else 
         Idx--;
@@ -1176,17 +1176,17 @@ unsigned char buf[LEN_TRANSACTIONS];
 //==============================================================================
 void IncTrHead(void)
 {
-  if(++trHead>=MAX_TRANSACTIONS)
+  if (++trHead>=MAX_TRANSACTIONS)
     trHead=0;
-  if(trHead==trTail)
-    if(++trTail>=MAX_TRANSACTIONS)
+  if (trHead==trTail)
+    if (++trTail>=MAX_TRANSACTIONS)
       trTail=0; 
-	if(trTail>trHead)	
+	if (trTail>trHead)	
 	{
 		//if Head and Tail come in same sector tail must jump to next sector
-		if((trHead/(4096/LEN_TRANSACTIONS))==(trTail/(4096/LEN_TRANSACTIONS)))
+		if ((trHead/(4096/LEN_TRANSACTIONS))==(trTail/(4096/LEN_TRANSACTIONS)))
 			trTail+=(4096/LEN_TRANSACTIONS)-(trTail%(4096/LEN_TRANSACTIONS));
-    if(++trTail>=MAX_TRANSACTIONS)
+    if (++trTail>=MAX_TRANSACTIONS)
       trTail=0; 
 	}
 }
@@ -1202,33 +1202,33 @@ unsigned short BCC, i, Idx=0,len=0;
 	
 	len=LEN_TRANSACTIONS;
 
-	for(i=0; i<len; i++)
-    TBuff[i]=Buf[i];
+	for (i=0; i<len; i++)
+    TBuff[i] =Buf[i];
   
-	TBuff[len-1]=0x50;
+	TBuff[len-1] =0x50;
 	
-	TBuff[len]=0x3C;
-  TBuff[len+1]=0x14;
-  TBuff[len+2]=0xB1;
+	TBuff[len] =0x3C;
+  TBuff[len+1] =0x14;
+  TBuff[len+2] =0xB1;
 	
   address=addTransactions+(trHead*len);
-  if(SaveFromRamToDF(address, len+3, TBuff))
-		if(SaveFromRamToDF(address, len+3, TBuff))
+  if (SaveFromRamToDF(address, len+3, TBuff))
+		if (SaveFromRamToDF(address, len+3, TBuff))
 		{
 			IncTrHead();
       address=addTransactions+(trHead*len);
-		  if(SaveFromRamToDF(address, len+3, TBuff))			
+		  if (SaveFromRamToDF(address, len+3, TBuff))			
 			{
 
 			}
 		}			
 		
 	IncTrHead();
-	 if(trHead>=MAX_TRANSACTIONS)
+	 if (trHead>=MAX_TRANSACTIONS)
   {
-    TBuff[0]=0x3C;
-    TBuff[1]=0x14;
-    TBuff[2]=0xB1;
+    TBuff[0] =0x3C;
+    TBuff[1] =0x14;
+    TBuff[2] =0xB1;
     SaveFromRamToDF(address, len+3, TBuff);
     trHead=0;
 
@@ -1239,10 +1239,10 @@ unsigned short BCC, i, Idx=0,len=0;
 //==============================================================================
 void IntToBytes(unsigned int i, unsigned char *buf)
 {
-  buf[0]=i & 0xFF;
-  buf[1]=(i>>8) & 0xFF;
-  buf[2]=(i>>16) & 0xFF;
-  buf[3]=(i>>24) & 0xFF;
+  buf[0] =i & 0xFF;
+  buf[1] =(i>>8) & 0xFF;
+  buf[2] =(i>>16) & 0xFF;
+  buf[3] =(i>>24) & 0xFF;
 }
 
 //==============================================================================
@@ -1262,7 +1262,7 @@ unsigned char i;
 	/*
   ErrorBip(1);
   ShowMessageDlg(mtWarning, "ط®ط·ط§ظٹ ط´ظ…ط§ط±ظ‡ 25. ظ„ط·ظپط§ ط¨ط§ ظ¾ط´طھظٹط¨ط§ظ† ط¯ط³طھع¯ط§ظ‡ طھظ…ط§ط³ ط­ط§طµظ„ ظپط±ظ…ط§ظٹظٹط¯.",0,0,0,0);  
-	for(i=0; i<5; i++)
+	for (i=0; i<5; i++)
 	{
 	  WDTR;
 		GUI_Delay(1000);
@@ -1275,11 +1275,11 @@ unsigned char GetUCMap(unsigned int UC)
 {
 unsigned int i;
 
-  for(i=0; i<255; i++)
-    if(UCMap[i]==UC)
+  for (i=0; i<255; i++)
+    if (UCMap[i] ==UC)
       break;
-  if(i>=255) return(0xFF);
-  else       return(i);
+  if (i>=255) return 0xFF;
+  else       return i;
 }
 
 //==============================================================================
@@ -1298,7 +1298,7 @@ unsigned int i=0;
   i+=data[1]; i<<=8;
   i+=data[0];
   
-  return(i);
+  return i;
 }
 
 
@@ -1384,7 +1384,7 @@ static const GUI_POINT _aPolig3[] = {
  GUI_SetColor(0x000f0000);
  
  LoadFont(FontBNazanin200);
- if(Config.X10==1)
+ if (Config.X10==1)
  {
    LoadFont(FontBNazanin140);
    sprintf(str,"%d",Config.Price*10);
@@ -1423,7 +1423,7 @@ static const GUI_POINT _aPolig3[] = {
 
   LoadFont(FontTahoma20);
   GUI_SetColor(GUI_DARKRED); 
-	if(LastCardingDateTime[0]!=0)
+	if (LastCardingDateTime[0]!=0)
 	{
 	//sprintf(str,"%d/%d/%d  %d:%d:%02d",LastCardingDateTime[0],LastCardingDateTime[1],LastCardingDateTime[2],LastCardingDateTime[3],LastCardingDateTime[4],LastCardingDateTime[5]);
 	//PutText(5, 275+30+10, 272-38, 275+30+30+10, str, GUI_TA_CENTER);
@@ -1444,7 +1444,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	{ 60, 0 },
  };	
  //........................................................................................
- if(Mode==0)
+ if (Mode==0)
  {
 	 
 	LEDOK=1;
@@ -1453,7 +1453,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_GREEN;		
 	BoarderColor=GUI_YELLOW;
  }
- else if(Mode==1)
+ else if (Mode==1)
  {
 	LEDERR=1;
   HeaderColor=GUI_DARKRED;
@@ -1461,7 +1461,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	 BoarderColor=GUI_RED;
  }
- else if(Mode==2)
+ else if (Mode==2)
  {
 	 LEDERR=1;
   HeaderColor=GUI_DARKRED;
@@ -1469,7 +1469,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	BoarderColor=GUI_RED;
  } 
- else if(Mode==3)
+ else if (Mode==3)
  {
 	LEDERR=1; 
   HeaderColor=GUI_DARKRED;
@@ -1477,7 +1477,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	BoarderColor=GUI_RED;
  }  
- else if(Mode==4)  //sam error
+ else if (Mode==4)  //sam error
  {
 	LEDERR=1; 
   HeaderColor=GUI_DARKRED;
@@ -1485,7 +1485,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 	TopColor=GUI_RED;		
 	BoarderColor=GUI_RED;
  }
- else if(Mode==5)  
+ else if (Mode==5)  
  {
 
   HeaderColor=GUI_DARKRED;
@@ -1515,18 +1515,18 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
  //........................................................................................
  
 //.....................................................................................
- if(Mode==0)
+ if (Mode==0)
    {
     LoadFont(FontBNazanin200);
     GUI_SetColor(GUI_BLACK);
-		 if(Pay>9999)  LoadFont(FontBNazanin140);
+		 if (Pay>9999)  LoadFont(FontBNazanin140);
     sprintf(str,"%d",Pay);
     PutText(0, 70, 272, 400, str, GUI_TA_CENTER);
  
     LoadFont(FontBKoodak40);
 
     GUI_SetColor(GUI_WHITE);	
-    if(Tedadi==0)  PutText(0, 20+15, 272, 20+15+50, "مانده اعتبار - واحد تومان", GUI_TA_CENTER);
+    if (Tedadi==0)  PutText(0, 20+15, 272, 20+15+50, "مانده اعتبار - واحد تومان", GUI_TA_CENTER);
 		else           PutText(0, 20+15, 272, 20+15+50, "تعداد بازي موجود در کارت", GUI_TA_CENTER); 
 			
 		Tedadi=0;
@@ -1535,10 +1535,10 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		PlayVoice("08.wav");
 		VOICEEN=0; 
 	 }
- else if(Mode==1)
+ else if (Mode==1)
    {
     LoadFont(FontBNazanin200);
-		 if(Pay>9999)  LoadFont(FontBNazanin140);		 
+		 if (Pay>9999)  LoadFont(FontBNazanin140);		 
     GUI_SetColor(GUI_BLACK);
     sprintf(str,"%d",Pay);
     PutText(0, 70, 272, 400, str, GUI_TA_CENTER);
@@ -1551,7 +1551,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
     PutText(0, 20+15, 272, 20+15+50, "اعتبار کافي نمي باشد ", GUI_TA_CENTER);
 		 
     GUI_SetColor(GUI_BLACK);	
-		if(Tedadi==1)  PutText(0, 225-25, 272, 225+50, "بازي", GUI_TA_CENTER);
+		if (Tedadi==1)  PutText(0, 225-25, 272, 225+50, "بازي", GUI_TA_CENTER);
     else               PutText(0, 225-25, 272, 225+50, "تومان", GUI_TA_CENTER);
 		Tedadi=0;
 		ErrorBip(1);
@@ -1559,7 +1559,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		PlayVoice("04.wav");
 		VOICEEN=0; 		 
 	 } 
- else if(Mode==2)
+ else if (Mode==2)
    {
     LoadFont(FontBNazanin140);
     GUI_SetColor(GUI_BLACK);
@@ -1578,7 +1578,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		PlayVoice("03.wav");
 		VOICEEN=0; 		 
 	 } 
- else if(Mode==3)
+ else if (Mode==3)
    {
     LoadFont(FontBNazanin200);
     GUI_SetColor(GUI_BLACK);
@@ -1596,7 +1596,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		PlayVoice("03.wav");
 		VOICEEN=0; 		 
 	 } 	 
-  else if(Mode==4)
+  else if (Mode==4)
    {
 
     GUI_SetColor(GUI_BLACK);
@@ -1610,7 +1610,7 @@ void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int 
 		PlayVoice("03.wav");
 		VOICEEN=0; 		 
 	 }
-	   else if(Mode==5)
+	   else if (Mode==5)
    {
 
     GUI_SetColor(GUI_BLACK);
@@ -1743,7 +1743,7 @@ void ShowPageAlef(void) {
 
  GUI_SetColor(0x000f0000);	 
  
- if(Config.X10==1)
+ if (Config.X10==1)
  {
    LoadFont(FontBNazanin140);
    sprintf(str,"%d",Config.Price*10);
@@ -1795,7 +1795,7 @@ void ShowPageAlef(void) {
 
   LoadFont(FontTahoma20);
   GUI_SetColor(GUI_YELLOW); 
-	if(LastCardingDateTime[0]!=0)	{
+	if (LastCardingDateTime[0]!=0)	{
 		sprintf(str,"%d/%d/%d  %d:%d:%02d",
 			LastCardingDateTime[0],
 			LastCardingDateTime[1],
@@ -1820,13 +1820,13 @@ void ShowPageAlef(void) {
 	
 	
 	
-	if(WiFiStep==10)
+	if (WiFiStep==10)
 	{
 	GUI_SetColor(GUI_CYAN);
 	GUI_FillRoundedRect(4+234,2+3,30+233,27+1,3);	
 
 	
-	if(ConnectedToServer)   GUI_SetColor(GUI_DARKGREEN); 
+	if (ConnectedToServer)   GUI_SetColor(GUI_DARKGREEN); 
 	else                    GUI_SetColor(GUI_RED); 
 			
 
@@ -1855,13 +1855,13 @@ unsigned char SetDateAndTime(unsigned char Y, unsigned char M, unsigned char D, 
 {
 unsigned long int time=0;
 
-  if((s > 59) || (m > 59) || (h > 23))
+  if ((s > 59) || (m > 59) || (h > 23))
     return 1;
   
-  //if(GPSTimeAcquired)
-  //  return(2);
+  //if (GPSTimeAcquired)
+  //  return 2;
   
-if((s > 59) || (m > 59) || (h > 23))
+if ((s > 59) || (m > 59) || (h > 23))
     return 1;
   
   Hour=h;
@@ -1887,7 +1887,7 @@ if((s > 59) || (m > 59) || (h > 23))
 	*/
 	
 	RTC_Get();
-  return(0);
+  return 0;
 }
 
 //========================================================================
@@ -1899,31 +1899,31 @@ unsigned char SendBuf[32];
 
   //printf("\n\rSend Request [%d] %d, %d",ActivePort,type,idx);
  
-  SendBuf[0]=STX;
-  SendBuf[1]=14;  
-  SendBuf[2]=Config.DeviceID%256;
-  SendBuf[3]=Config.DeviceID/256;
-  SendBuf[4]=3;//Len
-  SendBuf[5]=0;//Len
+  SendBuf[0] =STX;
+  SendBuf[1] =14;  
+  SendBuf[2] =Config.DeviceID%256;
+  SendBuf[3] =Config.DeviceID/256;
+  SendBuf[4] =3;//Len
+  SendBuf[5] =0;//Len
   indx=6;
-  if((BinPageSize==512)&&(type==Simorgh))
+  if ((BinPageSize==512) && (type==Simorgh))
   {
-    SendBuf[4]=4;//Len
-    SendBuf[indx++]=99; 
+    SendBuf[4] =4;//Len
+    SendBuf[indx++] =99; 
   }
-  SendBuf[indx++]=type; 
-  SendBuf[indx++]=idx%256;
-  SendBuf[indx++]=idx/256;
+  SendBuf[indx++] =type; 
+  SendBuf[indx++] =idx%256;
+  SendBuf[indx++] =idx/256;
   crc=crc16(0,SendBuf+1, indx-1);
-  SendBuf[indx++]=crc%256;      
-  SendBuf[indx++]=crc/256;            
-  SendBuf[indx++]=ETX; 
+  SendBuf[indx++] =crc%256;      
+  SendBuf[indx++] =crc/256;            
+  SendBuf[indx++] =ETX; 
   
-  switch(ActivePort)
+  switch (ActivePort)
   {
     case 0:
 			SetTX485();GUI_Delay(1);
-      for(i=0; i<indx; i++)
+      for (i=0; i<indx; i++)
         SendByte(SendBuf[i]);
 		
 		GUI_Delay(5);
@@ -1952,30 +1952,30 @@ unsigned int crc=0, page, Loc;
 unsigned short crc2=0;
 unsigned int pageSize;
   
-  if(CheckFirmware==0) return(0);
+  if (CheckFirmware==0) return 0;
   //SaveTaxiInfo();
   ShowMessageDlg(mtInformation, "ط¨ط±ط±ط³ظٹ ظ†ط³ط®ظ‡ ط¬ط¯ظٹط¯",1,0,0,0);  
   FirmwareRequestNo=0; 
   CheckFirmware=0;
 
-  for(i=0; i<32; i++)
-    GlobalBuffer[i]=0;
+  for (i=0; i<32; i++)
+    GlobalBuffer[i] =0;
 	FLASH_UNLOCK
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
 	FLASH_LOCK
 
-  if(FirmwareLength!=Firmware.Length)
+  if (FirmwareLength!=Firmware.Length)
   {
     ShowMessageDlg(mtError, "ط®ط·ط§ ط¯ط± ط­ط¬ظ… ط§ط·ظ„ط§ط¹ط§طھ",1,0,0,0);  
     InfoCounter=3;
-    return(1);
+    return 1;
   }
 
   crc=0;
 	Loc=1024;
-  for(i=0; i<FirmwareLength; i++)
+  for (i=0; i<FirmwareLength; i++)
 	{
-		if(Loc==1024)
+		if (Loc==1024)
 		{
 			SPI_Flash_Read(GlobalBuffer, i+addFirmware, 1024);
 			Loc=0;
@@ -1985,21 +1985,21 @@ unsigned int pageSize;
 		Loc++;
 	}
 	
-  if(crc!=Firmware.CheckSum)
+  if (crc!=Firmware.CheckSum)
   {
     ShowMessageDlg(mtError, "ط®ط·ط§ طµط­طھ ط§ط·ظ„ط§ط¹ط§طھ",1,0,0,0);  
     InfoCounter=3;
-    return(2);
+    return 2;
   }
   
-  GlobalBuffer[0]=0xC2;
-  GlobalBuffer[1]=(crc2)&0xFF;
-  GlobalBuffer[2]=(crc2>>8)&0xFF;
-  GlobalBuffer[3]=(FirmwareLength)&0xFF;
-  GlobalBuffer[4]=(FirmwareLength>>8)&0xFF;
-  GlobalBuffer[5]=(FirmwareLength>>16)&0xFF;
-  GlobalBuffer[6]=(FirmwareLength>>24)&0xFF;
-  GlobalBuffer[7]=0x55;
+  GlobalBuffer[0] =0xC2;
+  GlobalBuffer[1] =(crc2)&0xFF;
+  GlobalBuffer[2] =(crc2>>8)&0xFF;
+  GlobalBuffer[3] =(FirmwareLength)&0xFF;
+  GlobalBuffer[4] =(FirmwareLength>>8)&0xFF;
+  GlobalBuffer[5] =(FirmwareLength>>16)&0xFF;
+  GlobalBuffer[6] =(FirmwareLength>>24)&0xFF;
+  GlobalBuffer[7] =0x55;
 	FLASH_UNLOCK
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
 	FLASH_LOCK
@@ -2018,28 +2018,28 @@ unsigned char i, Byte;
 unsigned short crc=0;
 unsigned char SendBuf[20];
 
-   SendBuf[0]=STX;
-   SendBuf[1]=14; //Request
-   SendBuf[2]=Config.DeviceID%256;
-   SendBuf[3]=Config.DeviceID/256;
-   SendBuf[4]=5;
-   SendBuf[5]=0;
-   SendBuf[6]=Type;
-   SendBuf[7]=Index&0xFF;
-   SendBuf[8]=(Index>>8)&0xFF;
-   SendBuf[9]=(Index>>16)&0xFF;
-   SendBuf[10]=(Index>>24)&0xFF;
+   SendBuf[0] =STX;
+   SendBuf[1] =14; //Request
+   SendBuf[2] =Config.DeviceID%256;
+   SendBuf[3] =Config.DeviceID/256;
+   SendBuf[4] =5;
+   SendBuf[5] =0;
+   SendBuf[6] =Type;
+   SendBuf[7] =Index&0xFF;
+   SendBuf[8] =(Index>>8)&0xFF;
+   SendBuf[9] =(Index>>16)&0xFF;
+   SendBuf[10] =(Index>>24)&0xFF;
    crc=crc16(0, SendBuf+1, 10);
-   SendBuf[11]=crc&0xFF;
-   SendBuf[12]=crc>>8;
-   SendBuf[13]=ETX;
+   SendBuf[11] =crc&0xFF;
+   SendBuf[12] =crc>>8;
+   SendBuf[13] =ETX;
    
  
-  switch(ActivePort)
+  switch (ActivePort)
   {
     case 0:	
 	SetTX485();GUI_Delay(1);
-   for(Byte=0; Byte<14; Byte++)
+   for (Byte=0; Byte<14; Byte++)
      SendByte(SendBuf[Byte]);
 		 
 		 GUI_Delay(5);
@@ -2061,24 +2061,24 @@ unsigned char SendCommandResult(unsigned char Type, unsigned int Status)
 unsigned char i, Byte; 
 unsigned short crc=0;
 
-   GlobalBuffer[0]=STX;
-   GlobalBuffer[1]=11; //Result
-   GlobalBuffer[2]=Config.DeviceID%256;
-   GlobalBuffer[3]=Config.DeviceID/256;
-   GlobalBuffer[4]=2;
-   GlobalBuffer[5]=0;
-   GlobalBuffer[6]=Type;
-   GlobalBuffer[7]=Status;
+   GlobalBuffer[0] =STX;
+   GlobalBuffer[1] =11; //Result
+   GlobalBuffer[2] =Config.DeviceID%256;
+   GlobalBuffer[3] =Config.DeviceID/256;
+   GlobalBuffer[4] =2;
+   GlobalBuffer[5] =0;
+   GlobalBuffer[6] =Type;
+   GlobalBuffer[7] =Status;
    crc=crc16(0, GlobalBuffer+1, 7);
-   GlobalBuffer[8]=crc&0xFF;
-   GlobalBuffer[9]=crc>>8;
-   GlobalBuffer[10]=ETX;
+   GlobalBuffer[8] =crc&0xFF;
+   GlobalBuffer[9] =crc>>8;
+   GlobalBuffer[10] =ETX;
    
-   switch(ActivePort)
+   switch (ActivePort)
    {
      case 0:
 			 SetTX485();GUI_Delay(1);
-       for(Byte=0; Byte<11; Byte++)
+       for (Byte=0; Byte<11; Byte++)
          SendByte(GlobalBuffer[Byte]);
 		 
 		 GUI_Delay(5);
@@ -2094,7 +2094,7 @@ unsigned short crc=0;
    }
 
    //printf("\n\r%d:%d:%d Send Command Result",Hour,Min,Sec);
-   return(0);
+   return 0;
 }
 
 //==============================================================================
@@ -2103,58 +2103,58 @@ unsigned int SendDeviceConfiguration(void)
 unsigned short Idx, i, crc;
 
   Idx=0;
-  GlobalBuffer[Idx++]=STX;
-  GlobalBuffer[Idx++]=11; //Result
-  GlobalBuffer[Idx++]=Config.DeviceID%256;
-  GlobalBuffer[Idx++]=Config.DeviceID/256;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=81;
-  GlobalBuffer[Idx++]=0;  //Group
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=Config.UC%256;
-  GlobalBuffer[Idx++]=Config.UC/256;
-  GlobalBuffer[Idx++]=Indicators.Transactions%256;
-  GlobalBuffer[Idx++]=Indicators.Transactions/256;
-  GlobalBuffer[Idx++]=Indicators.OffTransactions%256;
-  GlobalBuffer[Idx++]=Indicators.OffTransactions/256;
-  GlobalBuffer[Idx++]=Indicators.Locations%256;
-  GlobalBuffer[Idx++]=Indicators.Locations/256;
-  GlobalBuffer[Idx++]=Indicators.OffLocations%256;
-  GlobalBuffer[Idx++]=Indicators.OffLocations/256;
-  GlobalBuffer[Idx++]=Config.TransactionsSendInterval%256;
-  GlobalBuffer[Idx++]=Config.TransactionsSendInterval/256;
-  GlobalBuffer[Idx++]=Config.TrackingInterval&0xFF;
-  GlobalBuffer[Idx++]=(Config.TrackingInterval>>8)&0xFF;
-  GlobalBuffer[Idx++]=Year%256;
-  GlobalBuffer[Idx++]=Year/256;
-  GlobalBuffer[Idx++]=Month;
-  GlobalBuffer[Idx++]=Day;
-  GlobalBuffer[Idx++]=Hour;
-  GlobalBuffer[Idx++]=Min;
-  GlobalBuffer[Idx++]=Sec;
-  GlobalBuffer[Idx++]=Ver%256;
-  GlobalBuffer[Idx++]=Ver/256;
-  GlobalBuffer[Idx++]=Release%256;
-  GlobalBuffer[Idx++]=Release/256;
-  GlobalBuffer[Idx++]=Config.Password&0xFF;
-  GlobalBuffer[Idx++]=(Config.Password >> 8) & 0xFF;
-  GlobalBuffer[Idx++]=(Config.Password >> 16) & 0xFF;
-  GlobalBuffer[Idx++]=(Config.Password >> 24) & 0xFF;
-  GlobalBuffer[Idx++]=Config.DriverID&0xFF;
-  GlobalBuffer[Idx++]=(Config.DriverID>>8)&0xFF;
-  GlobalBuffer[4]=(Idx-6)%256;
-  GlobalBuffer[5]=(Idx-6)/256;
+  GlobalBuffer[Idx++] =STX;
+  GlobalBuffer[Idx++] =11; //Result
+  GlobalBuffer[Idx++] =Config.DeviceID%256;
+  GlobalBuffer[Idx++] =Config.DeviceID/256;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =81;
+  GlobalBuffer[Idx++] =0;  //Group
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =Config.UC%256;
+  GlobalBuffer[Idx++] =Config.UC/256;
+  GlobalBuffer[Idx++] =Indicators.Transactions%256;
+  GlobalBuffer[Idx++] =Indicators.Transactions/256;
+  GlobalBuffer[Idx++] =Indicators.OffTransactions%256;
+  GlobalBuffer[Idx++] =Indicators.OffTransactions/256;
+  GlobalBuffer[Idx++] =Indicators.Locations%256;
+  GlobalBuffer[Idx++] =Indicators.Locations/256;
+  GlobalBuffer[Idx++] =Indicators.OffLocations%256;
+  GlobalBuffer[Idx++] =Indicators.OffLocations/256;
+  GlobalBuffer[Idx++] =Config.TransactionsSendInterval%256;
+  GlobalBuffer[Idx++] =Config.TransactionsSendInterval/256;
+  GlobalBuffer[Idx++] =Config.TrackingInterval&0xFF;
+  GlobalBuffer[Idx++] =(Config.TrackingInterval>>8)&0xFF;
+  GlobalBuffer[Idx++] =Year%256;
+  GlobalBuffer[Idx++] =Year/256;
+  GlobalBuffer[Idx++] =Month;
+  GlobalBuffer[Idx++] =Day;
+  GlobalBuffer[Idx++] =Hour;
+  GlobalBuffer[Idx++] =Min;
+  GlobalBuffer[Idx++] =Sec;
+  GlobalBuffer[Idx++] =Ver%256;
+  GlobalBuffer[Idx++] =Ver/256;
+  GlobalBuffer[Idx++] =Release%256;
+  GlobalBuffer[Idx++] =Release/256;
+  GlobalBuffer[Idx++] =Config.Password&0xFF;
+  GlobalBuffer[Idx++] =(Config.Password >> 8) & 0xFF;
+  GlobalBuffer[Idx++] =(Config.Password >> 16) & 0xFF;
+  GlobalBuffer[Idx++] =(Config.Password >> 24) & 0xFF;
+  GlobalBuffer[Idx++] =Config.DriverID&0xFF;
+  GlobalBuffer[Idx++] =(Config.DriverID>>8)&0xFF;
+  GlobalBuffer[4] =(Idx-6)%256;
+  GlobalBuffer[5] =(Idx-6)/256;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
-  GlobalBuffer[Idx++]=crc%256;
-  GlobalBuffer[Idx++]=crc/256;
-  GlobalBuffer[Idx++]=ETX;
+  GlobalBuffer[Idx++] =crc%256;
+  GlobalBuffer[Idx++] =crc/256;
+  GlobalBuffer[Idx++] =ETX;
   
-  switch(ActivePort)
+  switch (ActivePort)
   {
   case 0:
 		SetTX485();GUI_Delay(1);
-    for(i=0; i<Idx; i++)
+    for (i=0; i<Idx; i++)
       SendByte(GlobalBuffer[i]);
 	GUI_Delay(5);
 	SetRX485();
@@ -2179,7 +2179,7 @@ unsigned long int Sector, Temp, Limit;
 unsigned char read_buf[320];
 char str[20];
 
-  switch(GlobalBuffer[6]) //Command #
+  switch (GlobalBuffer[6]) //Command #
   {
         case 1: //Connection Test
           SendCommandResult(1, 1);
@@ -2199,21 +2199,21 @@ char str[20];
           Config.Password+=GlobalBuffer[14]; Config.Password <<= 8;
           Config.Password+=GlobalBuffer[13]; 
           Config.TransactionsSendInterval = (GlobalBuffer[17]+(GlobalBuffer[18]*256)); 
-          for(i=0; i<15; i++)
-            Config.HostIP[i]=GlobalBuffer[19+i];
+          for (i=0; i<15; i++)
+            Config.HostIP[i] =GlobalBuffer[19+i];
           Config.ConnectionType=GlobalBuffer[19+i];
           i=(19+i+1);
 			 /*
-          Config.GrouhPrice[0]= (GlobalBuffer[i]+(GlobalBuffer[i+1]*256)); 
-          Config.GrouhPrice[1]= (GlobalBuffer[i+2]+(GlobalBuffer[i+3]*256)); 
-          Config.GrouhPrice[2]= (GlobalBuffer[i+4]+(GlobalBuffer[i+5]*256)); 
-          Config.GrouhPrice[3]= (GlobalBuffer[i+6]+(GlobalBuffer[i+7]*256)); 
-          Config.GrouhPrice[4]= (GlobalBuffer[i+8]+(GlobalBuffer[i+9]*256)); 
-          Config.GrouhPrice[5]= (GlobalBuffer[i+10]+(GlobalBuffer[i+11]*256)); 
-          Config.GrouhPrice[6]= (GlobalBuffer[i+12]+(GlobalBuffer[i+13]*256)); 
-          Config.GrouhPrice[7]= (GlobalBuffer[i+14]+(GlobalBuffer[i+15]*256)); 
-          Config.GrouhPrice[8]= (GlobalBuffer[i+16]+(GlobalBuffer[i+17]*256)); 
-          Config.GrouhPrice[9]= (GlobalBuffer[i+18]+(GlobalBuffer[i+19]*256)); 
+          Config.GrouhPrice[0] = (GlobalBuffer[i]+(GlobalBuffer[i+1]*256)); 
+          Config.GrouhPrice[1] = (GlobalBuffer[i+2]+(GlobalBuffer[i+3]*256)); 
+          Config.GrouhPrice[2] = (GlobalBuffer[i+4]+(GlobalBuffer[i+5]*256)); 
+          Config.GrouhPrice[3] = (GlobalBuffer[i+6]+(GlobalBuffer[i+7]*256)); 
+          Config.GrouhPrice[4] = (GlobalBuffer[i+8]+(GlobalBuffer[i+9]*256)); 
+          Config.GrouhPrice[5] = (GlobalBuffer[i+10]+(GlobalBuffer[i+11]*256)); 
+          Config.GrouhPrice[6] = (GlobalBuffer[i+12]+(GlobalBuffer[i+13]*256)); 
+          Config.GrouhPrice[7] = (GlobalBuffer[i+14]+(GlobalBuffer[i+15]*256)); 
+          Config.GrouhPrice[8] = (GlobalBuffer[i+16]+(GlobalBuffer[i+17]*256)); 
+          Config.GrouhPrice[9] = (GlobalBuffer[i+18]+(GlobalBuffer[i+19]*256)); 
           */
           SaveConfiguration();
           SendCommandResult(201, 1);
@@ -2222,67 +2222,67 @@ char str[20];
           break;
          
         case 202: // Send Device Configuration
-          GlobalBuffer[0]=STX;
-          GlobalBuffer[1]=11; //Result
-          GlobalBuffer[2]=Config.DeviceID%256;
-          GlobalBuffer[3]=Config.DeviceID/256;
-          GlobalBuffer[4]=0;
-          GlobalBuffer[5]=0;
-          GlobalBuffer[6]=202;
-          GlobalBuffer[7]=Config.Price%256;
-          GlobalBuffer[8]=Config.Price/256;
-          GlobalBuffer[9]=Config.UC%256;
-          GlobalBuffer[10]=Config.UC/256;
-          GlobalBuffer[11]=Indicators.Transactions%256;
-          GlobalBuffer[12]=Indicators.Transactions/256;
-          GlobalBuffer[13]=Indicators.OffTransactions%256;
-          GlobalBuffer[14]=Indicators.OffTransactions/256;
-          GlobalBuffer[15]=Config.TransactionsSendInterval%256;
-          GlobalBuffer[16]=Config.TransactionsSendInterval/256;
-          GlobalBuffer[17]=Year%256;
-          GlobalBuffer[18]=Year/256;
-          GlobalBuffer[19]=Month;
-          GlobalBuffer[20]=Day;
-          GlobalBuffer[21]=Hour;
-          GlobalBuffer[22]=Min;
-          GlobalBuffer[23]=Sec;
-          GlobalBuffer[24]=Ver%256;
-          GlobalBuffer[25]=Ver/256;
-          GlobalBuffer[26]=Release%256;
-          GlobalBuffer[27]=Release/256;
-          GlobalBuffer[28]=Config.Password&0xFF;
-          GlobalBuffer[29]=(Config.Password >> 8) & 0xFF;
-          GlobalBuffer[30]=(Config.Password >> 16) & 0xFF;
-          GlobalBuffer[31]=(Config.Password >> 24) & 0xFF;
-          GlobalBuffer[32]=Config.HostIP[0];
-          GlobalBuffer[33]=Config.HostIP[1];
-          GlobalBuffer[34]=Config.HostIP[2];
-          GlobalBuffer[35]=Config.HostIP[3];
-          GlobalBuffer[36]=Config.HostIP[4];
-          GlobalBuffer[37]=Config.HostIP[5];
-          GlobalBuffer[38]=Config.HostIP[6];
-          GlobalBuffer[39]=Config.HostIP[7];
-          GlobalBuffer[40]=Config.HostIP[8];
-          GlobalBuffer[41]=Config.HostIP[9];
-          GlobalBuffer[42]=Config.HostIP[10];
-          GlobalBuffer[43]=Config.HostIP[11];
-          GlobalBuffer[44]=Config.HostIP[12];
-          GlobalBuffer[45]=Config.HostIP[13];
-          GlobalBuffer[46]=Config.HostIP[14];
+          GlobalBuffer[0] =STX;
+          GlobalBuffer[1] =11; //Result
+          GlobalBuffer[2] =Config.DeviceID%256;
+          GlobalBuffer[3] =Config.DeviceID/256;
+          GlobalBuffer[4] =0;
+          GlobalBuffer[5] =0;
+          GlobalBuffer[6] =202;
+          GlobalBuffer[7] =Config.Price%256;
+          GlobalBuffer[8] =Config.Price/256;
+          GlobalBuffer[9] =Config.UC%256;
+          GlobalBuffer[10] =Config.UC/256;
+          GlobalBuffer[11] =Indicators.Transactions%256;
+          GlobalBuffer[12] =Indicators.Transactions/256;
+          GlobalBuffer[13] =Indicators.OffTransactions%256;
+          GlobalBuffer[14] =Indicators.OffTransactions/256;
+          GlobalBuffer[15] =Config.TransactionsSendInterval%256;
+          GlobalBuffer[16] =Config.TransactionsSendInterval/256;
+          GlobalBuffer[17] =Year%256;
+          GlobalBuffer[18] =Year/256;
+          GlobalBuffer[19] =Month;
+          GlobalBuffer[20] =Day;
+          GlobalBuffer[21] =Hour;
+          GlobalBuffer[22] =Min;
+          GlobalBuffer[23] =Sec;
+          GlobalBuffer[24] =Ver%256;
+          GlobalBuffer[25] =Ver/256;
+          GlobalBuffer[26] =Release%256;
+          GlobalBuffer[27] =Release/256;
+          GlobalBuffer[28] =Config.Password&0xFF;
+          GlobalBuffer[29] =(Config.Password >> 8) & 0xFF;
+          GlobalBuffer[30] =(Config.Password >> 16) & 0xFF;
+          GlobalBuffer[31] =(Config.Password >> 24) & 0xFF;
+          GlobalBuffer[32] =Config.HostIP[0];
+          GlobalBuffer[33] =Config.HostIP[1];
+          GlobalBuffer[34] =Config.HostIP[2];
+          GlobalBuffer[35] =Config.HostIP[3];
+          GlobalBuffer[36] =Config.HostIP[4];
+          GlobalBuffer[37] =Config.HostIP[5];
+          GlobalBuffer[38] =Config.HostIP[6];
+          GlobalBuffer[39] =Config.HostIP[7];
+          GlobalBuffer[40] =Config.HostIP[8];
+          GlobalBuffer[41] =Config.HostIP[9];
+          GlobalBuffer[42] =Config.HostIP[10];
+          GlobalBuffer[43] =Config.HostIP[11];
+          GlobalBuffer[44] =Config.HostIP[12];
+          GlobalBuffer[45] =Config.HostIP[13];
+          GlobalBuffer[46] =Config.HostIP[14];
           Idx=47;
-          GlobalBuffer[4]=(Idx-6)%256;
-          GlobalBuffer[5]=(Idx-6)/256;
+          GlobalBuffer[4] =(Idx-6)%256;
+          GlobalBuffer[5] =(Idx-6)/256;
           crc=crc16(0, GlobalBuffer+1, Idx-1);
-          GlobalBuffer[Idx++]=crc%256;
-          GlobalBuffer[Idx++]=crc/256;
-          GlobalBuffer[Idx++]=ETX;
+          GlobalBuffer[Idx++] =crc%256;
+          GlobalBuffer[Idx++] =crc/256;
+          GlobalBuffer[Idx++] =ETX;
        
-          switch(ActivePort)
+          switch (ActivePort)
           {
 
             case 0:
           
-              for(i=0; i<Idx; i++)
+              for (i=0; i<Idx; i++)
                 SendByte(GlobalBuffer[i]);
           
               break;
@@ -2290,8 +2290,8 @@ char str[20];
               //GPRSSend(Idx, GlobalBuffer);
               break;  
             case 2:
-          //    for(i=0; i<Idx; i++)
-          //    EtherNetResBuffer[i]=GlobalBuffer[i];
+          //    for (i=0; i<Idx; i++)
+          //    EtherNetResBuffer[i] =GlobalBuffer[i];
           //    EtherNetResLen=Idx;  
               break; 
             case 3:
@@ -2326,20 +2326,20 @@ char str[20];
           
 
 
-				if(trHead==0) 
+				if (trHead==0) 
                Temp=(MAX_TRANSACTIONS-1);
             else
                Temp=trHead-1;
             
              i=0;
 						InvalidDateRecord=0;
-             while(i<MAX_TRANSACTIONS)
+             while (i<MAX_TRANSACTIONS)
                   {              
                    i++;  
                    
                    LoadFromDFToRam(addTransactions+(Temp*LEN_TRANSACTIONS), LEN_TRANSACTIONS, read_buf);
                       
-                   if(i==1)  Indicators.OffTransactions=0;
+                   if (i==1)  Indicators.OffTransactions=0;
 										
                    InvalidDateRecordFlag=0;
        
@@ -2347,43 +2347,43 @@ char str[20];
      // printf("\n\rIndex=%03d ",Temp);
       //printf("%02d/%02d/%02d  %02d/%02d/%02d - %d",read_buf[5],read_buf[6],read_buf[7],GlobalBuffer[7],GlobalBuffer[8],GlobalBuffer[9],InvalidDateRecord);
 
-				           if(Temp==0)
+				           if (Temp==0)
 	               Temp=(MAX_TRANSACTIONS-1);
             else
                Temp=Temp-1;
 
 						
-                   if(read_buf[5]<GlobalBuffer[7])
+                   if (read_buf[5]<GlobalBuffer[7])
                       InvalidDateRecordFlag=1;
-                   else if(read_buf[5]==GlobalBuffer[7]) 
+                   else if (read_buf[5] ==GlobalBuffer[7]) 
                           {
-                           if(read_buf[6]<GlobalBuffer[8])
+                           if (read_buf[6]<GlobalBuffer[8])
                               InvalidDateRecordFlag=1;
-                           else if(read_buf[6]==GlobalBuffer[8])
+                           else if (read_buf[6] ==GlobalBuffer[8])
                                   {
-                                   if(read_buf[7]<GlobalBuffer[9])
+                                   if (read_buf[7]<GlobalBuffer[9])
                                       InvalidDateRecordFlag=1;
                                   }  
                           }
 						
-								if((read_buf[5]>=200)||(read_buf[6]>=200)||(read_buf[7]>=200))  InvalidDateRecordFlag=1;
+								if ((read_buf[5]>=200) || (read_buf[6]>=200) || (read_buf[7]>=200))  InvalidDateRecordFlag=1;
 													
 													
       //printf("** %d ",InvalidDateRecordFlag);													
 													
                    Indicators.OffTransactions++;   
 
-								   if(InvalidDateRecordFlag)
+								   if (InvalidDateRecordFlag)
                      {
-                      if(++InvalidDateRecord>=30) break;
+                      if (++InvalidDateRecord>=30) break;
                      }   
                    else InvalidDateRecord=0;  
 							
 							
-                   if(Temp)  Temp--;
+                   if (Temp)  Temp--;
                    else      Temp=MAX_TRANSACTIONS-1;
 									 
-									 if(i>MAX_TRANSACTIONS) break;
+									 if (i>MAX_TRANSACTIONS) break;
                  }
 									
 							
@@ -2395,9 +2395,9 @@ char str[20];
         case 85:  //Text Message
           Idx=GlobalBuffer[4]+(GlobalBuffer[5]*256);
           Idx--;
-          for(i=0; (i<Idx) && (i<300); i++)
-            read_buf[i]=GlobalBuffer[i+7];
-          read_buf[i]=0;
+          for (i=0; (i<Idx) && (i<300); i++)
+            read_buf[i] =GlobalBuffer[i+7];
+          read_buf[i] =0;
 				  DisplayText(read_buf); 
           InfoCounter=20;
           SendCommandResult(85, 2);
@@ -2419,9 +2419,9 @@ char str[20];
           break;
         case 222:
           Idx=7;
-          for(i=0; i<10; i++)
+          for (i=0; i<10; i++)
 				  {
-				    for(j=0; j<6; j++)
+				    for (j=0; j<6; j++)
 				      GlobalBuffer[Idx+(i*6)+j]^=0x42;
 				  }
 				  MFRC531_WriteMasterKey(0x00,&GlobalBuffer[Idx]);
@@ -2461,16 +2461,16 @@ unsigned short New_Release;
  //............................................................................................................
 
 						
- if(GlobalBuffer[6]!=DeviceType) return;
+ if (GlobalBuffer[6]!=DeviceType) return;
  
  WDTR;
  
 
  		          
- if((FirmwarePacketIndex==(GlobalBuffer[7]+GlobalBuffer[8]*256))||((GlobalBuffer[7]+GlobalBuffer[8]*256)==0))
+ if ((FirmwarePacketIndex==(GlobalBuffer[7]+GlobalBuffer[8]*256)) || ((GlobalBuffer[7]+GlobalBuffer[8]*256)==0))
     {
 
-     if((GlobalBuffer[7]+GlobalBuffer[8]*256)==0)
+     if ((GlobalBuffer[7]+GlobalBuffer[8]*256)==0)
        {
         FirmwarePacketIndex=0;
         Load_FirmwareProperties();
@@ -2484,11 +2484,11 @@ unsigned short New_Release;
         IsFileForGprsDownload=0;
         Firmware.HaveData=0;
         
-        if(BufferLen>40)
+        if (BufferLen>40)
           {
-           for(Counter=0;Counter<(BufferLen-3);Counter+=43)
+           for (Counter=0;Counter<(BufferLen-3);Counter+=43)
               {
-               if(GlobalBuffer[Counter+i]==DeviceType)
+               if (GlobalBuffer[Counter+i] ==DeviceType)
                  {
                   k=0;
                   Load_FirmwareProperties();
@@ -2502,7 +2502,7 @@ unsigned short New_Release;
             
 
 							
-            if((New_Ver>Firmware.SavedVer)||((New_Release>Firmware.SavedRelease)&&(New_Ver==Firmware.SavedVer)))
+            if ((New_Ver>Firmware.SavedVer) || ((New_Release>Firmware.SavedRelease) && (New_Ver==Firmware.SavedVer)))
               {
 
 				
@@ -2521,9 +2521,9 @@ unsigned short New_Release;
             Firmware.SavedVer=New_Ver;
             Firmware.SavedRelease=New_Release;
          
-            for(j=0; j<30; j++)
-                Firmware.FirmwareFileName[j]=GlobalBuffer[i+Counter+13+j];
-            Firmware.FirmwareFileName[j]=0;
+            for (j=0; j<30; j++)
+                Firmware.FirmwareFileName[j] =GlobalBuffer[i+Counter+13+j];
+            Firmware.FirmwareFileName[j] =0;
             FirmwarePacketIndex=1;
 
             FirmwarePercent=Firmware.Length/512;  
@@ -2549,19 +2549,19 @@ unsigned short New_Release;
            //SaveConfiguration();
 
           }
-         else if(FirmwarePacketIndex)
+         else if (FirmwarePacketIndex)
                 {
 
                  
-                 if(BufferLen<8) return; 
-                 if(GlobalBuffer[6]!=DeviceType)  return;  
+                 if (BufferLen<8) return; 
+                 if (GlobalBuffer[6]!=DeviceType)  return;  
                    
                  
                  Data_Length=(GlobalBuffer[4]+GlobalBuffer[5]*256)-3;
                  
-                 if((Data_Length==0)&&(FirmwarePacketIndex==1))  {IsFileForGprsDownload=0; return; }
+                 if ((Data_Length==0) && (FirmwarePacketIndex==1))  {IsFileForGprsDownload=0; return; }
                  //.....................................................................................
-                 if(Data_Length==0)
+                 if (Data_Length==0)
                    {
 										 CheckNewFirmware();
 
@@ -2574,7 +2574,7 @@ unsigned short New_Release;
   		FLASH_UNLOCK
   	
 					//					
-			if(SaveFromRamToDF(addFirmware+((FirmwarePacketIndex-1)*512), 512, GlobalBuffer+9))
+			if (SaveFromRamToDF(addFirmware+((FirmwarePacketIndex-1)*512), 512, GlobalBuffer+9))
         SaveFromRamToDF(addFirmware+((FirmwarePacketIndex-1)*512), 512, GlobalBuffer+9);
 
                   Downloaded_FirmwareLength+=Data_Length;
@@ -2583,17 +2583,17 @@ unsigned short New_Release;
  FLASH_LOCK
 										
 										
-        if(1) 
+        if (1) 
           {   
-           if(FirmwarePacketIndex)
+           if (FirmwarePacketIndex)
                        {
-                        if(FirmwarePercent) Percent=((FirmwarePacketIndex*100)/FirmwarePercent);
+                        if (FirmwarePercent) Percent=((FirmwarePacketIndex*100)/FirmwarePercent);
                         else Percent=0;
 
 
                        }
 											 
-		if(InfoCounter==0)
+		if (InfoCounter==0)
 		{
      GUI_SetColor(GUI_DARKGRAY);
 		 GUI_FillRoundedRect(237, 271, 264, 293,3);
@@ -2623,53 +2623,53 @@ char SendDeviceInfo(void)
 unsigned int Idx, crc, i;
 unsigned char Byte,str[100];
 
-  GlobalBuffer[0]=STX;
-  GlobalBuffer[1]=2; //Device Information
-  GlobalBuffer[2]=Config.DeviceID%256;
-  GlobalBuffer[3]=Config.DeviceID/256;
-  GlobalBuffer[4]=0; //Len;
-  GlobalBuffer[5]=0; //Len;
+  GlobalBuffer[0] =STX;
+  GlobalBuffer[1] =2; //Device Information
+  GlobalBuffer[2] =Config.DeviceID%256;
+  GlobalBuffer[3] =Config.DeviceID/256;
+  GlobalBuffer[4] =0; //Len;
+  GlobalBuffer[5] =0; //Len;
   Idx=6;
-  GlobalBuffer[Idx++]=DeviceType;  
-  GlobalBuffer[Idx++]=Ver%256;  
-  GlobalBuffer[Idx++]=Ver/256;  
-  GlobalBuffer[Idx++]=Release%256;  
-  GlobalBuffer[Idx++]=Release/256;  
-  GlobalBuffer[Idx++]=Config.UC%256;  
-  GlobalBuffer[Idx++]=Config.UC/256;  
-  GlobalBuffer[Idx++]=Year-1300;  
-  GlobalBuffer[Idx++]=Month;  
-  GlobalBuffer[Idx++]=Day;  
-  GlobalBuffer[Idx++]=Hour;  
-  GlobalBuffer[Idx++]=Min;  
-  GlobalBuffer[Idx++]=Sec;  
-  GlobalBuffer[Idx++]=Indicators.Transactions&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.Transactions>>8)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.Transactions>>16)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.Transactions>>24)&0xFF;  
-  GlobalBuffer[Idx++]=Indicators.OffTransactions&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.OffTransactions>>8)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.OffTransactions>>16)&0xFF;  
-  GlobalBuffer[Idx++]=(Indicators.OffTransactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =DeviceType;  
+  GlobalBuffer[Idx++] =Ver%256;  
+  GlobalBuffer[Idx++] =Ver/256;  
+  GlobalBuffer[Idx++] =Release%256;  
+  GlobalBuffer[Idx++] =Release/256;  
+  GlobalBuffer[Idx++] =Config.UC%256;  
+  GlobalBuffer[Idx++] =Config.UC/256;  
+  GlobalBuffer[Idx++] =Year-1300;  
+  GlobalBuffer[Idx++] =Month;  
+  GlobalBuffer[Idx++] =Day;  
+  GlobalBuffer[Idx++] =Hour;  
+  GlobalBuffer[Idx++] =Min;  
+  GlobalBuffer[Idx++] =Sec;  
+  GlobalBuffer[Idx++] =Indicators.Transactions&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions>>8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions>>16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =Indicators.OffTransactions&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>24)&0xFF;  
 
-  GlobalBuffer[Idx++]=DeviceType;    
+  GlobalBuffer[Idx++] =DeviceType;    
 
-  GlobalBuffer[4]=(Idx-6)%256; //Len;
-  GlobalBuffer[5]=(Idx-6)/256; //Len;
+  GlobalBuffer[4] =(Idx-6)%256; //Len;
+  GlobalBuffer[5] =(Idx-6)/256; //Len;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
-  GlobalBuffer[Idx++]=crc&0xFF;
-  GlobalBuffer[Idx++]=crc>>8;
-  GlobalBuffer[Idx++]=ETX;
+  GlobalBuffer[Idx++] =crc&0xFF;
+  GlobalBuffer[Idx++] =crc>>8;
+  GlobalBuffer[Idx++] =ETX;
   
   SetRX485();
   EmptyRXBuffer();
-  //for(i=0; i<10; i++) if(!USART_GCF(&Byte)) break; 
-  //if(i>=10) return(1);
-  //if(i>1) delay_ms(Config.DeviceID*100);  //Wait to ensure to line is free
+  //for (i=0; i<10; i++) if (!USART_GCF(&Byte)) break; 
+  //if (i>=10) return 1;
+  //if (i>1) delay_ms(Config.DeviceID*100);  //Wait to ensure to line is free
   
   
 
-  for(i=0; i<Idx; i++)
+  for (i=0; i<Idx; i++)
      {
       //SendByte(GlobalBuffer[i]);
      }
@@ -2692,35 +2692,35 @@ unsigned int crc=0, i;
 static unsigned char Idx=9;
 unsigned char Index=0;
 /*
-	if(MemoryStatus==MEMERROR)     STATUSES&=~(0x40);
+	if (MemoryStatus==MEMERROR)     STATUSES&=~(0x40);
   else                           STATUSES|=0x40; 
-  if(RTCStatus==RTCOK) STATUSES|=0x20;
+  if (RTCStatus==RTCOK) STATUSES|=0x20;
   else                 STATUSES&=0xDF;
 	*/
 	
-	GlobalBuffer[0]=STX;
-  GlobalBuffer[1]=3; //Result
-  GlobalBuffer[2]=Config.DeviceID%256;
-  GlobalBuffer[3]=Config.DeviceID/256;
-  GlobalBuffer[4]=8;
-  GlobalBuffer[5]=0;
-  GlobalBuffer[6]=1; //Type
-  GlobalBuffer[7]=STATUSES; //Status
-  GlobalBuffer[8]=DeviceType;  
-  GlobalBuffer[9]=Ver%256;  
-  GlobalBuffer[10]=Ver/256;  
-  GlobalBuffer[11]=Release%256;  
-  GlobalBuffer[12]=Release/256;  
-  GlobalBuffer[13]=DeviceType;    
+	GlobalBuffer[0] =STX;
+  GlobalBuffer[1] =3; //Result
+  GlobalBuffer[2] =Config.DeviceID%256;
+  GlobalBuffer[3] =Config.DeviceID/256;
+  GlobalBuffer[4] =8;
+  GlobalBuffer[5] =0;
+  GlobalBuffer[6] =1; //Type
+  GlobalBuffer[7] =STATUSES; //Status
+  GlobalBuffer[8] =DeviceType;  
+  GlobalBuffer[9] =Ver%256;  
+  GlobalBuffer[10] =Ver/256;  
+  GlobalBuffer[11] =Release%256;  
+  GlobalBuffer[12] =Release/256;  
+  GlobalBuffer[13] =DeviceType;    
 
   crc=crc16(0, GlobalBuffer+1, 13);
-  GlobalBuffer[14]=crc&0xFF;
-  GlobalBuffer[15]=crc>>8;
-  GlobalBuffer[16]=ETX;
+  GlobalBuffer[14] =crc&0xFF;
+  GlobalBuffer[15] =crc>>8;
+  GlobalBuffer[16] =ETX;
 	
 	/*
 	SetTX485();GUI_Delay(1);
-  for(i=0; i<17; i++)
+  for (i=0; i<17; i++)
         SendByte(GlobalBuffer[i]);
 	GUI_Delay(5);
 	SetRX485();
@@ -2742,15 +2742,15 @@ unsigned char  ProcessPacket(unsigned char Port) {
 	unsigned char m, Idx,Err;
 	char str[50];	
   
-  //for(i=0; i<BufferLen; i++) /////////////////////////////////////////////////////////////
+  //for (i=0; i<BufferLen; i++) /////////////////////////////////////////////////////////////
   //  SendByte(GlobalBuffer[i]);
-  if(BufferLen < 9)
-    return(1);
+  if (BufferLen < 9)
+    return 1;
   /*
-  for(Start=0; Start<BufferLen; Start++)
+  for (Start=0; Start<BufferLen; Start++)
   {
-    if(GlobalBuffer[Start] == STX)
-      switch(GlobalBuffer[Start+1])
+    if (GlobalBuffer[Start] == STX)
+      switch (GlobalBuffer[Start+1])
       {
         case 1:
         case 2:
@@ -2767,37 +2767,37 @@ unsigned char  ProcessPacket(unsigned char Port) {
         default:
           Len=0; 
       }//switch
-      if(Len)
-        if((BufferLen-Start)>=Len)
-          if(GlobalBuffer[Start+(Len-1)] == ETX)
+      if (Len)
+        if ((BufferLen-Start)>=Len)
+          if (GlobalBuffer[Start+(Len-1)] == ETX)
           {
             BufferLen=Len;
-            if(Start)
-              for(i=0; (i<Len) && ((Start+i)<GlobalBufferLen); i++)
-                GlobalBuffer[i]=GlobalBuffer[Start+i]; 
+            if (Start)
+              for (i=0; (i<Len) && ((Start+i)<GlobalBufferLen); i++)
+                GlobalBuffer[i] =GlobalBuffer[Start+i]; 
             break;
           }
   }//for
 */
 
-  if(BufferLen < 9)
-    return(1);
+  if (BufferLen < 9)
+    return 1;
 
-  if(BufferLen < (GlobalBuffer[4]+(GlobalBuffer[5]*256)))
-    return(2);   
+  if (BufferLen < (GlobalBuffer[4]+(GlobalBuffer[5]*256)))
+    return 2;   
     
-  if((GlobalBuffer[0]!=STX)||(GlobalBuffer[BufferLen-1]!=ETX))
-    return(3);   
+  if ((GlobalBuffer[0]!=STX) || (GlobalBuffer[BufferLen-1]!=ETX))
+    return 3;   
 
   crc = crc16(0, GlobalBuffer + 1, BufferLen - 4);
   
   if (crc != (GlobalBuffer[BufferLen - 3] + (GlobalBuffer[BufferLen - 2] * 256)))
-    return(4);       
+    return 4;       
     
   DID=GlobalBuffer[3]; DID<<=8;
   DID=DID+GlobalBuffer[2];  
-  if((DID!=Config.DeviceID)&&(DID!=0xFFFF)&&(GlobalBuffer[1]>=10)&&(GlobalBuffer[1]!=12))
-    return(5);
+  if ((DID!=Config.DeviceID) && (DID!=0xFFFF) && (GlobalBuffer[1]>=10) && (GlobalBuffer[1]!=12))
+    return 5;
 
 
 
@@ -2812,15 +2812,15 @@ unsigned char  ProcessPacket(unsigned char Port) {
 
   ActivePort=Port; 
 	WifiConnectionError=0;
-  switch(GlobalBuffer[1])
+  switch (GlobalBuffer[1])
   {
     case 1:  //Detect Device    
-      if((GlobalBuffer[4]+(GlobalBuffer[5]*256))==6)
+      if ((GlobalBuffer[4]+(GlobalBuffer[5]*256))==6)
         SetDateAndTime(GlobalBuffer[6],GlobalBuffer[7],GlobalBuffer[8],GlobalBuffer[9],GlobalBuffer[10],GlobalBuffer[11],0);
 
- 			 if(Config.WiFi!=103)
+ 			 if (Config.WiFi!=103)
 			   {
-			    if(WiFiStep!=10) {WiFiStep=9;  CheckWiFi();}
+			    if (WiFiStep!=10) {WiFiStep=9;  CheckWiFi();}
 		     }
 				
       ConnectedToServer=1;				 
@@ -2834,7 +2834,7 @@ unsigned char  ProcessPacket(unsigned char Port) {
       break;
     case 13: //Data Accepted
 			ConnectedToServer=1;
-      switch(GlobalBuffer[6])
+      switch (GlobalBuffer[6])
       {
         case 8: //Transactions:				
           Address=GlobalBuffer[10]; Address<<=8;
@@ -2842,12 +2842,12 @@ unsigned char  ProcessPacket(unsigned char Port) {
           Address=Address+GlobalBuffer[8]; Address<<=8;
           Address=Address+GlobalBuffer[7];
 				
-          if(Address==WaitForAddress)
+          if (Address==WaitForAddress)
           {
             Sector=addTransactions+((Address==0?(MAX_TRANSACTIONS-1):Address-1)*LEN_TRANSACTIONS);
-            if(Address==trHead)
+            if (Address==trHead)
             {
-              if(trHead==0)
+              if (trHead==0)
                 Sector=addTransactions+((MAX_TRANSACTIONS-1)*LEN_TRANSACTIONS);
               else
                 Sector=addTransactions+((trHead-1)*LEN_TRANSACTIONS);
@@ -2855,7 +2855,7 @@ unsigned char  ProcessPacket(unsigned char Port) {
 
 						
             //printf("\n\r Data Sent Add: %d [%d]",WaitForAddress, Sector);
-            GlobalBuffer[0]=0x90;
+            GlobalBuffer[0] =0x90;
 						SaveFromRamToDF(Sector+LEN_TRANSACTIONS-1, 1, GlobalBuffer);
             Indicators.OffTransactions=(Address>trHead)?(MAX_TRANSACTIONS-Address)+trHead:trHead-Address;
 						
@@ -2875,7 +2875,7 @@ unsigned char  ProcessPacket(unsigned char Port) {
 						
           }
           WaitForAddress=0;
-          if(Indicators.OffTransactions)
+          if (Indicators.OffTransactions)
 					  {
 						 DataCurrentlySend=1;	
              SendOfflines();
@@ -2888,7 +2888,7 @@ unsigned char  ProcessPacket(unsigned char Port) {
       break;
    }//switch
   
-  return(0);
+  return 0;
 
 }
 
@@ -2897,17 +2897,17 @@ unsigned char CommunicateWithHostByGPRS(void)
 {
 unsigned int i;
 
-  for(i=0;i<DataBufferLen;i++)
-    if(DataBuffer[i]==2) 
+  for (i=0;i<DataBufferLen;i++)
+    if (DataBuffer[i] ==2) 
       break;
 
   BufferLen=0;
-  for(;(i<DataBufferLen) && (BufferLen<GlobalBufferLen);i++)
-    GlobalBuffer[BufferLen++]=DataBuffer[i];
+  for (;(i<DataBufferLen) && (BufferLen<GlobalBufferLen);i++)
+    GlobalBuffer[BufferLen++] =DataBuffer[i];
 
   ProcessPacket(1);
   
-  return(1);
+  return 1;
 }
 
 //==============================================================================
@@ -2917,21 +2917,21 @@ unsigned char CommunicateWithHost(void)
 unsigned char Byte;
 
   BufferLen=0;  
-  while(USART_GCF(&Byte))
+  while (USART_GCF(&Byte))
   {
-    if(Byte==2)
+    if (Byte==2)
     {
-      GlobalBuffer[BufferLen++]=Byte;
+      GlobalBuffer[BufferLen++] =Byte;
       break;
     }
   }
 
-  while((USART_GCF(&Byte))&&(BufferLen<GlobalBufferLen)) 
-    GlobalBuffer[BufferLen++]=Byte;
+  while ((USART_GCF(&Byte)) && (BufferLen<GlobalBufferLen)) 
+    GlobalBuffer[BufferLen++] =Byte;
   
   ProcessPacket(0);
     
-  return(1);
+  return 1;
 }
 //=======================================================================
 unsigned char CommunicateWithHostByWiFi(void) 
@@ -2939,40 +2939,40 @@ unsigned char CommunicateWithHostByWiFi(void)
 unsigned char Byte;
 
   BufferLen=0;  
-  while(WIFI_GCF(&Byte))
+  while (WIFI_GCF(&Byte))
   {
 
-    if(Byte==2)
+    if (Byte==2)
     {
-      GlobalBuffer[BufferLen++]=Byte;
+      GlobalBuffer[BufferLen++] =Byte;
       break;
     }
   }
 
-  while((WIFI_GCF(&Byte))&&(BufferLen<GlobalBufferLen)) 
-    GlobalBuffer[BufferLen++]=Byte;
+  while ((WIFI_GCF(&Byte)) && (BufferLen<GlobalBufferLen)) 
+    GlobalBuffer[BufferLen++] =Byte;
   
   ProcessPacket(3);
     
-  return(1);
+  return 1;
 }
 //==============================================================================
 unsigned char CheckCard(unsigned int UC, unsigned long int CardID)
 {
  char str[100];
 
-   if((UC==251)&&(CardID == 15013)) 
+   if ((UC==251) && (CardID == 15013)) 
    {
      Config.Password=1;
      CardID = 0;
      OkBip(0);
      SaveConfiguration();
      InfoCounter=1;
-     return(1);
+     return 1;
    } 
 
 	 /*
-	 if((UC==251)&&(CardID==))
+	 if ((UC==251) && (CardID==))
 	 {
    		SPI_Flash_Erase_Sector(addTransactions/4096);
       trHead=0;trTail=0;Indicators.OffTransactions=0;
@@ -2980,15 +2980,15 @@ unsigned char CheckCard(unsigned int UC, unsigned long int CardID)
 	 }
 	 */
 		 
-   if(UC!=Config.UC)
+   if (UC!=Config.UC)
    {
 		 CardID=CardID&0x7FFFF;
   	 ShowCardingResult(2,0,UC,CardID,S_InvalidCardUC,"");
      InfoCounter=3;
-     return(1);
+     return 1;
    }
   
- return(0);
+ return 0;
 }
 
 //==============================================================================
@@ -3022,15 +3022,15 @@ unsigned int CardEtebar=0;
 
 	
 
-  if(ISO14443_LoginE2(0,0x10)) return(1);
-  if(ISO14443_ReadBlock(1,buf)) return(1);
+  if (ISO14443_LoginE2(0,0x10)) return 1;
+  if (ISO14443_ReadBlock(1,buf)) return 1;
   UC=buf[0];
   UC+=(buf[1]<<8);
   CardID=buf[2];
   CardID+=(buf[3]<<8);
   CardID+=(buf[4]<<16);
   CardID+=(buf[5]<<24);
-  if((UC & 0x8000)==0x8000)
+  if ((UC & 0x8000)==0x8000)
   {
     UC = UC & 0x7FFF;
     UC = UC ^ 0x6A29;
@@ -3039,8 +3039,8 @@ unsigned int CardEtebar=0;
 	
 	//printf("\n\rCARDID=%d",CardID);
 	
-  if(CheckCard(UC, CardID))
-   return(0);
+  if (CheckCard(UC, CardID))
+   return 0;
 	
 
 Grouh=0;
@@ -3049,84 +3049,84 @@ Grouh=0;
       
 
 
-    if(ISO14443_LoginE2(4,0x39)) 
+    if (ISO14443_LoginE2(4,0x39)) 
       {
-       if(ISO14443_SingleTagSelect(snr))
+       if (ISO14443_SingleTagSelect(snr))
          {
-          if(ISO14443_SingleTagSelect(snr))
-             {  return(1); }
+          if (ISO14443_SingleTagSelect(snr))
+             {  return 1; }
          }
-       if(ISO14443_LoginE2(4,0x39))  {  return(1); }
+       if (ISO14443_LoginE2(4,0x39))  {  return 1; }
       }
 
 
-     if(ISO14443_ReadValueBlock(16, &CardEtebar)) return(1); 
+     if (ISO14443_ReadValueBlock(16, &CardEtebar)) return 1; 
                                                          
-			if(ISO14443_ReadBlock(18, buf)) return(1);  //Hediye  
+			if (ISO14443_ReadBlock(18, buf)) return 1;  //Hediye  
 		
-		 if((buf[4]==0xAB)&&(buf[5]==0xCD))
+		 if ((buf[4] ==0xAB) && (buf[5] ==0xCD))
 		   {
  		    HEtebar=buf[3];  HEtebar<<=8; 
         HEtebar+=buf[2]; HEtebar<<=8; 
         HEtebar+=buf[1]; HEtebar<<=8; 
         HEtebar+=buf[0]; 
 		   }
-			 if((buf[0]==0xFF)&&(buf[1]==0xFF)&&(buf[2]==0xFF)&&(buf[3]==0xFF))
+			 if ((buf[0] ==0xFF) && (buf[1] ==0xFF) && (buf[2] ==0xFF) && (buf[3] ==0xFF))
 				 HEtebar=0;
 	   
 
 
-    if(ISO14443_ReadBlock(17, buf)) 
+    if (ISO14443_ReadBlock(17, buf)) 
       {
-       if(ISO14443_LoginE2(4,0x39)) 
+       if (ISO14443_LoginE2(4,0x39)) 
          {
-          if(ISO14443_SingleTagSelect(snr))
+          if (ISO14443_SingleTagSelect(snr))
             {
-             if(ISO14443_SingleTagSelect(snr))
-                 {  return(1); }
+             if (ISO14443_SingleTagSelect(snr))
+                 {  return 1; }
             }
-          if(ISO14443_LoginE2(4,0x39))  {  return(1); }
+          if (ISO14443_LoginE2(4,0x39))  {  return 1; }
          }
-       if(ISO14443_ReadBlock(17,buf)) {  return(1); }
+       if (ISO14443_ReadBlock(17,buf)) {  return 1; }
       }
 			
 	
 
     BCC=0;;
-  for(i=0; i<15; i++)              
+  for (i=0; i<15; i++)              
      BCC^=buf[i];
   
 	DisCount=0;
-  if(BCC==buf[15])
+  if (BCC==buf[15])
     {
      Grouh=buf[0];
      Grouh+=(buf[1]<<8);
      DisCount=buf[2];
      
-		 EDate[0]=buf[3];
-     EDate[1]=buf[4];
-     EDate[2]=buf[5];
-     STime[0]=buf[6];// Start Hour
-     STime[1]=buf[7];// Start Min
-     ETime[0]=buf[8];// End Hour
-     ETime[1]=buf[9];// End Min	
+		 EDate[0] =buf[3];
+     EDate[1] =buf[4];
+     EDate[2] =buf[5];
+     STime[0] =buf[6];// Start Hour
+     STime[1] =buf[7];// Start Min
+     ETime[0] =buf[8];// End Hour
+     ETime[1] =buf[9];// End Min	
 
      IsCorrect=1;
     }
   else
     {
      DisCount=0;
-		 EDate[0]=0;
-     EDate[1]=0;
-     EDate[2]=0;
-     STime[3]=0;
-     STime[4]=0;
+		 EDate[0] =0;
+     EDate[1] =0;
+     EDate[2] =0;
+     STime[3] =0;
+     STime[4] =0;
      
-     ETime[0]=buf[8];
-     ETime[1]=buf[9];    
+     ETime[0] =buf[8];
+     ETime[1] =buf[9];    
      
-     Modes[0]=0; 
-     Modes[1]=0;     
+     Modes[0] =0; 
+     Modes[1] =0;     
     }
 		
 		
@@ -3138,17 +3138,17 @@ Grouh=0;
     /*
 		 Grouh=0;
      DisCount=0;
-		 EDate[0]=0;
-     EDate[1]=0;
-     EDate[2]=0;
-     STime[3]=0;
-     STime[4]=0;
+		 EDate[0] =0;
+     EDate[1] =0;
+     EDate[2] =0;
+     STime[3] =0;
+     STime[4] =0;
      
-     ETime[0]=buf[8];
-     ETime[1]=buf[9];    
+     ETime[0] =buf[8];
+     ETime[1] =buf[9];    
      
-     Modes[0]=0; 
-     Modes[1]=0;     
+     Modes[0] =0; 
+     Modes[1] =0;     
     */
 		
   //        22  Takhfif 
@@ -3157,11 +3157,11 @@ Grouh=0;
   //        25  mehman tedadi 
   		
       Price=Config.Price;
-      if(Config.X10==1)
+      if (Config.X10==1)
 				Price*=10;
 			
       
-      switch(Config.UC)
+      switch (Config.UC)
       {
         case 6364:   //Gorgan
         case 5750:
@@ -3197,57 +3197,57 @@ Grouh=0;
           MaxCharge=5000;  
       }  
  
-   //if(CoderType==ctTaxi)
+   //if (CoderType==ctTaxi)
      //     MaxCharge=100000;
    
 	 
-   //else if(CoderType==ctSABA)
+   //else if (CoderType==ctSABA)
 			
-	#if(CoderType==ctSABA)
+	#if (CoderType==ctSABA)
 	MaxCharge=10000000;   
 	#endif
   
           
   BreakFlag=0;
   //................................................................................................................
-  if(((Grouh==EX_Takhfif)||(Grouh==EX_TakhfifMehman)||(Grouh==EX_TedadiMehman))&&(IsCorrect))
+  if (((Grouh==EX_Takhfif) || (Grouh==EX_TakhfifMehman) || (Grouh==EX_TedadiMehman)) && (IsCorrect))
     {
 			/*
-     if((Year-1300)>EDate[0]) BreakFlag=1;
-     else if((Year-1300)==EDate[0])
+     if ((Year-1300)>EDate[0]) BreakFlag=1;
+     else if ((Year-1300)==EDate[0])
 		   {
-        if(Month>EDate[1])  BreakFlag=1;
+        if (Month>EDate[1])  BreakFlag=1;
        }
-     if(!BreakFlag )
+     if (!BreakFlag )
        {
-        if(((Year-1300)==EDate[0])&&(Month==EDate[1])&&(Day>EDate[2])) BreakFlag=1;
+        if (((Year-1300)==EDate[0]) && (Month==EDate[1]) && (Day>EDate[2])) BreakFlag=1;
        }
 			 
-     if(!BreakFlag)
+     if (!BreakFlag)
        {
-        if(Hour<STime[0])      BreakFlag=1;
-        else if(Hour>ETime[0]) BreakFlag=1;
+        if (Hour<STime[0])      BreakFlag=1;
+        else if (Hour>ETime[0]) BreakFlag=1;
        }
        
-     if(!BreakFlag)
+     if (!BreakFlag)
        {
-        if((Hour==STime[0])&&(Min<STime[1]))      BreakFlag=1;
-        else if((Hour==ETime[0])&&(Min>ETime[1])) BreakFlag=1;
+        if ((Hour==STime[0]) && (Min<STime[1]))      BreakFlag=1;
+        else if ((Hour==ETime[0]) && (Min>ETime[1])) BreakFlag=1;
        }
 		*/	 
-     if(BreakFlag)
+     if (BreakFlag)
 		 {
 			 sprintf(str,"%d/%d/%d %d:%d %d:%d",EDate[0],EDate[1],EDate[2],STime[0],STime[1],ETime[0],ETime[1]);
        ShowCardingResult(5,PreEtebar,Config.UC,ID,Status,str);
 
        GUI_Delay(3000);
        InfoCounter=1;
-       return(0); 
+       return 0; 
 		 }			 
    }
 
 	 //.........................................................................................................
-    if(CardingBetweenTimeout)
+    if (CardingBetweenTimeout)
       {
 				/*
        SetFgColor(YELLOW);
@@ -3257,45 +3257,45 @@ Grouh=0;
        delay_ms(3000);
 				*/
        InfoCounter=1;
-       return(0); 
+       return 0; 
       }
 
   //................................................................................................................
-    if(Grouh==EX_Takhfif) 
+    if (Grouh==EX_Takhfif) 
       {
-      if(IsCorrect==1) 
+      if (IsCorrect==1) 
         {
-         if(DisCount<=100)
+         if (DisCount<=100)
            {
             Price=Price-((DisCount*Price)/100);
            }
          else 
 				 {
-           return(1);
+           return 1;
 				 }
         }
       else 
          {
           InfoCounter=2;
-          return(1);
+          return 1;
          }
     }
 
 		  HNPayment=HEtebar;
 		
-		  HediyeBuf[0]=HNPayment&0xFF;
-      HediyeBuf[1]=(HNPayment>>8)&0xFF;
-      HediyeBuf[2]=(HNPayment>>16)&0xFF;	
-      HediyeBuf[3]=(HNPayment>>24)&0xFF;	
-      HediyeBuf[4]=0xAB;	
-      HediyeBuf[5]=0xCD;		
+		  HediyeBuf[0] =HNPayment&0xFF;
+      HediyeBuf[1] =(HNPayment>>8)&0xFF;
+      HediyeBuf[2] =(HNPayment>>16)&0xFF;	
+      HediyeBuf[3] =(HNPayment>>24)&0xFF;	
+      HediyeBuf[4] =0xAB;	
+      HediyeBuf[5] =0xCD;		
 		
 		 Tedadi=0;
-		 if(Grouh==EX_TedadiMehman)  {Tedadi=1;Price=1;  }
-    // if(Grouh==24)  TicketBuffer[0]=15; 
-     if(Grouh==EX_Tedadi)  {Tedadi=1;Price=1;  }
+		 if (Grouh==EX_TedadiMehman)  {Tedadi=1;Price=1;  }
+    // if (Grouh==24)  TicketBuffer[0] =15; 
+     if (Grouh==EX_Tedadi)  {Tedadi=1;Price=1;  }
 		 
-		 switch(Grouh)
+		 switch (Grouh)
 		 {
 			 case EX_Takhfif: ExOP=0x10; break;
 			 case EX_Tedadi: ExOP=0x20; break;
@@ -3309,19 +3309,19 @@ Grouh=0;
       UC=Config.UC; 
       
 			Price2=Price;
-			if(Grouh!=22)
-			  if(CardEtebar<Price)
-				  if(HNPayment+CardEtebar>=Price)
+			if (Grouh!=22)
+			  if (CardEtebar<Price)
+				  if (HNPayment+CardEtebar>=Price)
 				  {
 					  HNPayment=HNPayment-(Price-CardEtebar);
 					  Price2=CardEtebar;
 				  }
 
 			Status=ExecTransaction(ExOP|2, &ID, &UC, Price2, 0, MaxCharge, Config.DeviceID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
-      if(Status==1) 
+      if (Status==1) 
         {
 	       Status=ExecTransaction(ExOP|2, &ID, &UC, Price2, 0, MaxCharge, Config.DeviceID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
-  			 if(Status==1) 
+  			 if (Status==1) 
            {
 						Status=ExecTransaction(ExOP|2, &ID, &UC, Price2, 0, MaxCharge, Config.DeviceID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex); 
 					 }
@@ -3329,15 +3329,15 @@ Grouh=0;
 	
       //printf("\n\rSTATUS=%d",Status);
 			
-    if(Status==6) //Is Old Format  
+    if (Status==6) //Is Old Format  
     {
        ID=0;                             
        UC=Config.UC;
        Status=Old_ExecTransaction(ExOP|2, &ID, &UC, Price2, 0, MaxCharge, Config.DeviceID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
-       if((Status==1)||(Status==13)) 
+       if ((Status==1) || (Status==13)) 
        {
  				  Status=Old_ExecTransaction(ExOP|2, &ID, &UC, Price2, 0, MaxCharge, Config.DeviceID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
-          if((Status==1)||(Status==13)) 
+          if ((Status==1) || (Status==13)) 
             {
 					   Status=Old_ExecTransaction(ExOP|2, &ID, &UC, Price2, 0, MaxCharge, Config.DeviceID, &Etebar, &PreEtebar,&LastDevice,&LastOP,&OPIndex);
 					  }
@@ -3350,80 +3350,80 @@ Grouh=0;
   //        25  mehman tedadi 		
 			
  // printf("\n\r> STATUS=%d - %d - %d ",Status,Etebar, PreEtebar);
-     TicketBuffer[0]=2;   
+     TicketBuffer[0] =2;   
      
-		 if(Grouh==EX_TedadiMehman)  TicketBuffer[0]=18;  
-     if(Grouh==EX_TakhfifMehman)  TicketBuffer[0]=15; 
-     if(Grouh==EX_Tedadi)  TicketBuffer[0]=50;  
-     if(Grouh==EX_Takhfif)  TicketBuffer[0]=17;  
+		 if (Grouh==EX_TedadiMehman)  TicketBuffer[0] =18;  
+     if (Grouh==EX_TakhfifMehman)  TicketBuffer[0] =15; 
+     if (Grouh==EX_Tedadi)  TicketBuffer[0] =50;  
+     if (Grouh==EX_Takhfif)  TicketBuffer[0] =17;  
 		 
   
 
-     if(Status==10)
+     if (Status==10)
       {
-        if(CheckCard(UC, ID))
-          return(1);
+        if (CheckCard(UC, ID))
+          return 1;
       }
       
 
-		 if((HEtebar!=HNPayment)&&(Status==S_Success))
+		 if ((HEtebar!=HNPayment) && (Status==S_Success))
 		 {
-		     HediyeBuf[0]=HNPayment&0xFF;
-         HediyeBuf[1]=(HNPayment>>8)&0xFF;
-         HediyeBuf[2]=(HNPayment>>16)&0xFF;	
-         HediyeBuf[3]=(HNPayment>>24)&0xFF;	
-         HediyeBuf[4]=0xAB;	
-         HediyeBuf[5]=0xCD;	 	
+		     HediyeBuf[0] =HNPayment&0xFF;
+         HediyeBuf[1] =(HNPayment>>8)&0xFF;
+         HediyeBuf[2] =(HNPayment>>16)&0xFF;	
+         HediyeBuf[3] =(HNPayment>>24)&0xFF;	
+         HediyeBuf[4] =0xAB;	
+         HediyeBuf[5] =0xCD;	 	
 				
          Li=OS_TimeMS;
 
-				 while(1)
+				 while (1)
 				 {
-           if(OS_TimeMS-Li>1000) 
+           if (OS_TimeMS-Li>1000) 
            {
              break;
            }								 
-           if(ISO14443_LoginE2(4,0x39))
+           if (ISO14443_LoginE2(4,0x39))
            {
-             if(ISO14443_SingleTagSelect(snr))
+             if (ISO14443_SingleTagSelect(snr))
              {
-               if(ISO14443_SingleTagSelect(snr))
+               if (ISO14443_SingleTagSelect(snr))
                  continue;
              }
-             if(ISO14443_LoginE2(4,0x39)) continue;
+             if (ISO14443_LoginE2(4,0x39)) continue;
            }                 
-           if(ISO14443_WriteBlock(18,HediyeBuf))  continue;
+           if (ISO14443_WriteBlock(18,HediyeBuf))  continue;
 					 i=HEtebar-HNPayment;
            
-					 TicketBuffer[1]=ID&0xFF;
-           TicketBuffer[2]=(ID>>8)&0xFF;
-           TicketBuffer[3]=(ID>>16)&0xFF;
-           TicketBuffer[4]=(ID>>24)&0xFF;
-           TicketBuffer[5]=Year-1300;
-           TicketBuffer[6]=Month;
-           TicketBuffer[7]=Day;
-           TicketBuffer[8]=Hour;
-           TicketBuffer[9]=Min;
-           TicketBuffer[10]=Sec;
-           TicketBuffer[11]=Grouh&0xFF;
-           TicketBuffer[12]=(Grouh>>8)&0xFF;
-           TicketBuffer[13]=i&0xFF;
-           TicketBuffer[14]=(i>>8)&0xFF;
-           TicketBuffer[15]=HEtebar&0xFF;
-           TicketBuffer[16]=(HEtebar>>8)&0xFF;
-           TicketBuffer[17]=(HEtebar>>16)&0xFF;
-           TicketBuffer[18]=(HEtebar>>24)&0xFF;
-           TicketBuffer[19]=HNPayment&0xFF;
-           TicketBuffer[20]=(HNPayment>>8)&0xFF;
-           TicketBuffer[21]=(HNPayment>>16)&0xFF;
-           TicketBuffer[22]=(HNPayment>>24)&0xFF;
-           TicketBuffer[23]=0xE9;
-           TicketBuffer[24]=Config.DeviceID%256;
-           TicketBuffer[25]=Config.DeviceID/256; 
-           TicketBuffer[26]=0;//Indicators.OperatorID&0xFF;
-           TicketBuffer[27]=0;//(Indicators.OperatorID>>8)&0xFF;
-           TicketBuffer[28]=0;//(Indicators.OperatorID>>16)&0xFF;
-           TicketBuffer[29]=0;//(Indicators.OperatorID>>24)&0xFF;
+					 TicketBuffer[1] =ID&0xFF;
+           TicketBuffer[2] =(ID>>8)&0xFF;
+           TicketBuffer[3] =(ID>>16)&0xFF;
+           TicketBuffer[4] =(ID>>24)&0xFF;
+           TicketBuffer[5] =Year-1300;
+           TicketBuffer[6] =Month;
+           TicketBuffer[7] =Day;
+           TicketBuffer[8] =Hour;
+           TicketBuffer[9] =Min;
+           TicketBuffer[10] =Sec;
+           TicketBuffer[11] =Grouh&0xFF;
+           TicketBuffer[12] =(Grouh>>8)&0xFF;
+           TicketBuffer[13] =i&0xFF;
+           TicketBuffer[14] =(i>>8)&0xFF;
+           TicketBuffer[15] =HEtebar&0xFF;
+           TicketBuffer[16] =(HEtebar>>8)&0xFF;
+           TicketBuffer[17] =(HEtebar>>16)&0xFF;
+           TicketBuffer[18] =(HEtebar>>24)&0xFF;
+           TicketBuffer[19] =HNPayment&0xFF;
+           TicketBuffer[20] =(HNPayment>>8)&0xFF;
+           TicketBuffer[21] =(HNPayment>>16)&0xFF;
+           TicketBuffer[22] =(HNPayment>>24)&0xFF;
+           TicketBuffer[23] =0xE9;
+           TicketBuffer[24] =Config.DeviceID%256;
+           TicketBuffer[25] =Config.DeviceID/256; 
+           TicketBuffer[26] =0;//Indicators.OperatorID&0xFF;
+           TicketBuffer[27] =0;//(Indicators.OperatorID>>8)&0xFF;
+           TicketBuffer[28] =0;//(Indicators.OperatorID>>16)&0xFF;
+           TicketBuffer[29] =0;//(Indicators.OperatorID>>24)&0xFF;
         	 SaveTransaction(TicketBuffer);
         	 //SaveTransactionRecord(TicketBuffer, 32);
            Indicators.Transactions++;   
@@ -3432,38 +3432,38 @@ Grouh=0;
 				 }						
 		   	 
 		 }else{
-    	 TicketBuffer[1]=ID&0xFF;
-       TicketBuffer[2]=(ID>>8)&0xFF;
-       TicketBuffer[3]=(ID>>16)&0xFF;
-       TicketBuffer[4]=(ID>>24)&0xFF;
-       TicketBuffer[5]=Year-1300;
-       TicketBuffer[6]=Month;
-       TicketBuffer[7]=Day;
-       TicketBuffer[8]=Hour;
-       TicketBuffer[9]=Min;
-       TicketBuffer[10]=Sec;
+    	 TicketBuffer[1] =ID&0xFF;
+       TicketBuffer[2] =(ID>>8)&0xFF;
+       TicketBuffer[3] =(ID>>16)&0xFF;
+       TicketBuffer[4] =(ID>>24)&0xFF;
+       TicketBuffer[5] =Year-1300;
+       TicketBuffer[6] =Month;
+       TicketBuffer[7] =Day;
+       TicketBuffer[8] =Hour;
+       TicketBuffer[9] =Min;
+       TicketBuffer[10] =Sec;
 
-       TicketBuffer[11]=Grouh&0xFF;
-       TicketBuffer[12]=(Grouh>>8)&0xFF;
-       TicketBuffer[13]=Price&0xFF;
-       TicketBuffer[14]=(Price>>8)&0xFF;
-       TicketBuffer[15]=PreEtebar&0xFF;
-       TicketBuffer[16]=(PreEtebar>>8)&0xFF;
-       TicketBuffer[17]=(PreEtebar>>16)&0xFF;
-       TicketBuffer[18]=(PreEtebar>>24)&0xFF;
-       TicketBuffer[19]=Etebar&0xFF;
-       TicketBuffer[20]=(Etebar>>8)&0xFF;
-       TicketBuffer[21]=(Etebar>>16)&0xFF;
-       TicketBuffer[22]=(Etebar>>24)&0xFF;
-       TicketBuffer[23]=(Price>>16)&0xFF;
-       TicketBuffer[24]=Config.DeviceID%256;
-       TicketBuffer[25]=Config.DeviceID/256; 
-       TicketBuffer[26]=Indicators.TransactionUID&0xFF;
-       TicketBuffer[27]=(Indicators.TransactionUID>>8)&0xFF;
-       TicketBuffer[28]=(Indicators.TransactionUID>>16)&0xFF;
-       TicketBuffer[29]=(Indicators.TransactionUID>>24)&0xFF;
+       TicketBuffer[11] =Grouh&0xFF;
+       TicketBuffer[12] =(Grouh>>8)&0xFF;
+       TicketBuffer[13] =Price&0xFF;
+       TicketBuffer[14] =(Price>>8)&0xFF;
+       TicketBuffer[15] =PreEtebar&0xFF;
+       TicketBuffer[16] =(PreEtebar>>8)&0xFF;
+       TicketBuffer[17] =(PreEtebar>>16)&0xFF;
+       TicketBuffer[18] =(PreEtebar>>24)&0xFF;
+       TicketBuffer[19] =Etebar&0xFF;
+       TicketBuffer[20] =(Etebar>>8)&0xFF;
+       TicketBuffer[21] =(Etebar>>16)&0xFF;
+       TicketBuffer[22] =(Etebar>>24)&0xFF;
+       TicketBuffer[23] =(Price>>16)&0xFF;
+       TicketBuffer[24] =Config.DeviceID%256;
+       TicketBuffer[25] =Config.DeviceID/256; 
+       TicketBuffer[26] =Indicators.TransactionUID&0xFF;
+       TicketBuffer[27] =(Indicators.TransactionUID>>8)&0xFF;
+       TicketBuffer[28] =(Indicators.TransactionUID>>16)&0xFF;
+       TicketBuffer[29] =(Indicators.TransactionUID>>24)&0xFF;
 
-       if(Status==25)
+       if (Status==25)
        {
          //Port_Set(Buzzer); 
          //Play_CardingSound(0);
@@ -3476,7 +3476,7 @@ Grouh=0;
    
          //Port_Clear(Buzzer); 
     
-         return(0);
+         return 0;
        }
 		 }
 
@@ -3496,39 +3496,39 @@ Grouh=0;
 
 	
 	
-		 if((HEtebar!=0xFFFFFF)&&(Status==S_OutOfRange))
+		 if ((HEtebar!=0xFFFFFF) && (Status==S_OutOfRange))
 		 {
-			 if(HEtebar>=Price)
+			 if (HEtebar>=Price)
 			 {
 		     HNPayment=HEtebar-Price;
 		
-		     HediyeBuf[0]=HNPayment&0xFF;
-         HediyeBuf[1]=(HNPayment>>8)&0xFF;
-         HediyeBuf[2]=(HNPayment>>16)&0xFF;	
-         HediyeBuf[3]=(HNPayment>>24)&0xFF;	
-         HediyeBuf[4]=0xAB;	
-         HediyeBuf[5]=0xCD;	 	
+		     HediyeBuf[0] =HNPayment&0xFF;
+         HediyeBuf[1] =(HNPayment>>8)&0xFF;
+         HediyeBuf[2] =(HNPayment>>16)&0xFF;	
+         HediyeBuf[3] =(HNPayment>>24)&0xFF;	
+         HediyeBuf[4] =0xAB;	
+         HediyeBuf[5] =0xCD;	 	
 				
          Li=OS_TimeMS;
 
-				 while(1)
+				 while (1)
 				 {
-           if(OS_TimeMS-Li>1000) 
+           if (OS_TimeMS-Li>1000) 
            {
              break;
            }								 
-           if(ISO14443_LoginE2(4,0x39))
+           if (ISO14443_LoginE2(4,0x39))
            {
-             if(ISO14443_SingleTagSelect(snr))
+             if (ISO14443_SingleTagSelect(snr))
              {
-               if(ISO14443_SingleTagSelect(snr))
+               if (ISO14443_SingleTagSelect(snr))
                  continue;
              }
-             if(ISO14443_LoginE2(4,0x39)) continue;
+             if (ISO14443_LoginE2(4,0x39)) continue;
            }                 
-           if(ISO14443_WriteBlock(18,HediyeBuf))  continue;
+           if (ISO14443_WriteBlock(18,HediyeBuf))  continue;
 					 Status=0;
-					 TicketBuffer[0]=53;
+					 TicketBuffer[0] =53;
 					 Etebar=HNPayment;
 					 PreEtebar=HEtebar;
 					 break;
@@ -3539,19 +3539,19 @@ Grouh=0;
 	
 	
  
-   switch(Status)
+   switch (Status)
       {
         case S_Success:
 
-          LastCardingDateTime[0]=Year-1300;
-          LastCardingDateTime[1]=Month;
-          LastCardingDateTime[2]=Day;
-          LastCardingDateTime[3]=Hour;
-          LastCardingDateTime[4]=Min;
-          LastCardingDateTime[5]=Sec;
+          LastCardingDateTime[0] =Year-1300;
+          LastCardingDateTime[1] =Month;
+          LastCardingDateTime[2] =Day;
+          LastCardingDateTime[3] =Hour;
+          LastCardingDateTime[4] =Min;
+          LastCardingDateTime[5] =Sec;
           
 
-          if(LastCardSec>Sec)  CardTimeout2=(60-LastCardSec)+Sec;
+          if (LastCardSec>Sec)  CardTimeout2=(60-LastCardSec)+Sec;
           else                 CardTimeout2=Sec-LastCardSec;
 
 		
@@ -3569,9 +3569,9 @@ Grouh=0;
 
 
 			 	 RelayT=Config.Relay_Timeout;			 
-         if((RelayT>180000)||(RelayT<0)) RelayT=200;
+         if ((RelayT>180000) || (RelayT<0)) RelayT=200;
 			 
-			   if(RelayT<=1000)
+			   if (RelayT<=1000)
 			     {
 				    GUI_Delay(RelayT);
 				    RELAY1=0; 
@@ -3584,11 +3584,11 @@ Grouh=0;
           SaveTransaction(TicketBuffer);
           
           Indicators.OffTransactions++; 
-					if(Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
+					if (Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
 
           Indicators.TransactionUID++;
         
-         if((Indicators.TransactionUID&0x000000FFFF)>=65536) 
+         if ((Indicators.TransactionUID&0x000000FFFF)>=65536) 
           {
            Indicators.TransactionUID=0;     
           }
@@ -3598,10 +3598,10 @@ Grouh=0;
           
 
           
-          LastCardSnr[0]=snr[0];
-          LastCardSnr[1]=snr[1];
-          LastCardSnr[2]=snr[2];
-          LastCardSnr[3]=snr[3];
+          LastCardSnr[0] =snr[0];
+          LastCardSnr[1] =snr[1];
+          LastCardSnr[2] =snr[2];
+          LastCardSnr[3] =snr[3];
           LastCardSec=Sec;
 					
 					
@@ -3620,7 +3620,7 @@ Grouh=0;
 
 					
 					
-         if(RelayT<=1000) RelayT=1;
+         if (RelayT<=1000) RelayT=1;
 				 else RelayT=RelayT/1000;
 					
 						
@@ -3629,7 +3629,7 @@ Grouh=0;
 
 					
          CardingBetweenTimeout=Config.G_GameTimer;
-				 if(CardingBetweenTimeoutRelay>CardingBetweenTimeout)
+				 if (CardingBetweenTimeoutRelay>CardingBetweenTimeout)
 					 {
 						//CardingBetweenTimeout=CardingBetweenTimeoutRelay;
 					 }
@@ -3674,7 +3674,7 @@ unsigned long int Start,Temp;
 unsigned char MEMBuffer[LEN_TRANSACTIONS];
   static char GG=0;
 	
-  if(Indicators.OffTransactions==0) return; 
+  if (Indicators.OffTransactions==0) return; 
 	
   Start=(Indicators.OffTransactions>trHead)?(MAX_TRANSACTIONS-(Indicators.OffTransactions-trHead)):trHead-Indicators.OffTransactions;
 
@@ -3683,24 +3683,24 @@ unsigned char MEMBuffer[LEN_TRANSACTIONS];
   
  
 
-  GlobalBuffer[0]=STX;
-  GlobalBuffer[1]=12;
-  GlobalBuffer[2]=Config.DeviceID%256;
-  GlobalBuffer[3]=Config.DeviceID/256;
-  GlobalBuffer[4]=0;
-  GlobalBuffer[5]=0;
-  GlobalBuffer[6]=8;  //SABA Dec Transactions
+  GlobalBuffer[0] =STX;
+  GlobalBuffer[1] =12;
+  GlobalBuffer[2] =Config.DeviceID%256;
+  GlobalBuffer[3] =Config.DeviceID/256;
+  GlobalBuffer[4] =0;
+  GlobalBuffer[5] =0;
+  GlobalBuffer[6] =8;  //SABA Dec Transactions
 
-  GlobalBuffer[7]=Start&0xFF;
-  GlobalBuffer[8]=(Start>>8)&0xFF;
-  GlobalBuffer[9]=(Start>>16)&0xFF;
-  GlobalBuffer[10]=(Start>>24)&0xFF;
+  GlobalBuffer[7] =Start&0xFF;
+  GlobalBuffer[8] =(Start>>8)&0xFF;
+  GlobalBuffer[9] =(Start>>16)&0xFF;
+  GlobalBuffer[10] =(Start>>24)&0xFF;
 	
   Idx=11;
   SendUsers=Start;	
-  while(1)  
+  while (1)  
   {
-    if(SendUsers==trHead)
+    if (SendUsers==trHead)
       break;
 		
 
@@ -3710,15 +3710,15 @@ unsigned char MEMBuffer[LEN_TRANSACTIONS];
      
 		
 		 //.......................................................................   
-    GlobalBuffer[Idx++]=MEMBuffer[1];  //Card ID
-    GlobalBuffer[Idx++]=MEMBuffer[2];
-    GlobalBuffer[Idx++]=MEMBuffer[3];
-    GlobalBuffer[Idx++]=MEMBuffer[4];
-    GlobalBuffer[Idx++]=MEMBuffer[0]; //OP       
-    GlobalBuffer[Idx++]=MEMBuffer[13];  //Payment
-    GlobalBuffer[Idx++]=MEMBuffer[14];
-    GlobalBuffer[Idx++]=MEMBuffer[23];//Pay MSB
-    GlobalBuffer[Idx++]=0;
+    GlobalBuffer[Idx++] =MEMBuffer[1];  //Card ID
+    GlobalBuffer[Idx++] =MEMBuffer[2];
+    GlobalBuffer[Idx++] =MEMBuffer[3];
+    GlobalBuffer[Idx++] =MEMBuffer[4];
+    GlobalBuffer[Idx++] =MEMBuffer[0]; //OP       
+    GlobalBuffer[Idx++] =MEMBuffer[13];  //Payment
+    GlobalBuffer[Idx++] =MEMBuffer[14];
+    GlobalBuffer[Idx++] =MEMBuffer[23];//Pay MSB
+    GlobalBuffer[Idx++] =0;
 		
 		
     Byte=MEMBuffer[5]-85; //year
@@ -3726,78 +3726,78 @@ unsigned char MEMBuffer[LEN_TRANSACTIONS];
     c=MEMBuffer[6]; //Month
     c&=0x0F;
     Byte|=c;
-    GlobalBuffer[Idx++]=Byte; //;Year-Month       
+    GlobalBuffer[Idx++] =Byte; //;Year-Month       
     Byte=MEMBuffer[7]; //Day
     Byte<<=3;
     c=MEMBuffer[9]; //Min
     c&=0x07;
     Byte|=c;
-    GlobalBuffer[Idx++]=Byte; //Day-Min L       
+    GlobalBuffer[Idx++] =Byte; //Day-Min L       
     Byte=MEMBuffer[8]; //Hour
     Byte<<=3;
     c=MEMBuffer[9]; //Min
     c>>=3;
     c&=0x07;
     Byte|=c;
-    GlobalBuffer[Idx++]=Byte; //Hour-Min H       
-    GlobalBuffer[Idx++]=MEMBuffer[10]; //Sec
-    GlobalBuffer[Idx++]=MEMBuffer[15];  //FisrtEtebar
-    GlobalBuffer[Idx++]=MEMBuffer[16];
-    GlobalBuffer[Idx++]=MEMBuffer[17];
-    GlobalBuffer[Idx++]=MEMBuffer[18];
-    GlobalBuffer[Idx++]=MEMBuffer[19];  //NewEtebar
-    GlobalBuffer[Idx++]=MEMBuffer[20];
-    GlobalBuffer[Idx++]=MEMBuffer[21];
-    GlobalBuffer[Idx++]=MEMBuffer[22];
-    GlobalBuffer[Idx++]=MEMBuffer[26];  //UID
-    GlobalBuffer[Idx++]=MEMBuffer[27];
-    GlobalBuffer[Idx++]=MEMBuffer[28];
-    GlobalBuffer[Idx++]=MEMBuffer[29];
+    GlobalBuffer[Idx++] =Byte; //Hour-Min H       
+    GlobalBuffer[Idx++] =MEMBuffer[10]; //Sec
+    GlobalBuffer[Idx++] =MEMBuffer[15];  //FisrtEtebar
+    GlobalBuffer[Idx++] =MEMBuffer[16];
+    GlobalBuffer[Idx++] =MEMBuffer[17];
+    GlobalBuffer[Idx++] =MEMBuffer[18];
+    GlobalBuffer[Idx++] =MEMBuffer[19];  //NewEtebar
+    GlobalBuffer[Idx++] =MEMBuffer[20];
+    GlobalBuffer[Idx++] =MEMBuffer[21];
+    GlobalBuffer[Idx++] =MEMBuffer[22];
+    GlobalBuffer[Idx++] =MEMBuffer[26];  //UID
+    GlobalBuffer[Idx++] =MEMBuffer[27];
+    GlobalBuffer[Idx++] =MEMBuffer[28];
+    GlobalBuffer[Idx++] =MEMBuffer[29];
 		
 		
-    //for(i=0; i<70; i++)
-    //  GlobalBuffer[Idx++]=MEMBuffer[i];
+    //for (i=0; i<70; i++)
+    //  GlobalBuffer[Idx++] =MEMBuffer[i];
     
     SendUsers++;
-    if(SendUsers>=MAX_TRANSACTIONS)
+    if (SendUsers>=MAX_TRANSACTIONS)
       SendUsers=0;
-    if(++NumRecords>=10) break;
+    if (++NumRecords>=10) break;
   }                 
   
 	
 	
   Temp=SendUsers;
 
-  GlobalBuffer[7]=Temp&0xFF;
-  GlobalBuffer[8]=(Temp>>8)&0xFF;
-  GlobalBuffer[9]=(Temp>>16)&0xFF;
-  GlobalBuffer[10]=(Temp>>24)&0xFF;
-  GlobalBuffer[4]=(Idx-6)%256;
-  GlobalBuffer[5]=(Idx-6)/256;
+  GlobalBuffer[7] =Temp&0xFF;
+  GlobalBuffer[8] =(Temp>>8)&0xFF;
+  GlobalBuffer[9] =(Temp>>16)&0xFF;
+  GlobalBuffer[10] =(Temp>>24)&0xFF;
+  GlobalBuffer[4] =(Idx-6)%256;
+  GlobalBuffer[5] =(Idx-6)/256;
   WaitForAddress=Temp;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
-  GlobalBuffer[Idx++]=crc%256;
-  GlobalBuffer[Idx++]=crc/256;
-  GlobalBuffer[Idx++]=ETX;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=0;
-  GlobalBuffer[Idx++]=0;
+  GlobalBuffer[Idx++] =crc%256;
+  GlobalBuffer[Idx++] =crc/256;
+  GlobalBuffer[Idx++] =ETX;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =0;
+  GlobalBuffer[Idx++] =0;
 
 	/*
-								 if(GG) GUI_SetColor(GUI_RED); 
+								 if (GG) GUI_SetColor(GUI_RED); 
 								 else   GUI_SetColor(GUI_YELLOW); 
 	          		 GUI_FillCircle(10,10,4);
 								 GG=!GG;
 								 */
 
 
-  switch(ActivePort)
+  switch (ActivePort)
   {
     case 0:
 			SetTX485();GUI_Delay(1);
-      for(i=0; i<Idx; i++)
+      for (i=0; i<Idx; i++)
         SendByte(GlobalBuffer[i]);
 		
 		GUI_Delay(5);
@@ -3829,13 +3829,13 @@ void ProcessPeriodicTasks(void)
 
 		++Sec;
 	
-  if(OldSec>Sec)
+  if (OldSec>Sec)
     OldSec=(60-OldSec)+Sec;
   else
     OldSec=Sec-OldSec;
 	
 	
-  if((Sec%2)==0)
+  if ((Sec%2)==0)
 	  {
 		 RTC_Get_Time();
 		 OldSec=Sec;
@@ -3843,16 +3843,16 @@ void ProcessPeriodicTasks(void)
 
   //..........................................................................................................
   Last_WifiConnectionStep=WiFiStep;
-  if(Config.WiFi!=103)
+  if (Config.WiFi!=103)
 	  {
 	   LWiFiStep=WiFiStep;
 	   CheckWiFi();
-	   if((LWiFiStep==9)&&(WiFiStep==10)) {ActivePort=3; SendDeviceInfo(); GUI_Delay(10); SendDeviceInfo(); ConnectedToServer=1; }
+	   if ((LWiFiStep==9) && (WiFiStep==10)) {ActivePort=3; SendDeviceInfo(); GUI_Delay(10); SendDeviceInfo(); ConnectedToServer=1; }
 
     }
   //..........................................................................................................
    
-   if(WiFiStep<7)
+   if (WiFiStep<7)
      {
 			ConnectedToServer=0;
      } 
@@ -3860,10 +3860,10 @@ void ProcessPeriodicTasks(void)
   //.......................................................................................
 
 	
-  if(CardingBetweenTimeout)  
+  if (CardingBetweenTimeout)  
 	  {
 		 CardingBetweenTimeout--;
-		 if(CardingBetweenTimeout)
+		 if (CardingBetweenTimeout)
 			{
 		   percent=(260/Config.G_GameTimer);
        GUI_SetColor(0x07F000FF);
@@ -3877,10 +3877,10 @@ void ProcessPeriodicTasks(void)
        GUI_DrawRoundedFrame(5, 225+10, 272-5, 265,6,3);  
 			}
 		}
-	if(CardingBetweenTimeoutRelay) 
+	if (CardingBetweenTimeoutRelay) 
   	{
 		 CardingBetweenTimeoutRelay--;
-	   if(!CardingBetweenTimeoutRelay)
+	   if (!CardingBetweenTimeoutRelay)
 	     {
     		RELAY1=0;
         RELAY2=0;
@@ -3889,10 +3889,10 @@ void ProcessPeriodicTasks(void)
 
   //.......................................................................................
 	
-  if(Min!=OldMin)
+  if (Min!=OldMin)
   {
    RTC_Get();
-	 if(CardingBetweenTimeout)
+	 if (CardingBetweenTimeout)
 	   { 
 	    ShowPaymentBox();
 		 }
@@ -3911,7 +3911,7 @@ void ProcessPeriodicTasks(void)
    //GUI_FillCircle(PointLocation, 40+370, 5);		
 		
    OldMin=Min;
-   if(Hour!=OldHour)
+   if (Hour!=OldHour)
 		{
 			RTC_Get();
 			OldHour=Hour;
@@ -3934,10 +3934,10 @@ void ProcessPeriodicTasks(void)
   
   }
 	
-  if(InfoCounter==0)
+  if (InfoCounter==0)
 	{
 		LoadFont(FontTahoma20);
-  	if(l)
+  	if (l)
 	  {
 			GUI_SetColor(0);
 
@@ -3960,10 +3960,10 @@ void ProcessPeriodicTasks(void)
   }
 	
 		
-	  if(InfoCounter)
-    if(--InfoCounter==0)
+	  if (InfoCounter)
+    if (--InfoCounter==0)
     {
-     if(!CardingBetweenTimeoutRelay)
+     if (!CardingBetweenTimeoutRelay)
 		 {
 
 		RELAY1=0;
@@ -4001,25 +4001,25 @@ void ProcessPeriodicTasks(void)
   DataSendInterval++;
 	
 
-	if(ConnectedToServer)
+	if (ConnectedToServer)
 	  {
-  if((++DataSendInterval>Config.TransactionsSendInterval)&&(Config.TransactionsSendInterval))
+  if ((++DataSendInterval>Config.TransactionsSendInterval) && (Config.TransactionsSendInterval))
     { 
-     if(Indicators.OffTransactions)
+     if (Indicators.OffTransactions)
       { 
         DataSendInterval=0;
 
         DeviceInfoSendInterval=0; 
         SendOfflines(); 
       } 
-    else if(!Check_ServerForUpdateFile)//&&((ActivePort!=0)))
+    else if (!Check_ServerForUpdateFile)//&&((ActivePort!=0)))
         {
 				 DataSendInterval=0;
          DeviceInfoSendInterval=0;
          CheckUpdateTry++;
          Download_NewFirmwares();
         }
-	  else if(Download_NewFirmwares()) 
+	  else if (Download_NewFirmwares()) 
          {
 					DataSendInterval=0;
           DeviceInfoSendInterval=0;
@@ -4027,11 +4027,11 @@ void ProcessPeriodicTasks(void)
 			
   
     
-    if(++DeviceInfoSendInterval>(Config.DeviceInfoSendInterval))
+    if (++DeviceInfoSendInterval>(Config.DeviceInfoSendInterval))
      {
       DeviceInfoSendInterval=0;
-      if((ActivePort==3)&&(Check_ServerForUpdateFile)&&(!IsFileForGprsDownload))  Check_ServerForUpdateFile=0;                 
-      if(!Download_NewFirmwares())             SendALive(150);
+      if ((ActivePort==3) && (Check_ServerForUpdateFile) && (!IsFileForGprsDownload))  Check_ServerForUpdateFile=0;                 
+      if (!Download_NewFirmwares())             SendALive(150);
      }  
 	 }
  }
@@ -4075,12 +4075,12 @@ void InitializeAlef(void) {
     FirmwareLength+=GlobalBuffer[3];
     _FirmwareVer=GlobalBuffer[9]+(GlobalBuffer[10]*256);
     _FirmwareRelease=GlobalBuffer[11]+(GlobalBuffer[12]*256);
-    if((FirmwareLength>512*1024)||(_FirmwareVer!=Ver)||((_FirmwareVer==Ver)&&(_FirmwareRelease<=Release)))
+    if ((FirmwareLength>512*1024) || (_FirmwareVer!=Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
     {
       FirmwareRequestNo=0; 
       FirmwareLength=0;
-      for(i=0; i<32; i++)
-        GlobalBuffer[i]=0;
+      for (i=0; i<32; i++)
+        GlobalBuffer[i] =0;
      	FLASH_UNLOCK
       SaveFromRamToDF(addFirmwareInfo, 32, &GlobalBuffer[0]);
      	FLASH_LOCK
@@ -4093,14 +4093,14 @@ void InitializeAlef(void) {
       Firmware.CheckSum+=GlobalBuffer[19]; Firmware.CheckSum<<=8;
       Firmware.CheckSum+=GlobalBuffer[18]; Firmware.CheckSum<<=8;
       Firmware.CheckSum+=GlobalBuffer[17];  
-      for(i=0; i<15; i++)
-        Firmware.FirmwareFileName[i]=GlobalBuffer[i+21];
+      for (i=0; i<15; i++)
+        Firmware.FirmwareFileName[i] =GlobalBuffer[i+21];
     }
   }
-	else if((GlobalBuffer[0]==0xC2)&&(GlobalBuffer[7]==0x55))
+	else if ((GlobalBuffer[0] ==0xC2) && (GlobalBuffer[7] ==0x55))
 	{
-    for(i=0; i<32; i++)
-      GlobalBuffer[i]=0;
+    for (i=0; i<32; i++)
+      GlobalBuffer[i] =0;
    	FLASH_UNLOCK
     SaveFromRamToDF(addFirmwareInfo, 32, &GlobalBuffer[0]);
    	FLASH_LOCK
@@ -4115,22 +4115,22 @@ unsigned char GetDateRange(unsigned short *SYear, unsigned char *SMonth, unsigne
 unsigned short CurX, CurY;
 unsigned char Refresh, Key;
 unsigned char Loc=0;
-unsigned char Stream[]="0000000000000000";
+unsigned char Stream[] ="0000000000000000";
 
   
-  Stream[0]=(*SYear/10)%10;
-  Stream[1]=*SYear%10;
-  Stream[2]=*SMonth/10;
-  Stream[3]=*SMonth%10;
-  Stream[4]=*SDay/10;
-  Stream[5]=*SDay%10;
+  Stream[0] =(*SYear/10)%10;
+  Stream[1] =*SYear%10;
+  Stream[2] =*SMonth/10;
+  Stream[3] =*SMonth%10;
+  Stream[4] =*SDay/10;
+  Stream[5] =*SDay%10;
   
-  Stream[6]=(*EYear/10)%10;
-  Stream[7]=*EYear%10;
-  Stream[8]=*EMonth/10;
-  Stream[9]=*EMonth%10;
-  Stream[10]=*EDay/10;
-  Stream[11]=*EDay%10;
+  Stream[6] =(*EYear/10)%10;
+  Stream[7] =*EYear%10;
+  Stream[8] =*EMonth/10;
+  Stream[9] =*EMonth%10;
+  Stream[10] =*EDay/10;
+  Stream[11] =*EDay%10;
 
   GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+272, GUI_MAKE_ALPHA(0x00, 0xA02020), GUI_MAKE_ALPHA(0x00, 0x000000));
   GUI_SetColor(RGB(237,237,237));
@@ -4166,12 +4166,12 @@ unsigned char Stream[]="0000000000000000";
 
   CurX=140;
 	CurY=80;
-  while(Loc<=11)
+  while (Loc<=11)
   {
-    switch(Key=ScanKeyboard())
+    switch (Key=ScanKeyboard())
     {
        case BUP:
-         if(Stream[Loc]<9)
+         if (Stream[Loc]<9)
          {
            GUI_SetColor(GUI_WHITE);
            GUI_FillRect(CurX, CurY+8, CurX+15, CurY+25);
@@ -4181,7 +4181,7 @@ unsigned char Stream[]="0000000000000000";
          }
       	 break;
        case BDOWN : 
-         if(Stream[Loc]>0)
+         if (Stream[Loc]>0)
          {
            GUI_SetColor(GUI_WHITE);
            GUI_FillRect(CurX, CurY+8, CurX+15, CurY+25);
@@ -4191,7 +4191,7 @@ unsigned char Stream[]="0000000000000000";
          }
       	 break;
        case BRIGHT:
-         if(Loc<11)
+         if (Loc<11)
          {
            GUI_SetColor(GUI_BLACK);
            GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
@@ -4200,7 +4200,7 @@ unsigned char Stream[]="0000000000000000";
          }
          break;
        case BLEFT:
-         if(Loc>0)
+         if (Loc>0)
          {
            GUI_SetColor(GUI_BLACK);
            GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
@@ -4213,7 +4213,7 @@ unsigned char Stream[]="0000000000000000";
          GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
          Loc++;
          Refresh=1;
-         if((Loc>11)||(Key==BF3))  
+         if ((Loc>11) || (Key==BF3))  
          {
            Loc=12;
            *SYear=(Stream[0]*10)+Stream[1];
@@ -4228,19 +4228,19 @@ unsigned char Stream[]="0000000000000000";
          }  
 	       break;
        case BF1:
-         return(1);
+         return 1;
 			 case BOK:
 				 Loc=12;
 				 break;
        case BCANCEL:
-         return(1);
+         return 1;
     }
-		if(Refresh)
+		if (Refresh)
 		{
 			Refresh=0;
-      if(Loc>=6) CurY=150;
+      if (Loc>=6) CurY=150;
 			else       CurY=80;  
-			switch(Loc%6)
+			switch (Loc%6)
 			{
 			  case 0: CurX=140; break;
 				case 1: CurX=160; break;
@@ -4253,7 +4253,7 @@ unsigned char Stream[]="0000000000000000";
       GUI_DispCharAt(Stream[Loc]+'0', CurX, CurY);
     }
   }
-  return(0);
+  return 0;
   
 }
 
@@ -4262,7 +4262,7 @@ void ProcessKeysAlef(unsigned int Key)
 {
   char  str[50];
 
-  switch(Key) 
+  switch (Key) 
   {
     case BOK:
 			Setup();
@@ -4334,46 +4334,46 @@ void MainAlef(void) {
   if ((Config.Relay_Timeout > 7200000) || (Config.Relay_Timeout < 0))
 		Config.Relay_Timeout = 0;
 					
-  if(Config.G_GameTimer>7200000) Config.G_GameTimer=0;
-  else if(Config.G_GameTimer<0) Config.G_GameTimer=0;
+  if (Config.G_GameTimer>7200000) Config.G_GameTimer=0;
+  else if (Config.G_GameTimer<0) Config.G_GameTimer=0;
 
-  if(Config.Price>0xFFFF) Config.Price=0;
-  else if(Config.Price<0) Config.Price=0;
+  if (Config.Price>0xFFFF) Config.Price=0;
+  else if (Config.Price<0) Config.Price=0;
 	
 	
 	
 	if ((Config.LocalIP[0] < '0') || (Config.LocalIP[0] > '9'))
 		sprintf(Config.LocalIP, "192.168.001.178");
 		
-	if((Config.SubnetIP[0]<'0')||(Config.SubnetIP[0]>'9'))
+	if ((Config.SubnetIP[0]<'0') || (Config.SubnetIP[0]>'9'))
   	{
 		 sprintf(Config.SubnetIP,"255.255.255.000");			
     }  
   
-	if((Config.RoutIpAddress[0]<'0')||(Config.RoutIpAddress[0]>'9'))
+	if ((Config.RoutIpAddress[0]<'0') || (Config.RoutIpAddress[0]>'9'))
   	{
-     Config.RoutIpAddress[0]=192;
-     Config.RoutIpAddress[1]=168;
-     Config.RoutIpAddress[2]=110;
-     Config.RoutIpAddress[3]=1;
+     Config.RoutIpAddress[0] =192;
+     Config.RoutIpAddress[1] =168;
+     Config.RoutIpAddress[2] =110;
+     Config.RoutIpAddress[3] =1;
 		 sprintf(Config.RoutIpAddress,"192.168.001.001");			
     }
 		
   
-	if((Config.ServerIP[0]<'0')||(Config.ServerIP[0]>'9'))
+	if ((Config.ServerIP[0]<'0') || (Config.ServerIP[0]>'9'))
   	{
 		 sprintf(Config.ServerIP,"192.168.001.123");
     }		
 		
 
-  //if(Config.SubnetIP[3]==255)		Config.SubnetIP[3]=0;	
+  //if (Config.SubnetIP[3] ==255)		Config.SubnetIP[3] =0;	
 	
 	//SaveConfiguration();
 	
 	
 	
 	
-	if((Indicators.TransactionUID&0x000000FFFF)>=65536) 
+	if ((Indicators.TransactionUID&0x000000FFFF)>=65536) 
     {
      Indicators.TransactionUID=0;     
     }
@@ -4393,22 +4393,22 @@ void MainAlef(void) {
 	
 
 
-	while(1) {
+	while (1) {
 		
    #ifdef WithSAMCARD
-   if(Byte=ISO14443_SingleTagSelect(snr)) 
+   if (Byte=ISO14443_SingleTagSelect(snr)) 
      {
     
 			 
-      if(LastCardSec>Sec)  CardTimeout=(60-LastCardSec)+Sec;
+      if (LastCardSec>Sec)  CardTimeout=(60-LastCardSec)+Sec;
       else                 CardTimeout=Sec-LastCardSec;     
         
   
-      if((CardTimeout<1)&&(Byte==3))//&&((snr[0]==LastCardSnr[0])&&(snr[1]==LastCardSnr[1])&&(snr[2]==LastCardSnr[2])&&(snr[3]==LastCardSnr[3])))
+      if ((CardTimeout<1) && (Byte==3))//&&((snr[0] ==LastCardSnr[0]) && (snr[1] ==LastCardSnr[1]) && (snr[2] ==LastCardSnr[2]) && (snr[3] ==LastCardSnr[3])))
          { 
            
          }
-      else if((CardTimeout<=2)&&(Byte==2)&&((snr[0]==LastCardSnr[0])&&(snr[1]==LastCardSnr[1])&&(snr[2]==LastCardSnr[2])&&(snr[3]==LastCardSnr[3])))
+      else if ((CardTimeout<=2) && (Byte==2) && ((snr[0] ==LastCardSnr[0]) && (snr[1] ==LastCardSnr[1]) && (snr[2] ==LastCardSnr[2]) && (snr[3] ==LastCardSnr[3])))
          { 
            
          }       
@@ -4418,12 +4418,12 @@ void MainAlef(void) {
          }
      }
    #else
-   if(!ISO14443_SingleTagSelect(snr)) 
+   if (!ISO14443_SingleTagSelect(snr)) 
      {
-      if(LastCardSec>Sec)  CardTimeout=(60-LastCardSec)+Sec;
+      if (LastCardSec>Sec)  CardTimeout=(60-LastCardSec)+Sec;
       else                 CardTimeout=Sec-LastCardSec;  
 			 
-      if((CardTimeout<=2)&&((snr[0]==LastCardSnr[0])&&(snr[1]==LastCardSnr[1])&&(snr[2]==LastCardSnr[2])&&(snr[3]==LastCardSnr[3])))
+      if ((CardTimeout<=2) && ((snr[0] ==LastCardSnr[0]) && (snr[1] ==LastCardSnr[1]) && (snr[2] ==LastCardSnr[2]) && (snr[3] ==LastCardSnr[3])))
          { 
            
          }       
@@ -4449,23 +4449,23 @@ void MainAlef(void) {
 		}
 
 		Key = ScanKeyboard();
-    if(Key)
+    if (Key)
 			ProcessKeysAlef(Key);
 		
 		if (rxd3_counter)
 			if (Config.WiFi != 103)
 				CommunicateWithHostByWiFi();
     /*
-    if(DataSent)
+    if (DataSent)
     {
       GPRSCHECK=0;
-      if(NumGPSSent)
+      if (NumGPSSent)
       {
-        snr[0]=0x50;
+        snr[0] =0x50;
         i=addLocations+(GWaitForAddress*LEN_LOCATIONS);
-        if(GWaitForAddress==loHead)
+        if (GWaitForAddress==loHead)
         {
-          if(loHead==0)
+          if (loHead==0)
             i=addLocations+((MAX_LOCATIONS-1)*LEN_LOCATIONS);
           else
             i=addLocations+((loHead-1)*LEN_LOCATIONS);
@@ -4476,22 +4476,22 @@ void MainAlef(void) {
         NumGPSSent=0;  
         DisplayToolbar(1);
         //G_RepaintArea(220,240);
-        //if(Indicators.OffLocations>5)
+        //if (Indicators.OffLocations>5)
        //   SendLocations();
       }
       DataSent=0;  
       ConnectionError=0;
-      if(BOARD_VER==VI)
+      if (BOARD_VER==VI)
         LEDCON=1;
     }*/
 /*
-    if(GPSValidData)
+    if (GPSValidData)
     {
       ProcessLocation();
       GPSValidData=0;  
-    }//if(GPSValidD
+    }//if (GPSValidD
 
-    if(CallReceived)
+    if (CallReceived)
     {
 			VOICEEN=1;
       InfoCounter=5;
@@ -4499,7 +4499,7 @@ void MainAlef(void) {
       CallReceived=0;
     }
 
-    if(NoCarrier)
+    if (NoCarrier)
     {
 			VOICEEN=0;
 			IncommingCall=0;
@@ -4507,15 +4507,15 @@ void MainAlef(void) {
       NoCarrier=0;
     }
 
-    if(SMSReceived)
+    if (SMSReceived)
     {
-      if(ProcessSMS()==0)
+      if (ProcessSMS()==0)
 				SMSReceived=0;
     }
  */
 
 
-		if(rxd_counter) {
+		if (rxd_counter) {
 			CommunicateWithHost();
 			EmptyRXBuffer();
 			if ((ActivePort == 0) && ((RequestType == 124) || (RequestType == 125)))

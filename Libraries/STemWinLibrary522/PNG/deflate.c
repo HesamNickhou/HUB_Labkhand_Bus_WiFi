@@ -565,9 +565,9 @@ int ZEXPORT deflate (strm, flush)
     if (strm->next_out == Z_NULL ||
         (strm->next_in == Z_NULL && strm->avail_in != 0) ||
         (s->status == FINISH_STATE && flush != Z_FINISH)) {
-        ERR_RETURN(strm, Z_STREAM_ERROR);
+        ERR_return(strm, Z_STREAM_ERROR);
     }
-    if (strm->avail_out == 0) ERR_RETURN(strm, Z_BUF_ERROR);
+    if (strm->avail_out == 0) ERR_return(strm, Z_BUF_ERROR);
 
     s->strm = strm; /* just in case */
     old_flush = s->last_flush;
@@ -773,12 +773,12 @@ int ZEXPORT deflate (strm, flush)
      */
     } else if (strm->avail_in == 0 && flush <= old_flush &&
                flush != Z_FINISH) {
-        ERR_RETURN(strm, Z_BUF_ERROR);
+        ERR_return(strm, Z_BUF_ERROR);
     }
 
     /* User must not provide more input after the first FINISH: */
     if (s->status == FINISH_STATE && strm->avail_in != 0) {
-        ERR_RETURN(strm, Z_BUF_ERROR);
+        ERR_return(strm, Z_BUF_ERROR);
     }
 
     /* Start a new block or continue the current one.

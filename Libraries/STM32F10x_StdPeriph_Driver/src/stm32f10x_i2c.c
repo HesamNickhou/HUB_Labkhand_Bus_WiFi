@@ -1154,7 +1154,7 @@ FlagStatus I2C_GetFlagStatus(I2C_TypeDef* I2Cx, uint32_t I2C_FLAG)
   /* Get bit[23:0] of the flag */
   I2C_FLAG &= FLAG_Mask;
   
-  if(i2creg != 0)
+  if (i2creg != 0)
   {
     /* Get the I2Cx SR1 register address */
     i2cxbase += 0x14;
@@ -1167,7 +1167,7 @@ FlagStatus I2C_GetFlagStatus(I2C_TypeDef* I2Cx, uint32_t I2C_FLAG)
     i2cxbase += 0x18;
   }
   
-  if(((*(__IO uint32_t *)i2cxbase) & I2C_FLAG) != (uint32_t)RESET)
+  if (((*(__IO uint32_t *)i2cxbase) & I2C_FLAG) != (uint32_t)RESET)
   {
     /* I2C_FLAG is set */
     bitstatus = SET;

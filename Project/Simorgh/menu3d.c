@@ -24,7 +24,7 @@ unsigned char SetTestMode(void);
 extern char InTestMode;
 		
 	
-#if(DeviceType==BUSDOOR)
+#if (DeviceType==BUSDOOR)
 extern void ShowPageAlef(void);
 #endif
 
@@ -66,7 +66,7 @@ unsigned char SetX10(void);
 
 
 
-  MenuStruct const MainMenu[]=
+  MenuStruct const MainMenu[] =
   {
 		#ifdef Simorgh50N
     //{{"0:icons/back.bmp", ""}, {"", ""}, {"برگشت", ""}, 0, 0},
@@ -77,7 +77,7 @@ unsigned char SetX10(void);
     {{"", ""}, {"", ""}, {"", ""}, 0, 0},
   };     
 
-  MenuStruct const SettingMenu[]=
+  MenuStruct const SettingMenu[] =
   {
 		#ifdef Simorgh50N
     //{{"0:icons/back.bmp", ""}, {"", ""}, {"برگشت", ""}, 0, 0},
@@ -86,7 +86,7 @@ unsigned char SetX10(void);
     {{"0:icons/M0002/001.bmp", ""}, {"0:1.bmp", ""}, {"کد دستگاه", ""}, SetDeviceID, 0},
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"کد سازمان", ""}, SetDeviceUC, 0},
 
-		#if(DeviceType!=BUSDOOR)
+		#if (DeviceType!=BUSDOOR)
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"ارتباط", ""}, ShowCommunicationMenu, 0},
 		#endif
 		#ifdef Simorgh50N
@@ -97,7 +97,7 @@ unsigned char SetX10(void);
     {{"", ""}, {"", ""}, {"", ""}, 0, 0},
   };     
 
-  MenuStruct const ToolsMenu[]= 
+  MenuStruct const ToolsMenu[] = 
  {
 		#ifdef Simorgh50N
     //{{"0:icons/back.bmp", ""}, {"", ""}, {"برگشت", ""}, 0, 0},
@@ -105,7 +105,7 @@ unsigned char SetX10(void);
    // {{"0:icons/M0003/000.bmp", ""}, {"0:1.bmp", ""}, {"CreditTest", ""}, 0, 0},
     //{{"0:icons/M0003/001.bmp", ""}, {"0:1.bmp", ""}, {"MemTest", ""}, MemoryTest, 0},
     {{"0:icons/M0003/002.bmp", ""}, {"0:1.bmp", ""}, {"رمز عبور", ""}, ChangePassword, 0},
-		#if(DeviceType!=BUSDOOR)
+		#if (DeviceType!=BUSDOOR)
     {{"0:icons/M0003/003.bmp", ""}, {"0:1.bmp", ""}, {"زمان بازي", ""}, SetGameTime, 0},		
     {{"0:icons/M0003/003.bmp", ""}, {"0:1.bmp", ""}, {"زمان رله", ""}, ChangeRelayTimeout, 0},
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"نرخ ويژه", ""}, SetX10, 0},
@@ -120,7 +120,7 @@ unsigned char SetX10(void);
     {{"", ""}, {"", ""}, {"", ""}, 0, 0},
   };
 
-  MenuStruct const CommunicationMenu[]= 
+  MenuStruct const CommunicationMenu[] = 
   {
 		#ifdef WithWIFI
     {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"جستجوي وايفاي", ""}, SearchAndSelectSSID, 0},		
@@ -134,7 +134,7 @@ unsigned char SetX10(void);
     {{"", ""}, {"", ""}, {"", ""}, 0, 0},
   }; 
   
-  MenuStruct const SIMCardTypeMenu[]=
+  MenuStruct const SIMCardTypeMenu[] =
   {
     {{"-", ""}, {"", ""}, {"ايرانسل", ""}, 0, 1},
     {{"-", ""}, {"", ""}, {"همراه اول", ""}, 0, 2},
@@ -142,14 +142,14 @@ unsigned char SetX10(void);
     {{"", ""}, {"", ""}, {"", ""}, 0, 0},
   };     
 
-  MenuStruct const LanguageRadioMenu[]=
+  MenuStruct const LanguageRadioMenu[] =
   {
     {{"-", ""}, {"", ""}, {"Persian", ""}, 0, 1},
     {{"-", ""}, {"", ""}, {"English", ""}, 0, 2},
     {{"-", ""}, {"", ""}, {"German", ""}, 0, 3},
     {{"", ""}, {"", ""}, {"", ""}, 0, 0},
   };     
-   MenuStruct const EnDeMenu[]=
+   MenuStruct const EnDeMenu[] =
   {
     {{"-", ""}, {"", ""}, {"غير فعال", ""}, 0, 1},
     {{"-", ""}, {"", ""}, {"فعال", ""}, 0, 2},
@@ -172,7 +172,7 @@ File = (FIL *)p;
   f_read(File, _acBuffer, NumBytesReq, &ByteRead);
 
   *ppData = _acBuffer;
-  return(ByteRead);
+  return ByteRead;
 }
 
 //==============================================================================
@@ -182,7 +182,7 @@ FRESULT res;
 FIL File;
 	
 	res = f_open(&File, FileName, FA_OPEN_EXISTING|FA_READ);
-	if(res==FR_OK)
+	if (res==FR_OK)
 	{
   	GUI_BMP_DrawEx(APP_GetData, &File, X, Y);
 	}
@@ -196,7 +196,7 @@ FRESULT res;
 FIL File;
 	
 	res = f_open(&File, filename, FA_OPEN_EXISTING|FA_READ);
-	if(res==FR_OK)
+	if (res==FR_OK)
 	{
   	GUI_BMP_DrawEx(APP_GetData, &File, x, y);
 	}
@@ -210,7 +210,7 @@ FRESULT res;
 FIL File;
 	
 	res = f_open(&File, filename, FA_OPEN_EXISTING|FA_READ);
-	if(res==FR_OK)
+	if (res==FR_OK)
 	{
   	GUI_PNG_DrawEx(APP_GetData, &File, x, y);
 	}
@@ -249,22 +249,22 @@ unsigned short b=0;
 	  Y+=TFT_START_Y;
     // Open the file
     res = f_open(&FileObject, FileName, FA_OPEN_EXISTING|FA_READ);
-    if( res != FR_OK ) 
+    if ( res != FR_OK ) 
 		{
-  	  if(res==5)
+  	  if (res==5)
     	{
         memset(&fs, 0, sizeof(FATFS));      // Clear file system object
 	      f_mount(&fs, "", 0); 		 		
 	    }
       return 1;
 		}
-    while(1)
+    while (1)
     {
       res = f_read(&FileObject, _acBuffer, DATA_SIZE, &ByteRead);
-      if(res==FR_OK) 
+      if (res==FR_OK) 
       {
         Loc=0;
-        if(FirstSector)
+        if (FirstSector)
         {
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
@@ -295,29 +295,29 @@ unsigned short b=0;
           Loc=54;
         }
 
-        for(;Loc<ByteRead;)
+        for (;Loc<ByteRead;)
         {
-          if(LastColor==0)
+          if (LastColor==0)
             R=_acBuffer[Loc++];
-          if(LastColor<=1)
+          if (LastColor<=1)
           {
-            if(Loc>=ByteRead) { LastColor=1; break; }
+            if (Loc>=ByteRead) { LastColor=1; break; }
             G=_acBuffer[Loc++];
           }
-          if(Loc>=ByteRead) { LastColor=2; break; }
+          if (Loc>=ByteRead) { LastColor=2; break; }
           B=_acBuffer[Loc++];
           LastColor=0;
           Color=RGB2(B,G,R);
-          if((CurCol<x1)||(CurCol>x2)||((CurRow)<y1)||((CurRow)>y2))
+          if ((CurCol<x1) || (CurCol>x2) || ((CurRow)<y1) || ((CurRow)>y2))
           {
             
           }else{
-            if((CurRow!=LastRow)&&(LastRow!=0))
+            if ((CurRow!=LastRow) && (LastRow!=0))
             {
               yPos--;
               NeedRelocate=1;
             }
-            if(NeedRelocate)
+            if (NeedRelocate)
             {
 							#ifdef Simorgh50N
               LCD_REG_ADDRESS=0x002b;	
@@ -346,7 +346,7 @@ unsigned short b=0;
 						#endif
           }  
           CurCol++;
-          if(CurCol>=biWidth)
+          if (CurCol>=biWidth)
           {
             NeedRelocate=1;
             CurCol=0;
@@ -354,14 +354,14 @@ unsigned short b=0;
           }  
         }
       }
-      if(ByteRead<DATA_SIZE)
+      if (ByteRead<DATA_SIZE)
         break;
     }
 
  
     // Close the file
     res = f_close(&FileObject);
-    if( res != FR_OK )
+    if ( res != FR_OK )
         return 10;
 }
 
@@ -381,25 +381,25 @@ unsigned short LastRow=0;
 unsigned short b=0;
 unsigned int StartAddress, Len;
    
-	  if(GetResourceAddress((char *)FileName, &StartAddress, &Len))
-			return(1);
+	  if (GetResourceAddress((char *)FileName, &StartAddress, &Len))
+			return 1;
 		
 		Y+=TFT_START_Y;
 		
     Len+=StartAddress;
-    while(1)
+    while (1)
     {
  			ByteRead=DATA_SIZE;
-			if(StartAddress+DATA_SIZE>Len)
+			if (StartAddress+DATA_SIZE>Len)
   			ByteRead=Len-StartAddress;
       LoadFromDFToRam(StartAddress, ByteRead, _acBuffer);
-      if(1) 
+      if (1) 
       {
         Loc=0;
-        if(FirstSector)
+        if (FirstSector)
         {
-					if((_acBuffer[0]!='B')||(_acBuffer[1]!='M'))
-						return(1);
+					if ((_acBuffer[0]!='B') || (_acBuffer[1]!='M'))
+						return 1;
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
           biWidth+=_acBuffer[20]; biWidth<<=8;
@@ -409,8 +409,8 @@ unsigned int StartAddress, Len;
           biHeight+=_acBuffer[24]; biHeight<<=8;
           biHeight+=_acBuffer[23]; biHeight<<=8;
           biHeight+=_acBuffer[22];
-					if((biHeight>480)||(biWidth>800))
-						return(3);
+					if ((biHeight>480) || (biWidth>800))
+						return 3;
           yPos=Y+biHeight;
  					#ifdef Simorgh50N
           LCD_REG_ADDRESS=0x002b;	
@@ -435,16 +435,16 @@ unsigned int StartAddress, Len;
           Loc=54;
         }
 
-        for(;Loc<ByteRead;)
+        for (;Loc<ByteRead;)
         {
-          if(LastColor==0)
+          if (LastColor==0)
             B=_acBuffer[Loc++];
-          if(LastColor<=1)
+          if (LastColor<=1)
           {
-            if(Loc>=ByteRead) { LastColor=1; break; }
+            if (Loc>=ByteRead) { LastColor=1; break; }
             G=_acBuffer[Loc++];
           }
-          if(Loc>=ByteRead) { LastColor=2; break; }
+          if (Loc>=ByteRead) { LastColor=2; break; }
           R=_acBuffer[Loc++];
           LastColor=0;
 					#ifdef Simorgh50N
@@ -453,12 +453,12 @@ unsigned int StartAddress, Len;
 					#ifdef Torgheh
           Color=RGB3(B,G,R);
 					#endif
-          if((CurRow!=LastRow)&&(LastRow!=0))
+          if ((CurRow!=LastRow) && (LastRow!=0))
           {
             yPos--;
             NeedRelocate=1;
           }
-          if(NeedRelocate)
+          if (NeedRelocate)
           {
   					#ifdef Simorgh50N
             LCD_REG_ADDRESS=0x002b;	
@@ -485,7 +485,7 @@ unsigned int StartAddress, Len;
           LastRow=CurRow;
 
 					CurCol++;
-          if((LoadTransparent)&&((R==255)&&(G==0)&&(B==0)))
+          if ((LoadTransparent) && ((R==255) && (G==0) && (B==0)))
           {
   					#ifdef Simorgh50N
          	  LCD_REG_ADDRESS=0x002A;	
@@ -513,7 +513,7 @@ unsigned int StartAddress, Len;
 						LcdWriteData(Color);
 						#endif
 					}
-          if(CurCol>=biWidth)
+          if (CurCol>=biWidth)
           {
             NeedRelocate=1;
             CurCol=0;
@@ -522,11 +522,11 @@ unsigned int StartAddress, Len;
         }
       }
 			StartAddress+=ByteRead;
-      if(StartAddress>=Len)
+      if (StartAddress>=Len)
         break;
     }
 
-  return(0);
+  return 0;
 }
 //==============================================================================
 unsigned char G_LoadMapPart(unsigned int X,unsigned int Y, unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2, const char* FileName)
@@ -550,11 +550,11 @@ unsigned short b=0;
 
   	// Open the file
     res = f_open(&FileObject, FileName, FA_OPEN_EXISTING|FA_READ);
-    if(res != FR_OK) 
+    if (res != FR_OK) 
 		{
  			GUI_SetColor(GUI_LIGHTGRAY);
       GUI_FillRect(X, Y, X+x2, Y+y2);
-			if(res==5)
+			if (res==5)
     	{
         memset(&fs, 0, sizeof(FATFS));      // Clear file system object
 	      f_mount(&fs, "", 0); 		 		
@@ -564,13 +564,13 @@ unsigned short b=0;
 			}
 		}
 		
-    while(1)
+    while (1)
     {
       res = f_read(&FileObject, _acBuffer, DATA_SIZE, &ByteRead);
-      if(res==FR_OK) 
+      if (res==FR_OK) 
       {
         Loc=0;
-        if(FirstSector)
+        if (FirstSector)
         {
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
@@ -605,29 +605,29 @@ unsigned short b=0;
           Loc=54;
         }
 
-        for(;Loc<ByteRead;)
+        for (;Loc<ByteRead;)
         {
-          if(LastColor==0)
+          if (LastColor==0)
             R=_acBuffer[Loc++];
-          if(LastColor<=1)
+          if (LastColor<=1)
           {
-            if(Loc>=ByteRead) { LastColor=1; break; }
+            if (Loc>=ByteRead) { LastColor=1; break; }
             G=_acBuffer[Loc++];
           }
-          if(Loc>=ByteRead) { LastColor=2; break; }
+          if (Loc>=ByteRead) { LastColor=2; break; }
           B=_acBuffer[Loc++];
           LastColor=0;
           Color=RGB2(B,G,R);
-          if((CurCol<x1)||(CurCol>x2)||((CurRow)<y1)||((CurRow)>y2))
+          if ((CurCol<x1) || (CurCol>x2) || ((CurRow)<y1) || ((CurRow)>y2))
           {
             
           }else{
-            if((CurRow!=LastRow)&&(LastRow!=0))
+            if ((CurRow!=LastRow) && (LastRow!=0))
             {
               yPos--;
               NeedRelocate=1;
             }
-            if(NeedRelocate)
+            if (NeedRelocate)
             {
 							/*
               LCD_REG_ADDRESS=0x002b;	
@@ -655,7 +655,7 @@ unsigned short b=0;
 						LCD_DATA_ADDRESS = Color;
           }  
           CurCol++;
-          if(CurCol>=biWidth)
+          if (CurCol>=biWidth)
           {
             NeedRelocate=1;
             CurCol=0;
@@ -663,14 +663,14 @@ unsigned short b=0;
           }  
         }
       }else return 1;
-      if(ByteRead<DATA_SIZE)
+      if (ByteRead<DATA_SIZE)
         break;
     }
 
  
     // Close the file
     res = f_close(&FileObject);
-    if( res != FR_OK )
+    if ( res != FR_OK )
         return 10;
 }
 
@@ -694,9 +694,9 @@ unsigned short b=0;
    
     // Open the file
     res = f_open(&FileObject, FileName, FA_OPEN_EXISTING|FA_READ);
-    if( res != FR_OK ) 
+    if ( res != FR_OK ) 
 		{
-  	  if(res==5)
+  	  if (res==5)
     	{
         memset(&fs, 0, sizeof(FATFS));      // Clear file system object
 	      f_mount(&fs, "", 0); 		 		
@@ -706,13 +706,13 @@ unsigned short b=0;
 
 	  Y+=TFT_START_Y;
 
-    while(1)
+    while (1)
     {
       res = f_read(&FileObject, _acBuffer, DATA_SIZE, &ByteRead);
-      if(res==FR_OK) 
+      if (res==FR_OK) 
       {
         Loc=0;
-        if(FirstSector)
+        if (FirstSector)
         {
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
@@ -738,25 +738,25 @@ unsigned short b=0;
           Loc=54;
         }
 
-        for(;Loc<ByteRead;)
+        for (;Loc<ByteRead;)
         {
-          if(LastColor==0)
+          if (LastColor==0)
             B=_acBuffer[Loc++];
-          if(LastColor<=1)
+          if (LastColor<=1)
           {
-            if(Loc>=ByteRead) { LastColor=1; break; }
+            if (Loc>=ByteRead) { LastColor=1; break; }
             G=_acBuffer[Loc++];
           }
-          if(Loc>=ByteRead) { LastColor=2; break; }
+          if (Loc>=ByteRead) { LastColor=2; break; }
           R=_acBuffer[Loc++];
           LastColor=0;
           Color=RGB2(R,G,B);
-          if((CurRow!=LastRow)&&(LastRow!=0))
+          if ((CurRow!=LastRow) && (LastRow!=0))
           {
             yPos--;
             NeedRelocate=1;
           }
-          if(NeedRelocate)
+          if (NeedRelocate)
           {
             LCD_REG_ADDRESS=0x002b;	
 	          LCD_DATA_ADDRESS=yPos>>8;	    
@@ -774,7 +774,7 @@ unsigned short b=0;
           LastRow=CurRow;
 
 					CurCol++;
-          if((LoadTransparent)&&((R==255)&&(G==0)&&(B==0)))
+          if ((LoadTransparent) && ((R==255) && (G==0) && (B==0)))
           {
          	  LCD_REG_ADDRESS=0x002A;	
 	          LCD_DATA_ADDRESS=(X+CurCol)>>8;	    
@@ -785,7 +785,7 @@ unsigned short b=0;
           }else{  
     				LCD_DATA_ADDRESS = Color;
 					}
-          if(CurCol>=biWidth)
+          if (CurCol>=biWidth)
           {
             NeedRelocate=1;
             CurCol=0;
@@ -793,14 +793,14 @@ unsigned short b=0;
           }  
         }
       }
-      if(ByteRead<DATA_SIZE)
+      if (ByteRead<DATA_SIZE)
         break;
     }
 
  
     // Close the file
     res = f_close(&FileObject);
-    if( res != FR_OK )
+    if ( res != FR_OK )
         return 10;
 }
 
@@ -820,7 +820,7 @@ GUI_RECT Rect;
 //==============================================================================
 void DisplayKeys(char *Key1, char *Key2, char *Key3) {
   //GUI_DrawGradientV(0, TFT_START_Y+245, 479, TFT_START_Y+271, GUI_MAKE_ALPHA(0x00, RGB(120,120,120)), GUI_MAKE_ALPHA(0x00, RGB(40,40,40)));
-  if(BOARD_VER == VI) 	{
+  if (BOARD_VER == VI) 	{
 		//LoadFont(FontBKoodak40);
     GUI_SetColor(RGB(11,108,0));
     GUI_FillRoundedRect(325, TFT_START_Y+250, 475, TFT_START_Y+271, 3);
@@ -857,14 +857,14 @@ void DisplayKeysTorgheh(char *Key1, char *Key2, char *Key3, char *Key4) {
 	  GUI_FillCircle(137, 165, 25);
 	  GUI_FillCircle(192, 165, 25);
 	*/
-	for(j=0; j<4; j++)
-	  for(i=0; i<5; i++)
+	for (j=0; j<4; j++)
+	  for (i=0; i<5; i++)
 	  {
 	    GUI_SetColor(RGB(210+(i*10), 210+(i*10), 0));
 	    GUI_DrawCircle(27+(j*55), 165, 25-i);
   	}
-	for(j=0; j<4; j++)
-	  for(i=0; i<21; i++)
+	for (j=0; j<4; j++)
+	  for (i=0; i<21; i++)
 	  {
 	    GUI_SetColor(RGB(100+(i*5), 100+(i*5), 100+(i*5)));
 	    GUI_DrawCircle(27+(j*55), 165, 20-i);
@@ -913,7 +913,7 @@ void ShowMessageDlg(unsigned char mType, unsigned char *mMessage, unsigned char 
 	
 	
 /*	
-  switch(mType)
+  switch (mType)
   {
     case mtError: G_LoadBMPPart(220,140,0,0,320,240,"0:desktop/EDlg.bmp"); break;
     case mtWarning: G_LoadBMPPart(220,140,0,0,320,240,"0:desktop/WDlg.bmp"); break;
@@ -921,17 +921,17 @@ void ShowMessageDlg(unsigned char mType, unsigned char *mMessage, unsigned char 
   }
 */
 
-  switch(alarm)
+  switch (alarm)
   {
     case 1: OkBip(1); break;
     case 3: ErrorBip(0); break;
     case 4: ErrorBip(1); break;
   }
     
-  if(delay)
+  if (delay)
     GUI_Delay(delay);
-  #if(DeviceType==BUSDOOR)
-	if(showpage)
+  #if (DeviceType==BUSDOOR)
+	if (showpage)
     ShowPageAlef();
 	#endif
 }
@@ -946,20 +946,20 @@ void DisplayMenu(MenuStruct const *Menu, unsigned char OldMenuItem, unsigned cha
 	unsigned char str[18];
 	unsigned short x;
   
-  if((MenuItem>=7)||((MenuItem==0)&&(OldMenuItem>=7))||((MenuItem==6)&&(OldMenuItem==7)))
+  if ((MenuItem>=7) || ((MenuItem==0) && (OldMenuItem>=7)) || ((MenuItem==6) && (OldMenuItem==7)))
 		RefreshAllItems=1;
 	
-	if(MenuItem<7)
+	if (MenuItem<7)
 		FirstItem=0;
 	else
 		FirstItem=MenuItem-6;
   Loc=0;
-  for(i=0; (i<7) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
+  for (i=0; (i<7) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
   {
     Loc+=34;
-    if((RefreshAllItems!=0)||(FirstItem+i==MenuItem)||(FirstItem+i==OldMenuItem))
+    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
-      if(FirstItem+i==MenuItem)
+      if (FirstItem+i==MenuItem)
 			{
     		GUI_DrawGradientRoundedV(0, Loc+2, 270+SCREENRESIZE, Loc+33,6,GUI_MAKE_ALPHA(0, RGB(220,220,0)),GUI_MAKE_ALPHA(0, RGB(40,40,0)));
       	//GUI_DrawGradientV(0, Loc, 479, Loc+35, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
@@ -974,16 +974,16 @@ void DisplayMenu(MenuStruct const *Menu, unsigned char OldMenuItem, unsigned cha
       	//GUI_DrawGradientV(0, Loc, 479, Loc+35, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
 			  //GUI_SetColor(GUI_DARKGREEN);
 			}
-		  if(Menu[i+FirstItem].Select!=0) {
-				if(Menu[i+FirstItem].Select>=100) {
+		  if (Menu[i+FirstItem].Select!=0) {
+				if (Menu[i+FirstItem].Select>=100) {
 				  x=1<<(Menu[i+FirstItem].Select-100);
-					if((Option&x)==x)
+					if ((Option&x)==x)
 		        G_LoadBMP(230,Loc+6,"011",1); 
 				  else
 		        G_LoadBMP(230,Loc+6,"010",1); 
 				}
 				else {
-				  if(Menu[i + FirstItem].Select == Option)
+				  if (Menu[i + FirstItem].Select == Option)
 		        G_LoadBMP(230,Loc+6,"015",1); 
 				  else
 		        G_LoadBMP(230,Loc+6,"014",1); 
@@ -1002,35 +1002,35 @@ unsigned char Y;
 unsigned char str[18];
 unsigned short x;
   
-  if((MenuItem>=4)||((MenuItem==0)&&(OldMenuItem>=4))||((MenuItem==3)&&(OldMenuItem==4)))
+  if ((MenuItem>=4) || ((MenuItem==0) && (OldMenuItem>=4)) || ((MenuItem==3) && (OldMenuItem==4)))
 		RefreshAllItems=1;
 	
-	if(MenuItem<4)
+	if (MenuItem<4)
 		FirstItem=0;
 	else
 		FirstItem=MenuItem-3;
   Loc=0;
-  for(i=0; (i<4) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
+  for (i=0; (i<4) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
   {
     Loc+=35;
-    if((RefreshAllItems!=0)||(FirstItem+i==MenuItem)||(FirstItem+i==OldMenuItem))
+    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
-      if(FirstItem+i==MenuItem)
+      if (FirstItem+i==MenuItem)
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
   	  else
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
 			GUI_SetColor(GUI_BLACK);
-		  if(Menu[i+FirstItem].Select!=0)
+		  if (Menu[i+FirstItem].Select!=0)
 			{
-				if(Menu[i+FirstItem].Select>=100)
+				if (Menu[i+FirstItem].Select>=100)
 				{
 				  x=1<<(Menu[i+FirstItem].Select-100);
-					if((Option&x)==x)
+					if ((Option&x)==x)
 		        G_LoadBMP(190,Loc+6,"011",1); 
 				  else
 		        G_LoadBMP(190,Loc+6,"010",1); 
 				}else{
-				  if(Menu[i+FirstItem].Select==Option)
+				  if (Menu[i+FirstItem].Select==Option)
 		        G_LoadBMP(190,Loc+6,"015",1); 
 				  else
 		        G_LoadBMP(190,Loc+6,"014",1); 
@@ -1057,16 +1057,16 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
  	GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+35, GUI_MAKE_ALPHA(0x00, RGB(0xe3,0xe6,0xea)), GUI_MAKE_ALPHA(0x00, RGB(10,10,10)));
   DisplayMenu(Menu, 0, MenuCurPos, 1);
 	Timeout = OS_TimeMS;
-  while(1) {
-  	if(OS_TimeMS-Timeout >= 20000) 
-		  return(Option);
+  while (1) {
+  	if (OS_TimeMS-Timeout >= 20000) 
+		  return Option;
     Key = ScanKeyboard();
-		if(Key)
+		if (Key)
 			Timeout = OS_TimeMS;
-    switch(Key) {
+    switch (Key) {
       case BUP://ssssssssssssssssssssssssssssssssssssssssssssssss
       case 'L':
-	      if(Menu[MenuCurPos + 1].ICON[0][0] == '\0') {
+	      if (Menu[MenuCurPos + 1].ICON[0][0] == '\0') {
  	        DisplayMenu(Menu, MenuCurPos, 0, 0);
           MenuCurPos = 0;
         }
@@ -1089,8 +1089,8 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
       	break;
       case 120:           
       case BOK : 
-        if(Menu[MenuCurPos].Select) {
-          if(Menu[MenuCurPos].Select >= 100) {
+        if (Menu[MenuCurPos].Select) {
+          if (Menu[MenuCurPos].Select >= 100) {
 						i = 1 << (Menu[MenuCurPos].Select - 100);
 						if ((Option & i) == i)
 						  Option &= (i ^ 0xFFFF);
@@ -1101,7 +1101,7 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
         }
 				else {
           if (Menu[MenuCurPos].fun != 0) {  
-  	        if ((*Menu[MenuCurPos].fun)() == 100) return(0); 
+  	        if ((*Menu[MenuCurPos].fun)() == 100) return 0; 
             ScanKeyboard();  
             //LoadFont(FontBKoodak40);
           	GUI_Clear();
@@ -1116,7 +1116,7 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
 			#ifdef Simorgh50N
 			case BF2:
 			#endif
-        return(Option);
+        return Option;
     }//switch
   }//while
 #endif	
@@ -1126,17 +1126,17 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
  	GUI_DrawGradientV(0, 0, 220, 35, GUI_MAKE_ALPHA(0x00, RGB(0xe3,0xe6,0xea)), GUI_MAKE_ALPHA(0x00, RGB(10,10,10)));
   DisplayMenu(Menu, 0, MenuCurPos, 1);
 	Timeout=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(OS_TimeMS-Timeout>=15000) 
-		  return(Option);
+  	if (OS_TimeMS-Timeout>=15000) 
+		  return Option;
     Key=ScanKeyboard();
-		if(Key)
+		if (Key)
 			Timeout=OS_TimeMS;
-    switch(Key) {
+    switch (Key) {
       case BDOWN:
       case 'R':
-	      if(Menu[MenuCurPos+1].ICON[0][0]=='\0')
+	      if (Menu[MenuCurPos+1].ICON[0][0] =='\0')
         {
  	        DisplayMenu(Menu, MenuCurPos, 0, 0);
           MenuCurPos=0;
@@ -1147,9 +1147,9 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
     	  break;
       case 'L':
       case BUP: 
-      	if(MenuCurPos==0)
+      	if (MenuCurPos==0)
         {
-          for(i=0; Menu[i].ICON[0][0]!='\0'; i++);
+          for (i=0; Menu[i].ICON[0][0]!='\0'; i++);
   	      DisplayMenu(Menu, MenuCurPos, i-1, 0);
           MenuCurPos=i-1;
         }else{
@@ -1159,12 +1159,12 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
       	break;
       case 120:           
       case BOK : 
-        if(Menu[MenuCurPos].Select)
+        if (Menu[MenuCurPos].Select)
 				{
-          if(Menu[MenuCurPos].Select>=100)
+          if (Menu[MenuCurPos].Select>=100)
 					{
 						i=1<<(Menu[MenuCurPos].Select-100);
-						if((Option&i)==i)
+						if ((Option&i)==i)
 						  Option&=(i^0xFFFF);
 						else
 						  Option|=i;
@@ -1173,9 +1173,9 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
         }
 				else
         {
-          if(Menu[MenuCurPos].fun!=0) 
+          if (Menu[MenuCurPos].fun!=0) 
           {  
-  	        if((*Menu[MenuCurPos].fun)()==100) return(0); 
+  	        if ((*Menu[MenuCurPos].fun)()==100) return 0; 
             ScanKeyboard();  
             //LoadFont(FontBKoodak40);
           	GUI_Clear();
@@ -1186,7 +1186,7 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
 				DisplayMenu(Menu, MenuCurPos, MenuCurPos, 1);
         break;
 			case BCANCEL:	
-        return(Option);
+        return Option;
     }//switch
   }//while
 #endif	
@@ -1201,18 +1201,18 @@ void DisplayStringList(unsigned char List[20][50], unsigned char OldMenuItem, un
 	unsigned char Y; 
 	unsigned short x;
   
-  if((MenuItem>=7)||((MenuItem==0)&&(OldMenuItem>=7))||((MenuItem==6)&&(OldMenuItem==7)))
+  if ((MenuItem>=7) || ((MenuItem==0) && (OldMenuItem>=7)) || ((MenuItem==6) && (OldMenuItem==7)))
 		RefreshAllItems=1;
 	
-	if(MenuItem<7)
+	if (MenuItem<7)
 		FirstItem=0;
 	else
 		FirstItem=MenuItem-6;
   Loc=0;
-  for(i=0; (i<7) && (List[i+FirstItem][0]!='\0'); i++) {
+  for (i=0; (i<7) && (List[i+FirstItem][0]!='\0'); i++) {
     Loc+=34;
-    if((RefreshAllItems!=0)||(FirstItem+i==MenuItem)||(FirstItem+i==OldMenuItem)) {
-      if(FirstItem+i==MenuItem) {
+    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem)) {
+      if (FirstItem+i==MenuItem) {
     		GUI_DrawGradientRoundedV(0, Loc+2, 479, Loc+33,6,GUI_MAKE_ALPHA(0, RGB(220,220,0)),GUI_MAKE_ALPHA(0, RGB(40,40,0)));
       	//GUI_DrawGradientV(0, Loc, 479, Loc+35, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
 			  GUI_SetColor(GUI_YELLOW);
@@ -1237,20 +1237,20 @@ int i, Loc;
 unsigned char Y; 
 unsigned short x;
   
-  if((MenuItem>=4)||((MenuItem==0)&&(OldMenuItem>=4))||((MenuItem==3)&&(OldMenuItem==4)))
+  if ((MenuItem>=4) || ((MenuItem==0) && (OldMenuItem>=4)) || ((MenuItem==3) && (OldMenuItem==4)))
 		RefreshAllItems=1;
 	
-	if(MenuItem<4)
+	if (MenuItem<4)
 		FirstItem=0;
 	else
 		FirstItem=MenuItem-3;
   Loc=0;
-  for(i=0; (i<4) && (List[i+FirstItem][0]!='\0'); i++)
+  for (i=0; (i<4) && (List[i+FirstItem][0]!='\0'); i++)
   {
     Loc+=35;
-    if((RefreshAllItems!=0)||(FirstItem+i==MenuItem)||(FirstItem+i==OldMenuItem))
+    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
-      if(FirstItem+i==MenuItem)
+      if (FirstItem+i==MenuItem)
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
   	  else
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
@@ -1281,17 +1281,17 @@ unsigned char ExecStringList(unsigned char List[20][50]) {
 	
   DisplayStringList(List, 0, MenuCurPos, 1);
 	Timeout=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(OS_TimeMS-Timeout>=15000) 
-		  return(255);
+  	if (OS_TimeMS-Timeout>=15000) 
+		  return 255;
     Key=ScanKeyboard();
-		if(Key)
+		if (Key)
 			Timeout=OS_TimeMS;
-    switch(Key) {
+    switch (Key) {
       case BUP://ssssssssssssssssssssssssssssssssssssssssss
       case 'L':
-	      if(List[MenuCurPos+1][0]=='\0')
+	      if (List[MenuCurPos+1][0] =='\0')
         {
  	        DisplayStringList(List, MenuCurPos, 0, 0);
           MenuCurPos=0;
@@ -1302,9 +1302,9 @@ unsigned char ExecStringList(unsigned char List[20][50]) {
     	  break;
       case 'R':
       case BDOWN: 
-      	if(MenuCurPos==0)
+      	if (MenuCurPos==0)
         {
-          for(i=0; List[i][0]!='\0'; i++);
+          for (i=0; List[i][0]!='\0'; i++);
   	      DisplayStringList(List, MenuCurPos, i-1, 0);
           MenuCurPos=i-1;
         }else{
@@ -1314,14 +1314,14 @@ unsigned char ExecStringList(unsigned char List[20][50]) {
       	break;
       case 120:           
       case BOK : 
-        return(MenuCurPos);
+        return MenuCurPos;
         break;
 			case BLEFT:	
 			case BCANCEL:	
 			#ifdef Simorgh50N
 			case BF2:
 			#endif
-        return(255);
+        return 255;
     }//switch
   }//while
 }
@@ -1335,10 +1335,10 @@ int i;
 unsigned char Y=35; 
 	
 	#ifdef Simorgh50N
-  for(i=0; i<8; i++)
+  for (i=0; i<8; i++)
   {
-    if(Menu[i+FirstItem].ICON[0][0]=='\0') break;
-    if(FirstItem+i==MenuItem)
+    if (Menu[i+FirstItem].ICON[0][0] =='\0') break;
+    if (FirstItem+i==MenuItem)
 		{
      	GUI_DrawGradientV(0, Y, 479, Y+35, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
 		  GUI_SetColor(GUI_YELLOW);
@@ -1348,7 +1348,7 @@ unsigned char Y=35;
      	GUI_DrawGradientV(0, Y, 479, Y+35, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
 		  GUI_SetColor(GUI_DARKGREEN);
 		}
-		if(Menu[i+FirstItem].Select==Option)
+		if (Menu[i+FirstItem].Select==Option)
       G_LoadBMP(455, Y+5, "0:icons/r1.bmp", 1);
     PutText(0, Y, 450, Y+35, (unsigned char *)Menu[i+FirstItem].Title[0], GUI_TA_RIGHT);
     Y+=35;
@@ -1356,16 +1356,16 @@ unsigned char Y=35;
 	#endif
 	
 	#ifdef Torgheh
-  for(i=0; i<8; i++)
+  for (i=0; i<8; i++)
   {
-    if(Menu[i+FirstItem].ICON[0][0]=='\0') break;
-    if(FirstItem+i==MenuItem)
+    if (Menu[i+FirstItem].ICON[0][0] =='\0') break;
+    if (FirstItem+i==MenuItem)
      	GUI_DrawGradientV(0, Y, 219, Y+36, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
  	  else
      	GUI_DrawGradientV(0, Y, 219, Y+36, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
 		GUI_SetColor(GUI_BLACK);
 
-		if(Menu[i+FirstItem].Select==Option)
+		if (Menu[i+FirstItem].Select==Option)
       G_LoadBMP(190, Y, "0:icons/r1.bmp", 1);
     PutText(0, Y, 185, Y+30, (char *)Menu[i+FirstItem].Title[0], GUI_TA_RIGHT);
     Y+=30;
@@ -1388,32 +1388,32 @@ unsigned char Key, MenuCurPos=0;
   #endif
 	DisplayRadioMenu(Menu, 0, MenuCurPos);
 	
-  while(1)
+  while (1)
   {
     Key=ScanKeyboard();
-    switch(Key) 
+    switch (Key) 
 		{
       case BUP://sssssssssssssssssssssssssssssssssssss
       case 'L':
-	      if(Menu[MenuCurPos+1].ICON[0][0]=='\0')
+	      if (Menu[MenuCurPos+1].ICON[0][0] =='\0')
 	        break;
 	      DisplayRadioMenu(Menu, MenuCurPos, MenuCurPos+1);
         MenuCurPos++;
 	      break;
       case 'R':
       case BDOWN : 
-	      if(MenuCurPos==0)
+	      if (MenuCurPos==0)
 	        break;
 	      DisplayRadioMenu(Menu, MenuCurPos, MenuCurPos-1);
         MenuCurPos--;
 	      break;
       case 120:           
       case BOK : 
-        return(Menu[MenuCurPos].Select);
+        return Menu[MenuCurPos].Select;
 	      break;
       case BLEFT:
       case BCANCEL:
-        return(Option);
+        return Option;
     }//switch
   }//while
 	
@@ -1433,7 +1433,7 @@ unsigned char Setup(void) {
     ExecMenu(MainMenu);
     SaveConfiguration();
   }
-  else if(Pass != 0)
+  else if (Pass != 0)
     ShowMessageDlg(mtError, "رمز اشتباه است", 1, 0, 1000, 0);
 }
 
@@ -1447,8 +1447,8 @@ unsigned char ShowCommunicationMenu(void) { ExecMenu(CommunicationMenu); }
 unsigned char SetLanguage(void) { ExecRadioMenu(LanguageRadioMenu, 1); }
 //==============================================================================
 unsigned char SetTestMode(void) {
-	#if(DeviceType==BUSDOOR)
-	switch(InTestMode)
+	#if (DeviceType==BUSDOOR)
+	switch (InTestMode)
 	{
 		case 0:
       Option=1;
@@ -1463,7 +1463,7 @@ unsigned char SetTestMode(void) {
 
 //==============================================================================
 unsigned char SetSIMCardType(void) {
-	switch(Config.SIMCardType) {
+	switch (Config.SIMCardType) {
 		case 2:
 		case 20:
       Option = 2;
@@ -1482,7 +1482,7 @@ unsigned char SetSIMCardType(void) {
 char CalcWeek(int year, int month, int day) {
   char week;
   
-  if(month == 1 || month == 2) {
+  if (month == 1 || month == 2) {
     month += 12;
     --year;
   }
@@ -1499,8 +1499,8 @@ unsigned char SetDateTime(void) {
 unsigned short CurX, y;
 unsigned char Refresh,Key, newWeek, m, d, hh, mm, ss;
 unsigned char Loc=0;
-unsigned char Stream[]="0000000000";
-char FileName[]="0:desktop/clock/0.bmp";
+unsigned char Stream[] ="0000000000";
+char FileName[] ="0:desktop/clock/0.bmp";
 unsigned int previousTime;
 unsigned long int time=0;
 unsigned char buf[32];
@@ -1510,16 +1510,16 @@ unsigned char buf[32];
   LcdFont(Nazanin19);
   SetFgColor(WHITE);
   
-  Stream[0]=(Year/10)%10;
-  Stream[1]=Year%10;
-  Stream[2]=Month/10;
-  Stream[3]=Month%10;
-  Stream[4]=Day/10;
-  Stream[5]=Day%10;
-  Stream[6]=Hour/10;
-  Stream[7]=Hour%10;
-  Stream[8]=Min/10;
-  Stream[9]=Min%10;
+  Stream[0] =(Year/10)%10;
+  Stream[1] =Year%10;
+  Stream[2] =Month/10;
+  Stream[3] =Month%10;
+  Stream[4] =Day/10;
+  Stream[5] =Day%10;
+  Stream[6] =Hour/10;
+  Stream[7] =Hour%10;
+  Stream[8] =Min/10;
+  Stream[9] =Min%10;
 
   G_DrawGradianRectangle(255,255,255,84,75,80,150,36,30,1);  
   SetCursorY(155);
@@ -1546,13 +1546,13 @@ unsigned char buf[32];
   CurX=90;
   SetCursorY(155);
   Refresh=1;
-  while(Loc<=9)
+  while (Loc<=9)
   {
-    switch(Key=ScanKeyboard())
+    switch (Key=ScanKeyboard())
     {
        case BUP:
        case 'R':
-         if(Stream[Loc]<9)
+         if (Stream[Loc]<9)
          {
            SetFgColor(RGB(84,75,80));
            SetCursorX(CurX); 
@@ -1563,7 +1563,7 @@ unsigned char buf[32];
  	 break;
        case 'L':
        case BDOWN: 
-         if(Stream[Loc]>0)
+         if (Stream[Loc]>0)
          {
            SetFgColor(RGB(84,75,80));
            SetCursorX(CurX); 
@@ -1573,7 +1573,7 @@ unsigned char buf[32];
          }
 	 break;
        case BRIGHT:
-         if(Loc<9)
+         if (Loc<9)
          {
            SetFgColor(RGB(255,255,255));
            SetCursorX(CurX); 
@@ -1583,7 +1583,7 @@ unsigned char buf[32];
          }
          break;
        case BLEFT:
-         if(Loc>0)
+         if (Loc>0)
          {
            SetFgColor(RGB(255,255,255));
            SetCursorX(CurX); 
@@ -1600,7 +1600,7 @@ unsigned char buf[32];
          PutChar(Stream[Loc]+'0');
          Loc++;
          Refresh=1;
-         if((Loc>9)||(Key==BF3)) 
+         if ((Loc>9) || (Key==BF3)) 
          {
            Loc=10;
            Hour=(Stream[6]*10)+Stream[7];
@@ -1620,28 +1620,28 @@ unsigned char buf[32];
            RTT_SetPrescaler(AT91C_BASE_RTTC, RTTPrescaler);
            previousTime = RTT_GetTime(AT91C_BASE_RTTC);
            while (previousTime == RTT_GetTime(AT91C_BASE_RTTC));           
-           buf[0]=Config.StartYear & 0xFF;
-           buf[1]=(Config.StartYear>>8) & 0xFF;
-           buf[2]=Config.StartMonth;
-           buf[3]=Config.StartDay;
-           buf[4]=Config.StartHour;
-           buf[5]=Config.StartMin;
-           buf[6]=Config.StartSec;
-           buf[7]=RTTPrescaler & 0xFF;
-           buf[8]=(RTTPrescaler>>8) & 0xFF;
-           for(time=7; time<16; time++)
-             buf[time]=0;
+           buf[0] =Config.StartYear & 0xFF;
+           buf[1] =(Config.StartYear>>8) & 0xFF;
+           buf[2] =Config.StartMonth;
+           buf[3] =Config.StartDay;
+           buf[4] =Config.StartHour;
+           buf[5] =Config.StartMin;
+           buf[6] =Config.StartSec;
+           buf[7] =RTTPrescaler & 0xFF;
+           buf[8] =(RTTPrescaler>>8) & 0xFF;
+           for (time=7; time<16; time++)
+             buf[time] =0;
            OkBip(1);
            break;
          }  
 	 break;
        case BF2:
-         return(0);
+         return 0;
     }
-    if(Refresh)
+    if (Refresh)
     {
       Refresh=0;
-      switch(Loc)
+      switch (Loc)
       {
         case 0: CurX=90; break;
         case 1: CurX=110; break;
@@ -1654,7 +1654,7 @@ unsigned char buf[32];
         case 8: CurX=180; break;
         case 9: CurX=200; break;
       }
-      if(Loc>5) SetCursorY(64);
+      if (Loc>5) SetCursorY(64);
       else      SetCursorY(155);
       SetFgColor(RGB(255,168,0));
       SetCursorX(CurX); 
@@ -1671,8 +1671,8 @@ unsigned char GetChargeCode(void) {
 	unsigned long int i=1, n1=0;
 	unsigned char Refresh=1, k, cnt=0;
 	unsigned char Loc=0;
-	unsigned char Stream[]="00000";
-	char FileName[]="0:desktop/clock/0.bmp";
+	unsigned char Stream[] ="00000";
+	char FileName[] ="0:desktop/clock/0.bmp";
 	unsigned char idx=0;
 /*
 	#ifdef Simorgh50N
@@ -1702,63 +1702,63 @@ unsigned char GetChargeCode(void) {
 	GUI_SetColor(GUI_BLACK);
 	#endif
   
-	ChargeCode[idx]='0';
+	ChargeCode[idx] ='0';
 	
-  while(1)
+  while (1)
   {
-     switch(ScanKeyboard()) 
+     switch (ScanKeyboard()) 
      {
    		 #ifdef Simorgh50N
-			 case BP4:       ChargeCode[idx++]='1'; Refresh=1; break;
-			 case BP3:       ChargeCode[idx++]='2'; Refresh=1; break;
-			 case BP2:       ChargeCode[idx++]='3'; Refresh=1; break;
-			 case BP1:       ChargeCode[idx++]='4'; Refresh=1; break;
-			 case BHELP:     ChargeCode[idx++]='5'; Refresh=1; break;
-			 case BF1:       ChargeCode[idx++]='6'; Refresh=1; break;
-			 case BMAP:      ChargeCode[idx++]='7'; Refresh=1; break;
-			 case BPAYMENT2: ChargeCode[idx++]='8'; Refresh=1; break;
-			 case BF2:       ChargeCode[idx++]='9'; Refresh=1; break;
-			 case BF3:       ChargeCode[idx++]='0'; Refresh=1; break;
+			 case BP4:       ChargeCode[idx++] ='1'; Refresh=1; break;
+			 case BP3:       ChargeCode[idx++] ='2'; Refresh=1; break;
+			 case BP2:       ChargeCode[idx++] ='3'; Refresh=1; break;
+			 case BP1:       ChargeCode[idx++] ='4'; Refresh=1; break;
+			 case BHELP:     ChargeCode[idx++] ='5'; Refresh=1; break;
+			 case BF1:       ChargeCode[idx++] ='6'; Refresh=1; break;
+			 case BMAP:      ChargeCode[idx++] ='7'; Refresh=1; break;
+			 case BPAYMENT2: ChargeCode[idx++] ='8'; Refresh=1; break;
+			 case BF2:       ChargeCode[idx++] ='9'; Refresh=1; break;
+			 case BF3:       ChargeCode[idx++] ='0'; Refresh=1; break;
 			 #endif	 
        case BDOWN : 
        case 'L':
 				 k=ChargeCode[idx];
-         if(k>'0') k--;
-         else if(++cnt>3) break;
-				 ChargeCode[idx]=k;
+         if (k>'0') k--;
+         else if (++cnt>3) break;
+				 ChargeCode[idx] =k;
 				 Refresh=1;
          break;
        case BUP:
        case 'R':
 				 k=ChargeCode[idx];
-         if(k<'9') k++;
-				 ChargeCode[idx]=k;
+         if (k<'9') k++;
+				 ChargeCode[idx] =k;
 				 Refresh=1;
          break;
        case 120:    
        case BRIGHT: 
 	
-			   if((ChargeCode[idx]<'0')||(ChargeCode[idx]>'9'))
-					 ChargeCode[idx]='0';
+			   if ((ChargeCode[idx]<'0') || (ChargeCode[idx]>'9'))
+					 ChargeCode[idx] ='0';
 				 else
-				   ChargeCode[++idx]='0';
+				   ChargeCode[++idx] ='0';
 				 Refresh=1;
          break;
        case BLEFT:
-				 if(idx>0)
+				 if (idx>0)
 					 idx--;
 				 Refresh=1;
 				 break;
        case BOK: 
-       	 ChargeCode[idx+1]=0;
-         return(1);
+       	 ChargeCode[idx+1] =0;
+         return 1;
          break;
        case BCANCEL:
-         return(0);
+         return 0;
      }
-     if(Refresh)
+     if (Refresh)
      {
-     	 ChargeCode[idx+1]=0;
+     	 ChargeCode[idx+1] =0;
 			 #ifdef Torgheh
        G_LoadBMP(10,85,"0:desktop/InputBox.bmp",0);
        PutText(20,85,210,115,ChargeCode,GUI_TA_LEFT);
@@ -1773,7 +1773,7 @@ unsigned char GetChargeCode(void) {
      }
   }
 	*/
-  return(0);
+  return 0;
 }
 
 //==============================================================================
@@ -1809,8 +1809,8 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
 	#endif
 
   
-  while(1) {
-     switch(ScanKeyboard()) {
+  while (1) {
+     switch (ScanKeyboard()) {
    		 #ifdef Simorgh50N
 			 case BA1:  n *= 10; n += 1; break;
 			 case BA2:  n *= 10; n += 2; break;
@@ -1828,41 +1828,41 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
        case 'R':
          k=n%10;
          n/=10; 
-         if(k>0) k--;
-         else if(++cnt>3) break;
+         if (k>0) k--;
+         else if (++cnt>3) break;
          n*=10;
          n+=k;
          break;
        case BDOWN:
        case 'L':
          k=n%10;
-         n/=10; if(k<9) k++;
+         n/=10; if (k<9) k++;
          n*=10;
          n+=k;
          break;
        case 120:    
        case BRIGHT: 
 				 /*
-         for(i=0; i<500000; i++) if(RowStatus(3)) break;
-         if(i>=500000)
-           return(n); 
+         for (i=0; i<500000; i++) if (RowStatus(3)) break;
+         if (i>=500000)
+           return n; 
 			   */
-         if(n<99999999)
+         if (n<99999999)
            n=n*10;
          break;
        case BLEFT:
-				 if(n>0)
+				 if (n>0)
 				 {
 					 n=n/10;
 				 }
 				 break;
        case BOK: 
-         return(n);
+         return n;
          break;
        case BCANCEL:
-         return(DefValue);
+         return DefValue;
      }
-     if(n!=n1)
+     if (n!=n1)
      {
        cnt=0;
      	 #ifdef Torgheh
@@ -1886,7 +1886,7 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
        Refresh=0;
      }
   }
-  return(n);
+  return n;
 }
 
 //==============================================================================
@@ -1895,8 +1895,8 @@ unsigned int GetNumberByVolume(unsigned char *msg, unsigned int n) {}
 unsigned char SetDeviceID(void) {
   Config.DeviceID=GetNumber("کد دستگاه را وارد نماييد .", Config.DeviceID, 0);
 	
-	#if(DeviceType == BUSDOOR)
-	if((Config.DeviceID!=1)&&(Config.DeviceID!=2)) Config.DeviceID=1;
+	#if (DeviceType == BUSDOOR)
+	if ((Config.DeviceID!=1) && (Config.DeviceID!=2)) Config.DeviceID=1;
 	#endif
 }
 
@@ -1933,11 +1933,11 @@ unsigned char ChangeWifiPassword(void) {
 unsigned char ChangePassword(void) {
  unsigned int Pass1, Pass2;
   
-  if((Pass1=GetNumber("رمز جديد", 0, 1))==0)
-    return(0);
-  if((Pass2=GetNumber("تکرار رمز", 0, 1))==0)
-    return(0);
-  if(Pass1==Pass2)
+  if ((Pass1=GetNumber("رمز جديد", 0, 1))==0)
+    return 0;
+  if ((Pass2=GetNumber("تکرار رمز", 0, 1))==0)
+    return 0;
+  if (Pass1==Pass2)
   {
     Config.Password=Pass1;
     SaveConfiguration();
@@ -1968,26 +1968,26 @@ unsigned char SetPrinter(void) { ExecRadioMenu(LanguageRadioMenu, 1); }
 unsigned char SetGatewayIP(void) {
 	unsigned short CurX;
 	unsigned char Loc=0;
-	unsigned char Stream[]="192168110127";
-	char FileName[]="0:desktop/clock/0.bmp";
+	unsigned char Stream[] ="192168110127";
+	char FileName[] ="0:desktop/clock/0.bmp";
 	unsigned long int i=1, n1=0;
 	unsigned char Refresh=1, k, cnt=0;
 	unsigned char str[20];
 
   //G_LoadBMPPart(0, 0, 0, 0, 320, 240-25, "0:desktop/0000.bmp");
-	if((Config.RoutIpAddress[0]<'0')||(Config.RoutIpAddress[0]>'9'))
+	if ((Config.RoutIpAddress[0]<'0') || (Config.RoutIpAddress[0]>'9'))
 	{
 		sprintf(Config.RoutIpAddress,"192.168.110.001");
 		Config.UC=251;
 		Config.TransactionsSendInterval=60;
 		Config.TrackingInterval=60;
 	}
-  for(CurX=0; CurX<16; CurX++)
-    Stream[CurX]=Config.RoutIpAddress[CurX];
+  for (CurX=0; CurX<16; CurX++)
+    Stream[CurX] =Config.RoutIpAddress[CurX];
 
-  for(CurX=0; CurX<16; CurX++)
-    if((Stream[CurX]<'0')||(Stream[CurX]>'9'))
-      Stream[CurX]='.';
+  for (CurX=0; CurX<16; CurX++)
+    if ((Stream[CurX]<'0') || (Stream[CurX]>'9'))
+      Stream[CurX] ='.';
     
 	#ifdef Simorgh50N
   GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+480, GUI_MAKE_ALPHA(0x00, 0xA02020), GUI_MAKE_ALPHA(0x00, 0x000000));
@@ -2009,18 +2009,18 @@ unsigned char SetGatewayIP(void) {
 	DisplayKeysTorgheh(""," "," ","");
   #endif
 
-  while(Loc <= 14) {
-     switch(ScanKeyboard()) {
+  while (Loc <= 14) {
+     switch (ScanKeyboard()) {
        case BUP ://ssssssssssssssssssssssssssssssssssssssssss 
        case 'R':
-         if(Stream[Loc]>'0') {
+         if (Stream[Loc]>'0') {
       	   Stream[Loc]--;
 					 Refresh=1;
          }
          break;
        case BDOWN:
        case 'L':
-         if(Stream[Loc]<'9') {
+         if (Stream[Loc]<'9') {
       	   Stream[Loc]++;
 					 Refresh=1;
          }
@@ -2031,11 +2031,11 @@ unsigned char SetGatewayIP(void) {
          break;
        case BRIGHT: 
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
 				 Refresh=1;
          break;
        case BLEFT:
-				 if(Loc>0)
+				 if (Loc>0)
 				 {	
 					 Loc--;
     			 Refresh=1;
@@ -2046,8 +2046,8 @@ unsigned char SetGatewayIP(void) {
        case BOK: 
        case BF3:
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
-         if(Loc>14) 
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
+         if (Loc>14) 
 					 break;
 				 Refresh=1;
          break;
@@ -2058,9 +2058,9 @@ unsigned char SetGatewayIP(void) {
        case BF2:
 			 #endif
          LoadFont(FontBKoodak40);
-         return(1);
+         return 1;
      }
-     if(Refresh)
+     if (Refresh)
      {
        cnt=0;
 			 #ifdef Simorgh50N
@@ -2073,9 +2073,9 @@ unsigned char SetGatewayIP(void) {
 			 GUI_SetColor(RGB(0,0,0));
        GUI_DrawRoundedFrame(35+1, 105+1, 272-35-1, 140-1,3,1);	
 			 
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) GUI_SetColor(GUI_ORANGE);
 				 else       GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 50+(i*12) ,TFT_START_Y+110);
 			 }
@@ -2085,11 +2085,11 @@ unsigned char SetGatewayIP(void) {
      }
   }
 
-  for(CurX=0; CurX<16; CurX++)
-    Config.RoutIpAddress[CurX]=Stream[CurX];
-  Config.RoutIpAddress[3]='.';
-  Config.RoutIpAddress[7]='.';
-  Config.RoutIpAddress[11]='.';
+  for (CurX=0; CurX<16; CurX++)
+    Config.RoutIpAddress[CurX] =Stream[CurX];
+  Config.RoutIpAddress[3] ='.';
+  Config.RoutIpAddress[7] ='.';
+  Config.RoutIpAddress[11] ='.';
   OkBip(1);  
   LoadFont(FontBKoodak40);
 
@@ -2098,26 +2098,26 @@ unsigned char SetGatewayIP(void) {
 unsigned char SetSubnetIP(void) {
 	unsigned short CurX;
 	unsigned char Loc=0;
-	unsigned char Stream[]="192168110127";
-	char FileName[]="0:desktop/clock/0.bmp";
+	unsigned char Stream[] ="192168110127";
+	char FileName[] ="0:desktop/clock/0.bmp";
 	unsigned long int i=1, n1=0;
 	unsigned char Refresh=1, k, cnt=0;
 	unsigned char str[20];
 
   //G_LoadBMPPart(0, 0, 0, 0, 320, 240-25, "0:desktop/0000.bmp");
-	if((Config.SubnetIP[0]<'0')||(Config.SubnetIP[0]>'9'))
+	if ((Config.SubnetIP[0]<'0') || (Config.SubnetIP[0]>'9'))
 	{
 		sprintf(Config.SubnetIP,"255.255.255.000");
 		Config.UC=251;
 		Config.TransactionsSendInterval=60;
 		Config.TrackingInterval=60;
 	}
-  for(CurX=0; CurX<16; CurX++)
-    Stream[CurX]=Config.SubnetIP[CurX];
+  for (CurX=0; CurX<16; CurX++)
+    Stream[CurX] =Config.SubnetIP[CurX];
 
-  for(CurX=0; CurX<16; CurX++)
-    if((Stream[CurX]<'0')||(Stream[CurX]>'9'))
-      Stream[CurX]='.';
+  for (CurX=0; CurX<16; CurX++)
+    if ((Stream[CurX]<'0') || (Stream[CurX]>'9'))
+      Stream[CurX] ='.';
     
 	#ifdef Simorgh50N
   GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+480, GUI_MAKE_ALPHA(0x00, 0xA02020), GUI_MAKE_ALPHA(0x00, 0x000000));
@@ -2139,13 +2139,13 @@ unsigned char SetSubnetIP(void) {
 	DisplayKeysTorgheh(""," "," ","");
   #endif
 
-  while(Loc<=14)
+  while (Loc<=14)
   {
-     switch(ScanKeyboard()) 
+     switch (ScanKeyboard()) 
      {
        case BUP ://ssssssssssssssssssssssssssssssssssssssssss 
        case 'R':
-         if(Stream[Loc]>'0')
+         if (Stream[Loc]>'0')
          {
       	   Stream[Loc]--;
 					 Refresh=1;
@@ -2153,7 +2153,7 @@ unsigned char SetSubnetIP(void) {
          break;
        case BDOWN:
        case 'L':
-         if(Stream[Loc]<'9')
+         if (Stream[Loc]<'9')
          {
       	   Stream[Loc]++;
 					 Refresh=1;
@@ -2165,11 +2165,11 @@ unsigned char SetSubnetIP(void) {
          break;
        case BRIGHT: 
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
 				 Refresh=1;
          break;
        case BLEFT:
-				 if(Loc>0)
+				 if (Loc>0)
 				 {	
 					 Loc--;
     			 Refresh=1;
@@ -2180,8 +2180,8 @@ unsigned char SetSubnetIP(void) {
        case BOK: 
        case BF3:
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
-         if(Loc>14) 
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
+         if (Loc>14) 
 					 break;
 				 Refresh=1;
          break;
@@ -2192,9 +2192,9 @@ unsigned char SetSubnetIP(void) {
        case BF2:
 			 #endif
          LoadFont(FontBKoodak40);
-         return(1);
+         return 1;
      }
-     if(Refresh)
+     if (Refresh)
      {
        cnt=0;
 			 #ifdef Simorgh50N
@@ -2205,18 +2205,18 @@ unsigned char SetSubnetIP(void) {
 			 GUI_SetColor(RGB(0,0,0));
        GUI_DrawRoundedFrame(35+1, 105+1, 272-35-1, 140-1,3,1);	
 			 
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) GUI_SetColor(GUI_ORANGE);
 				 else       GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 50+(i*12) ,TFT_START_Y+110);
 			 }
 			 #endif
 			 #ifdef Torgheh
        G_LoadBMP(10,85,"0:desktop/InputBox.bmp",0);
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) 	GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) 	GUI_SetColor(GUI_ORANGE);
 				 else         GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 20+(i*12) ,85);
 			 }
@@ -2225,11 +2225,11 @@ unsigned char SetSubnetIP(void) {
      }
   }
 
-  for(CurX=0; CurX<16; CurX++)
-    Config.SubnetIP[CurX]=Stream[CurX];
-  Config.SubnetIP[3]='.';
-  Config.SubnetIP[7]='.';
-  Config.SubnetIP[11]='.';
+  for (CurX=0; CurX<16; CurX++)
+    Config.SubnetIP[CurX] =Stream[CurX];
+  Config.SubnetIP[3] ='.';
+  Config.SubnetIP[7] ='.';
+  Config.SubnetIP[11] ='.';
   OkBip(1);  
   LoadFont(FontBKoodak40);
 
@@ -2238,14 +2238,14 @@ unsigned char SetSubnetIP(void) {
 unsigned char SetServerIP(void) {
 	unsigned short CurX;
 	unsigned char Loc=0;
-	unsigned char Stream[]="192168110127";
-	char FileName[]="0:desktop/clock/0.bmp";
+	unsigned char Stream[] ="192168110127";
+	char FileName[] ="0:desktop/clock/0.bmp";
 	unsigned long int i=1, n1=0;
 	unsigned char Refresh=1, k, cnt=0;
 	unsigned char str[20];
 
   //G_LoadBMPPart(0, 0, 0, 0, 320, 240-25, "0:desktop/0000.bmp");
-	if((Config.ServerIP[0]<'0')||(Config.ServerIP[0]>'9'))
+	if ((Config.ServerIP[0]<'0') || (Config.ServerIP[0]>'9'))
 	{
 		sprintf(Config.ServerIP,"192.168.110.002");
 		Config.UC=251;
@@ -2253,12 +2253,12 @@ unsigned char SetServerIP(void) {
 		Config.TrackingInterval=60;
 	}
 	
-  for(CurX=0; CurX<16; CurX++)
-    Stream[CurX]=Config.ServerIP[CurX];
+  for (CurX=0; CurX<16; CurX++)
+    Stream[CurX] =Config.ServerIP[CurX];
 
-  for(CurX=0; CurX<16; CurX++)
-    if((Stream[CurX]<'0')||(Stream[CurX]>'9'))
-      Stream[CurX]='.';
+  for (CurX=0; CurX<16; CurX++)
+    if ((Stream[CurX]<'0') || (Stream[CurX]>'9'))
+      Stream[CurX] ='.';
     
 	#ifdef Simorgh50N
   GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+480, GUI_MAKE_ALPHA(0x00, 0xA02020), GUI_MAKE_ALPHA(0x00, 0x000000));
@@ -2280,13 +2280,13 @@ unsigned char SetServerIP(void) {
 	DisplayKeysTorgheh(""," "," ","");
   #endif
 
-  while(Loc<=14)
+  while (Loc<=14)
   {
-     switch(ScanKeyboard()) 
+     switch (ScanKeyboard()) 
      {
        case BUP : 
        case 'R'://sssssssssssssssssssssssssssssssssssss
-         if(Stream[Loc]>'0')
+         if (Stream[Loc]>'0')
          {
       	   Stream[Loc]--;
 					 Refresh=1;
@@ -2294,7 +2294,7 @@ unsigned char SetServerIP(void) {
          break;
        case BDOWN:
        case 'L':
-         if(Stream[Loc]<'9')
+         if (Stream[Loc]<'9')
          {
       	   Stream[Loc]++;
 					 Refresh=1;
@@ -2306,11 +2306,11 @@ unsigned char SetServerIP(void) {
          break;
        case BRIGHT: 
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
 				 Refresh=1;
          break;
        case BLEFT:
-				 if(Loc>0)
+				 if (Loc>0)
 				 {	
 					 Loc--;
     			 Refresh=1;
@@ -2321,8 +2321,8 @@ unsigned char SetServerIP(void) {
        case BOK: 
        case BF3:
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
-         if(Loc>14) 
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
+         if (Loc>14) 
 					 break;
 				 Refresh=1;
          break;
@@ -2333,9 +2333,9 @@ unsigned char SetServerIP(void) {
        case BF2:
 			 #endif
          LoadFont(FontBKoodak40);
-         return(1);
+         return 1;
      }
-     if(Refresh)
+     if (Refresh)
      {
        cnt=0;
 			 #ifdef Simorgh50N
@@ -2346,18 +2346,18 @@ unsigned char SetServerIP(void) {
 			 GUI_SetColor(RGB(0,0,0));
        GUI_DrawRoundedFrame(35+1, 105+1, 272-35-1, 140-1,3,1);	
 			 
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) GUI_SetColor(GUI_ORANGE);
 				 else       GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 50+(i*12) ,TFT_START_Y+110);
 			 }
 			 #endif
 			 #ifdef Torgheh
        G_LoadBMP(10,85,"0:desktop/InputBox.bmp",0);
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) 	GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) 	GUI_SetColor(GUI_ORANGE);
 				 else         GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 20+(i*12) ,85);
 			 }
@@ -2366,11 +2366,11 @@ unsigned char SetServerIP(void) {
      }
   }
 
-  for(CurX=0; CurX<16; CurX++)
-    Config.ServerIP[CurX]=Stream[CurX];
-  Config.ServerIP[3]='.';
-  Config.ServerIP[7]='.';
-  Config.ServerIP[11]='.';
+  for (CurX=0; CurX<16; CurX++)
+    Config.ServerIP[CurX] =Stream[CurX];
+  Config.ServerIP[3] ='.';
+  Config.ServerIP[7] ='.';
+  Config.ServerIP[11] ='.';
   OkBip(1);  
   LoadFont(FontBKoodak40);
 
@@ -2379,27 +2379,27 @@ unsigned char SetServerIP(void) {
 unsigned char SetLocalIP(void) {
 	unsigned short CurX;
 	unsigned char Loc=0;
-	unsigned char Stream[]="192168110127";
-	char FileName[]="0:desktop/clock/0.bmp";
+	unsigned char Stream[] ="192168110127";
+	char FileName[] ="0:desktop/clock/0.bmp";
 	unsigned long int i=1, n1=0;
 	unsigned char Refresh=1, k, cnt=0;
 	unsigned char str[20];
 
   //G_LoadBMPPart(0, 0, 0, 0, 320, 240-25, "0:desktop/0000.bmp");
 	
-	if((Config.LocalIP[0]<'0')||(Config.LocalIP[0]>'9'))
+	if ((Config.LocalIP[0]<'0') || (Config.LocalIP[0]>'9'))
 	{
 		sprintf(Config.LocalIP,"192.168.110.004");
 		Config.UC=251;
 		Config.TransactionsSendInterval=60;
 		Config.TrackingInterval=60;
 	}
-  for(CurX=0; CurX<16; CurX++)
-    Stream[CurX]=Config.LocalIP[CurX];
+  for (CurX=0; CurX<16; CurX++)
+    Stream[CurX] =Config.LocalIP[CurX];
 
-  for(CurX=0; CurX<16; CurX++)
-    if((Stream[CurX]<'0')||(Stream[CurX]>'9'))
-      Stream[CurX]='.';
+  for (CurX=0; CurX<16; CurX++)
+    if ((Stream[CurX]<'0') || (Stream[CurX]>'9'))
+      Stream[CurX] ='.';
     
 	#ifdef Simorgh50N
   GUI_DrawGradientV(0, TFT_START_Y+0, 272, TFT_START_Y+480, GUI_MAKE_ALPHA(0x00, 0xA02020), GUI_MAKE_ALPHA(0x00, 0x000000));
@@ -2415,13 +2415,13 @@ unsigned char SetLocalIP(void) {
   #endif
 
 
-  while(Loc<=14)
+  while (Loc<=14)
   {
-     switch(ScanKeyboard()) 
+     switch (ScanKeyboard()) 
      {
        case BUP : //sssssssssssssssssssssssssssssssssssss
        case 'R':
-         if(Stream[Loc]>'0')
+         if (Stream[Loc]>'0')
          {
       	   Stream[Loc]--;
 					 Refresh=1;
@@ -2429,7 +2429,7 @@ unsigned char SetLocalIP(void) {
          break;
        case BDOWN:
        case 'L':
-         if(Stream[Loc]<'9')
+         if (Stream[Loc]<'9')
          {
       	   Stream[Loc]++;
 					 Refresh=1;
@@ -2441,11 +2441,11 @@ unsigned char SetLocalIP(void) {
          break;
        case BRIGHT: 
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
 				 Refresh=1;
          break;
        case BLEFT:
-				 if(Loc>0)
+				 if (Loc>0)
 				 {	
 					 Loc--;
     			 Refresh=1;
@@ -2456,8 +2456,8 @@ unsigned char SetLocalIP(void) {
        case BOK: 
        case BF3:
          Loc++;
-         if((Loc==3)||(Loc==7)||(Loc==11)) Loc++;
-         if(Loc>14) 
+         if ((Loc==3) || (Loc==7) || (Loc==11)) Loc++;
+         if (Loc>14) 
 					 break;
 				 Refresh=1;
          break;
@@ -2468,9 +2468,9 @@ unsigned char SetLocalIP(void) {
        case BF2:
 			 #endif
          LoadFont(FontBKoodak40);
-         return(1);
+         return 1;
      }
-     if(Refresh)
+     if (Refresh)
      {
        cnt=0;
 			 #ifdef Simorgh50N
@@ -2480,18 +2480,18 @@ unsigned char SetLocalIP(void) {
        GUI_DrawRoundedFrame(35, 105, 272-35, 140,3,2);			
 			 GUI_SetColor(RGB(0,0,0));
        GUI_DrawRoundedFrame(35+1, 105+1, 272-35-1, 140-1,3,1);	
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) GUI_SetColor(GUI_ORANGE);
 				 else       GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 50+(i*12) ,TFT_START_Y+110);
 			 }
 			 #endif
 			 #ifdef Torgheh
        G_LoadBMP(10,85,"0:desktop/InputBox.bmp",0);
-			 for(i=0; i<15; i++)
+			 for (i=0; i<15; i++)
 			 {
-         if(i==Loc) 	GUI_SetColor(GUI_ORANGE);
+         if (i==Loc) 	GUI_SetColor(GUI_ORANGE);
 				 else         GUI_SetColor(GUI_BLACK);
 			   GUI_DispCharAt(Stream[i], 20+(i*12) ,85);
 			 }
@@ -2500,11 +2500,11 @@ unsigned char SetLocalIP(void) {
      }
   }
 
-  for(CurX=0; CurX<16; CurX++)
-    Config.LocalIP[CurX]=Stream[CurX];
-  Config.LocalIP[3]='.';
-  Config.LocalIP[7]='.';
-  Config.LocalIP[11]='.';
+  for (CurX=0; CurX<16; CurX++)
+    Config.LocalIP[CurX] =Stream[CurX];
+  Config.LocalIP[3] ='.';
+  Config.LocalIP[7] ='.';
+  Config.LocalIP[11] ='.';
   OkBip(1);  
   LoadFont(FontBKoodak40);
 
@@ -2513,8 +2513,8 @@ unsigned char SetLocalIP(void) {
 //==============================================================================
 unsigned char DoClockCalibration(void) {
 	FLASH_UNLOCK
-  if(GetNumber("!!!حافظه پاک مي شود!!!", 0, 1)!=57)
-		return(0);
+  if (GetNumber("!!!حافظه پاک مي شود!!!", 0, 1)!=57)
+		return 0;
   ShowMessageDlg(mtError, "آماده سازي حافظه",0,0,0,0);  
 
 	SPI_Flash_Erase_Chip();
@@ -2580,12 +2580,12 @@ unsigned char KeypadTest(void) {
   LoadFont(FontTahoma20);
   GUI_Clear();
 	GUI_SetColor(GUI_WHITE);
-	while(1) {
+	while (1) {
 		WDTR;
 		Key = ScanKeyboard();
-		if(Key) {
+		if (Key) {
     	Line += 15;
-	    if(Line > 260) {
+	    if (Line > 260) {
 		    Line = 0;
 		    GUI_Clear();
 	    }

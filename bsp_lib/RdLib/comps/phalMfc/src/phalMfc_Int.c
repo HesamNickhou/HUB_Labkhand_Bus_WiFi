@@ -24,7 +24,7 @@
 */
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 #include "phalMfc_Int.h"
@@ -154,7 +154,7 @@ phStatus_t phalMfc_Int_ResolveReturnCode(
     uint8_t bRetCode
     )
 {
-    switch(bRetCode)
+    switch (bRetCode)
     {
     case PHAL_MFC_RESP_ACK:
         return PH_ADD_COMPCODE(PH_ERR_SUCCESS, PH_COMP_AL_MFC);

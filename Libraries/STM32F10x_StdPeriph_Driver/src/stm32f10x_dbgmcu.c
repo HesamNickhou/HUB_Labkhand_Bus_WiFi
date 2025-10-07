@@ -89,7 +89,7 @@
   */
 uint32_t DBGMCU_GetREVID(void)
 {
-   return(DBGMCU->IDCODE >> 16);
+   return DBGMCU->IDCODE >> 16;
 }
 
 /**
@@ -99,7 +99,7 @@ uint32_t DBGMCU_GetREVID(void)
   */
 uint32_t DBGMCU_GetDEVID(void)
 {
-   return(DBGMCU->IDCODE & IDCODE_DEVID_MASK);
+   return DBGMCU->IDCODE & IDCODE_DEVID_MASK;
 }
 
 /**

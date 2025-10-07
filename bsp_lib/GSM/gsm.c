@@ -150,7 +150,7 @@ typedef struct{
   //char *Data;
 }TGSMMessage;
 
-TGSMMessage GSMMessages[]=
+TGSMMessage GSMMessages[] =
 {
   {"+CMTI: \0", 7, 0, &SMSReceived},
   //{"+CMTI: \"SM\",\0", 12, 0, &SMSReceived},
@@ -196,19 +196,19 @@ void USART3_IRQHandler(void) {
   if (IIR & USART_FLAG_RXNE) 
 	{     
 		Byte=(USART3->DR & 0x1FF);
-    RXD3Buffer[rxd3_wr_index]=Byte;
+    RXD3Buffer[rxd3_wr_index] =Byte;
 		//USART_SendData(USART1, Byte);//////////////////////////
 
       //Process Data .... 
       //---------------------------
-      if(IPDLoc<IPDLen)
+      if (IPDLoc<IPDLen)
         IPDLoc=(Byte==IPD[IPDLoc])?IPDLoc+1:0;
-      if(IPDLoc>=IPDLen)
+      if (IPDLoc>=IPDLen)
       {
-        if(IPDLoc>=10)
+        if (IPDLoc>=10)
         {  
-          DataBuffer[DataSize++]=Byte;
-          if(DataSize>=DataBufferLen)
+          DataBuffer[DataSize++] =Byte;
+          if (DataSize>=DataBufferLen)
           {
             IPDLoc=0;
             DataSize=0;
@@ -221,11 +221,11 @@ void USART3_IRQHandler(void) {
         }
         else
         {
-          switch(Byte)
+          switch (Byte)
           {
             case ':':
               DataBufferLen=DataSize;
-              if(DataBufferLen>1024)
+              if (DataBufferLen>1024)
                 DataBufferLen=1024;
               IPDLoc=10;
               DataSize=0;
@@ -249,15 +249,15 @@ void USART3_IRQHandler(void) {
     
       //---------------------------
       //Process Messages .... 
-      for(i=0; i<14; i++)
+      for (i=0; i<14; i++)
       {
         GSMMessages[i].CurLoc=(Byte==GSMMessages[i].Message[GSMMessages[i].CurLoc])?GSMMessages[i].CurLoc+1:0;
-        if(GSMMessages[i].CurLoc>=GSMMessages[i].Len)
+        if (GSMMessages[i].CurLoc>=GSMMessages[i].Len)
         {
           *GSMMessages[i].Received=1;
 					//printf("\n\rMessage: %s ",GSMMessages[i].Message);
           GSMMessages[i].CurLoc=0;
-					if(i!=13)
+					if (i!=13)
 					{
             rxd3_rd_index=rxd3_counter=rxd3_wr_index=0;
 					}
@@ -267,8 +267,8 @@ void USART3_IRQHandler(void) {
         }
       }
 			
-      if(++rxd3_wr_index == BUFFER3_SIZE) rxd3_wr_index=0;
-      if(++rxd3_counter == BUFFER3_SIZE)
+      if (++rxd3_wr_index == BUFFER3_SIZE) rxd3_wr_index=0;
+      if (++rxd3_counter == BUFFER3_SIZE)
       {
         rxd3_rd_index=rxd3_counter=rxd3_wr_index=0;
       }
@@ -284,21 +284,21 @@ unsigned char GSM_GCL(unsigned char *c)
 int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) 
-			return(0);
-	  if(OS_TimeMS-i>=6000) //6 sec
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) 
+			return 0;
+	  if (OS_TimeMS-i>=6000) //6 sec
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
 		WDTR;
 	}		
   *c=RXD3Buffer[rxd3_rd_index];
-  if(++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
-  if(rxd3_counter) rxd3_counter--;
-  return(1);
+  if (++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
+  if (rxd3_counter) rxd3_counter--;
+  return 1;
 }
 
 //==============================================================================
@@ -307,21 +307,21 @@ unsigned char GSM_GCM(unsigned char *c)
 int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) 
-			return(0);
-	  if(OS_TimeMS-i>=1000) //6 sec
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) 
+			return 0;
+	  if (OS_TimeMS-i>=1000) //6 sec
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
 		WDTR;
 	}		
   *c=RXD3Buffer[rxd3_rd_index];
-  if(++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
-  if(rxd3_counter) rxd3_counter--;
-  return(1);
+  if (++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
+  if (rxd3_counter) rxd3_counter--;
+  return 1;
 }
 
 //==============================================================================
@@ -330,20 +330,20 @@ unsigned char GSM_GCF(unsigned char *c)
 unsigned int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=200)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=200)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
 		WDTR;
 	}		
   *c=RXD3Buffer[rxd3_rd_index];
-  if(++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
-  if(rxd3_counter) rxd3_counter--;
-  return(1);
+  if (++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
+  if (rxd3_counter) rxd3_counter--;
+  return 1;
 }
 
 //==============================================================================
@@ -352,19 +352,19 @@ unsigned char GSM_GCVF(unsigned char *c)
 unsigned int i;
 
 	i=OS_TimeMS;
-	while(1)
+	while (1)
 	{
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=50) //50 msec
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=50) //50 msec
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		WDTR;
 	}		
   *c=RXD3Buffer[rxd3_rd_index];
-  if(++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
-  if(rxd3_counter) rxd3_counter--;
-  return(1);
+  if (++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
+  if (rxd3_counter) rxd3_counter--;
+  return 1;
 }
 	 
 //==============================================================================
@@ -381,31 +381,31 @@ unsigned char Byte;
 unsigned char ReceiveBuf[101];
 
   ReceiveBufLen=0;
-	while(ReceiveBufLen==0)
+	while (ReceiveBufLen==0)
 	{
-    if(GSM_GCL(&Byte))
+    if (GSM_GCL(&Byte))
   	{
-      if((Byte!=13)&&(Byte!=10))
-		    ReceiveBuf[ReceiveBufLen++]=Byte;  
+      if ((Byte!=13) && (Byte!=10))
+		    ReceiveBuf[ReceiveBufLen++] =Byte;  
     }else 
-      return(1);
+      return 1;
   }
       
-  while((GSM_GCF(&Byte))&&(ReceiveBufLen<100)) 
-    ReceiveBuf[ReceiveBufLen++]=Byte;
+  while ((GSM_GCF(&Byte)) && (ReceiveBufLen<100)) 
+    ReceiveBuf[ReceiveBufLen++] =Byte;
 
-  ReceiveBuf[ReceiveBufLen]=0;
+  ReceiveBuf[ReceiveBufLen] =0;
   
   //printf("\n\rResponse[%d] : ",ReceiveBufLen);/////////////
   j=0;
-  for(i=0; i<ReceiveBufLen; i++)
+  for (i=0; i<ReceiveBufLen; i++)
   {
     //printf("%c",ReceiveBuf[i]);//////////////////////////
-    if(Response[j]=='\0') return(0);  
-    if(Response[j]==ReceiveBuf[i]) j++;
+    if (Response[j] =='\0') return 0;  
+    if (Response[j] ==ReceiveBuf[i]) j++;
     else j=0;
   }          
-  return(2);
+  return 2;
 }
 
 //==================================================================
@@ -416,24 +416,24 @@ unsigned char Byte;
 unsigned char ReceiveBuf[101];
 
   ReceiveBufLen=0;
-  while((GSM_GCF(&Byte))&&(ReceiveBufLen<100)) 
-    ReceiveBuf[ReceiveBufLen++]=Byte;
+  while ((GSM_GCF(&Byte)) && (ReceiveBufLen<100)) 
+    ReceiveBuf[ReceiveBufLen++] =Byte;
     
-  ReceiveBuf[ReceiveBufLen]=0;
+  ReceiveBuf[ReceiveBufLen] =0;
   
-  if(ReceiveBufLen==0)
-    return(1);
+  if (ReceiveBufLen==0)
+    return 1;
   
   //printf("\n\rResponse2: ");/////////////
   j=0;
-  for(i=0; i<ReceiveBufLen; i++)
+  for (i=0; i<ReceiveBufLen; i++)
   {
     //printf("%c",ReceiveBuf[i]);///////////////////////////////////////
-    if(Response[j]=='\0') return(0);  
-    if(Response[j]==ReceiveBuf[i]) j++;
+    if (Response[j] =='\0') return 0;  
+    if (Response[j] ==ReceiveBuf[i]) j++;
     else j=0;
   }          
-  return(2);
+  return 2;
 }
 
 //========================================================================================================
@@ -442,14 +442,14 @@ void USART_SendStr(USART_TypeDef* USARTx, char *str)
 int i=0;
 
 	  //printf("Send:");////////////////////////////////
-    //while(str[i]!=0)
+    //while (str[i]!=0)
     //  USART_SendData(USART1, str[i++]);
 		
   	i=0;
-    while(str[i]!=0)
+    while (str[i]!=0)
     {
       // Send character
-      switch(str[i])
+      switch (str[i])
       {
         case '\n':
           USART_SendData(USARTx, 13);
@@ -471,18 +471,18 @@ int i=0;
 char SendSMS(char *TelNum,char *DataToSend)
 {
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse2("OK")) return(1);
+  if (GetGSMResponse2("OK")) return 1;
   USART_SendStr(USART3, "AT+CSMP=17,167,0,0\n");
-  if(GetGSMResponse2("OK")) return(1);
+  if (GetGSMResponse2("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse2("CREG: 0,1")) return(2);  
+  if (GetGSMResponse2("CREG: 0,1")) return 2;  
   // We have excuted at+creg?
   // if GSM part is active and attached to the network, we should recieve AT+CREG: 0,1
   // if GSM part is not atatached to the net , we will recieve AT+CREG: 0,n    ( n is 0 or 2 )
   // if GSM part or interface board is off, we will recieve nothing	 		
 
   USART_SendStr(USART3, "at+cmgf=1\n");
-  if(GetGSMResponse("OK")) return(4);
+  if (GetGSMResponse("OK")) return 4;
 	
   USART_SendStr(USART3, "at+cmgs=\"");
   USART_SendStr(USART3, TelNum);
@@ -491,8 +491,8 @@ char SendSMS(char *TelNum,char *DataToSend)
   USART_SendStr(USART3, DataToSend);
   USART_SendData(USART3, 26);
 
-  if(GetGSMResponse("+CMGS")) return(5);
-  return(0);
+  if (GetGSMResponse("+CMGS")) return 5;
+  return 0;
 
 }
 
@@ -520,38 +520,38 @@ unsigned char Idx, i=0,Byte;
   //printf("\n\rChargeCode=%s",ChargeCode);
   
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("CREG: 0,1")) return(2);  
+  if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-  for(i=0; (i<50) && (ChargeCode[i]!=0); i++) 
+  for (i=0; (i<50) && (ChargeCode[i]!=0); i++) 
      USART_SendData(USART3,ChargeCode[i]);
   USART_SendData(USART3,'#'); 
   USART_SendData(USART3,13);  
   
-   if(GetGSMResponse("OK")) return(3);     
+   if (GetGSMResponse("OK")) return 3;     
   
-   Res[0]=0;
+   Res[0] =0;
   
 	i=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=6000)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=6000)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
   }
  
   Idx=0;
 
-  while(GSM_GCF(&Byte)&&(Idx<150)) 
+  while (GSM_GCF(&Byte) && (Idx<150)) 
   {  
-    Res[Idx++]=Byte;
+    Res[Idx++] =Byte;
   }
 
-  Res[Idx]=0;
+  Res[Idx] =0;
 
   OkBip(1);
 }
@@ -581,31 +581,31 @@ unsigned long int Li=0;
 unsigned char SendConfig=0;	
 
 	//printf("\n\rSMS Received");
-  Parameters[0][0]=0;
-  Parameters[1][0]=0;
-  Parameters[2][0]=0;
-  Parameters[3][0]=0;
-  Parameters[4][0]=0;
-  Parameters[5][0]=0;
-  Parameters[6][0]=0;
-  Parameters[7][0]=0;
-  Parameters[8][0]=0;
-  Parameters[9][0]=0;
+  Parameters[0][0] =0;
+  Parameters[1][0] =0;
+  Parameters[2][0] =0;
+  Parameters[3][0] =0;
+  Parameters[4][0] =0;
+  Parameters[5][0] =0;
+  Parameters[6][0] =0;
+  Parameters[7][0] =0;
+  Parameters[8][0] =0;
+  Parameters[9][0] =0;
 	USART_SendStr(USART3, "AT\n");
-  if(GetGSMResponse2("OK")) return(1);
+  if (GetGSMResponse2("OK")) return 1;
 	USART_SendStr(USART3, "at+cmgf=1\n");
-  if(GetGSMResponse2("OK")) return(1);
+  if (GetGSMResponse2("OK")) return 1;
 
   USART_SendStr(USART3, "at+cmgr=1\n");
   
-  while(GSM_GCM(&Byte))
+  while (GSM_GCM(&Byte))
   {
     //SendByte(Byte);
-    if(!CommandStarted)
+    if (!CommandStarted)
     {
-      if(TelIdx)
+      if (TelIdx)
       {
-        switch(Byte)
+        switch (Byte)
         {
           case '0':
           case '1':
@@ -617,41 +617,41 @@ unsigned char SendConfig=0;
           case '7':
           case '8':
           case '9':
-            TelNumber[TelIdx++]=Byte;
-					  if(TelIdx>=20) TelIdx=0;
-            TelNumber[TelIdx]=0;
+            TelNumber[TelIdx++] =Byte;
+					  if (TelIdx>=20) TelIdx=0;
+            TelNumber[TelIdx] =0;
             break;
           default:
             TelIdx=0;
         }
       }
-      if((Byte=='+')&&(OldByte=='"'))
+      if ((Byte=='+') && (OldByte=='"'))
       {
         TelIdx=1;
-        TelNumber[0]='+';
-        TelNumber[1]=0;
+        TelNumber[0] ='+';
+        TelNumber[1] =0;
       }
-      if((Byte=='W')||(Byte=='w'))
+      if ((Byte=='W') || (Byte=='w'))
         CommandStarted=1;
       CommandPosition=0;
       OldByte=Byte;
     }else{
-      if(Byte==','||(Byte==10)||(Byte==13))
+      if (Byte==','||(Byte==10) || (Byte==13))
       {
         CommandPosition++;
         CurIndex=0;
       }else{
-        if(CurIndex<20)
+        if (CurIndex<20)
         {
-          switch(CommandPosition)
+          switch (CommandPosition)
           {
             case 0:  //Password
-              Password[CurIndex++]=Byte;
-              Password[CurIndex]=0;
+              Password[CurIndex++] =Byte;
+              Password[CurIndex] =0;
               break;
             case 1:  //Command #
-              CommandNo[CurIndex++]=Byte;
-              CommandNo[CurIndex]=0;
+              CommandNo[CurIndex++] =Byte;
+              CommandNo[CurIndex] =0;
               break;
             case 2:  //Parameter 1
             case 3:  //Parameter 2
@@ -659,8 +659,8 @@ unsigned char SendConfig=0;
             case 5:  //Parameter 4
             case 6:  //Parameter 5
             case 7:  //Parameter 6
-              Parameters[CommandPosition-2][CurIndex++]=Byte;
-              Parameters[CommandPosition-2][CurIndex]=0;
+              Parameters[CommandPosition-2][CurIndex++] =Byte;
+              Parameters[CommandPosition-2][CurIndex] =0;
               break;
           }//switch
         }//if  
@@ -671,7 +671,7 @@ unsigned char SendConfig=0;
   DeleteAllMessages();
   
   //printf("\n\r==================");
-  Config.MainPassword[6]=0;
+  Config.MainPassword[6] =0;
   //printf("\n\rTelNumber: %s",TelNumber);
   //printf("\n\rMainPassword: %s",Config.MainPassword);
   //printf("\n\rPassword: %s",Password);
@@ -683,44 +683,44 @@ unsigned char SendConfig=0;
   //printf("\n\rParameter5: %s",Parameters[4]);
   
   
-  for(i=0; (i<6)&&(Password[i]!=0); i++)
-    if(Password[i]!=Config.MainPassword[i])
+  for (i=0; (i<6) && (Password[i]!=0); i++)
+    if (Password[i]!=Config.MainPassword[i])
       break;
   
-  if((i<6)||(Password[6]!=0))
+  if ((i<6) || (Password[6]!=0))
   {
     sprintf(str,"Incorrect Password"); 
-    str[160]=0;
+    str[160] =0;
     SendSMS(TelNumber, str); 
     //ErrorBip(0); //Password Incorrect
-    return(0);
+    return 0;
   }
   
-  if(!strcmp("001",CommandNo))  //Change Password
+  if (!strcmp("001",CommandNo))  //Change Password
   {
-    for(i=0; (i<20) && (Parameters[0][i]!=0); i++);
-    if(i==6)
+    for (i=0; (i<20) && (Parameters[0][i]!=0); i++);
+    if (i==6)
     {
       strcpy(Config.MainPassword, Parameters[0]);
       //i=SaveConfiguration();
       //LoadConfiguration();
-      str[160]=0;
+      str[160] =0;
       SendSMS(TelNumber, str);
       OkBip(1);
     }else{
       ErrorBip(1); //Invalid New Password
-      return(0);
+      return 0;
     }
   }
   
-  if(!strcmp("064",CommandNo))  
+  if (!strcmp("064",CommandNo))  
   {
     SendConfig=1;
   }
 
-  if(!strcmp("088",CommandNo))
+  if (!strcmp("088",CommandNo))
   {
-    if((Parameters[0][0]!=0)&&(Parameters[0][0]>='0')&&(Parameters[0][0]<='9'))
+    if ((Parameters[0][0]!=0) && (Parameters[0][0]>='0') && (Parameters[0][0]<='9'))
       strcpy(Config.HostIP, Parameters[0]);
     
     SaveConfiguration();
@@ -729,9 +729,9 @@ unsigned char SendConfig=0;
 		SendConfig=1;
   }
 
-  if(!strcmp("020",CommandNo))
+  if (!strcmp("020",CommandNo))
   {
-    if((Parameters[0][0]!=0)&&(Parameters[0][0]>='0')&&(Parameters[0][0]<='9'))
+    if ((Parameters[0][0]!=0) && (Parameters[0][0]>='0') && (Parameters[0][0]<='9'))
       Config.DeviceID=atoi(Parameters[0]);
     
     SaveConfiguration();
@@ -740,18 +740,18 @@ unsigned char SendConfig=0;
 		SendConfig=1;
   }
 	
-	if(SendConfig==1)
+	if (SendConfig==1)
 	{
     sprintf(str3,"%c[%d,%d,%d]",GPSData.Status[0],SattelitesInView,PositionFix,HDOP);    
-    for(Counter=0;Counter<15;Counter++) Ip_Temp[Counter]=Config.HostIP[Counter];
-    Ip_Temp[Counter]=0;
+    for (Counter=0;Counter<15;Counter++) Ip_Temp[Counter] =Config.HostIP[Counter];
+    Ip_Temp[Counter] =0;
     sprintf(str,"Ver:%d-%d.%d\rID: %d\rUC: %d\r%02d:%02d:%02d , %02d/%02d/%02d\rCharge:%d\r%s\r%s",DeviceType,Ver,Release,Config.DeviceID,Config.UC,Hour,Min,Sec,(Year%100),Month,Day,DeviceInfo.Charge/10,Ip_Temp,str3); 
-    str[160]=0;
+    str[160] =0;
     SendSMS(TelNumber, str); 
   }
 	
   //.........................................................................................
-  if(!strcmp("100",CommandNo))  //Track on Demand
+  if (!strcmp("100",CommandNo))  //Track on Demand
   {
     F=atof(GPSData.Lat);
     I=floor(F);
@@ -770,18 +770,18 @@ unsigned char SendConfig=0;
     sprintf(str, "http://maps.google.com/maps?f=q&hl=en&q=%f,%f&ie=UTF8&z=16&iwloc=addr&om=1",F,F1);
     SendSMS(TelNumber, str); 
   }
-	return(0);
+	return 0;
 }
 
 //=========================================================================
 unsigned char DeleteAllMessages(void)
 {
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   //USART_SendStr(USART3, "at+cmgd=0,4\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
   USART_SendStr(USART3, "at+cmgd=1,4\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("OK")) return(2);  
-  return(0);
+  if (GetGSMResponse("OK")) return 2;  
+  return 0;
 }
 
 //=========================================================================
@@ -794,41 +794,41 @@ int i=0;
   EmptyGSMRXBuffer();
 	/*
   USART_SendStr(USART3, "AT\n");
-  if(GetGSMResponse("OK")) 
+  if (GetGSMResponse("OK")) 
   {
     //printf("\n\rAT Error");
-    return(1);
+    return 1;
   }
 	*/
   
   USART_SendStr(USART3, "at+cipsend=");
   
   ch=(len/1000)%10;
-  if(ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if(i==1) USART_SendData(USART3, '0');}
+  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   ch=(len/100)%10;
-  if(ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if(i==1) USART_SendData(USART3, '0');}
+  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   ch=(len/10)%10;
-  if(ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if(i==1) USART_SendData(USART3, '0');}
+  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   ch=(len/1)%10;
-  if(ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if(i==1) USART_SendData(USART3, '0');}
+  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   USART_SendData(USART3, 13);
   
   
-  if(GetGSMResponse(">")) 
+  if (GetGSMResponse(">")) 
   {
     //printf("\n\r> Error");
-    return(2);
+    return 2;
   }
 	
 	//GUI_Delay(100);
 
-  for(i=0; i<len; i++) 
+  for (i=0; i<len; i++) 
     USART_SendData(USART3, DataToSendRec[i]);
   
   //printf("\n\rGPRS Send: ");
-  //for(i=0; i<len; i++) 
+  //for (i=0; i<len; i++) 
   //  printf("%d ", DataToSendRec[i]);
-  //if(GetGSMResponse("OK")) return(3);
+  //if (GetGSMResponse("OK")) return 3;
  	GUI_SetColor(GUI_ORANGE);
 	GUI_FillCircle(300, 11, 4);
 
@@ -838,7 +838,7 @@ int i=0;
 //------------------------------------------------------------------------------
 void GSM_PowerOFF(void)
 {
-  if(GSMSTATUS)  //Device is currently on
+  if (GSMSTATUS)  //Device is currently on
   {
     GSMPWR=1;
     GUI_Delay(1000);
@@ -853,36 +853,36 @@ int j,ReceiveBufLen;
 unsigned char ReceiveBuf[101];
 
   ReceiveBufLen=0;
-  while(rxd3_counter)
+  while (rxd3_counter)
   {
-    if(((ReceiveBufLen==0)&&(RXD3Buffer[rxd3_rd_index]=='+'))||(ReceiveBufLen>0))
+    if (((ReceiveBufLen==0) && (RXD3Buffer[rxd3_rd_index] =='+')) || (ReceiveBufLen>0))
     {
-      ReceiveBuf[ReceiveBufLen++]=RXD3Buffer[rxd3_rd_index];
+      ReceiveBuf[ReceiveBufLen++] =RXD3Buffer[rxd3_rd_index];
     }
-    if(++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
+    if (++rxd3_rd_index >= BUFFER3_SIZE) rxd3_rd_index=0;
     rxd3_counter--;
-    if(ReceiveBufLen>=10) break;
+    if (ReceiveBufLen>=10) break;
   }  
  
   //printf("\n\rReceived Data: ");
-  //for(j=0; j<ReceiveBufLen; j++)
+  //for (j=0; j<ReceiveBufLen; j++)
   //  printf("%c",ReceiveBuf[j]);
-  ReceiveBuf[ReceiveBufLen]=0;
+  ReceiveBuf[ReceiveBufLen] =0;
   
-  if(ReceiveBufLen<7)
-    return(101);
+  if (ReceiveBufLen<7)
+    return 101;
   
-  if((ReceiveBuf[0]!='+')||(ReceiveBuf[1]!='C')||(ReceiveBuf[2]!='S')||(ReceiveBuf[3]!='Q')||(ReceiveBuf[4]!=' '))
-    return(102);
+  if ((ReceiveBuf[0]!='+') || (ReceiveBuf[1]!='C') || (ReceiveBuf[2]!='S') || (ReceiveBuf[3]!='Q') || (ReceiveBuf[4]!=' '))
+    return 102;
   
-  if(ReceiveBuf[6]==',')
+  if (ReceiveBuf[6] ==',')
     j=ReceiveBuf[5]-'0';
-  else if(ReceiveBuf[7]==',')
+  else if (ReceiveBuf[7] ==',')
     j=((ReceiveBuf[5]-'0')*10)+(ReceiveBuf[6]-'0');
   else
-    return(103);
+    return 103;
   CSQValue=j;
-  return(j);
+  return j;
 }
 
 //------------------------------------------------------------------------------
@@ -894,12 +894,12 @@ static unsigned char Command_Retry=0;
 static unsigned char CIICR_ErrorResponse=0;
 
 	  //printf("\n\rCurrentConnectionStep: %d ConnectionError: %d", CurrentConnectionStep,ConnectionError);
-    switch(CurrentConnectionStep)
+    switch (CurrentConnectionStep)
     {
       case 90:  //Module must be turned off  200
     Log("GPRS90")
         CIICR_ErrorResponse=0;
-        if(GSMSTATUS)  //Device is currently on
+        if (GSMSTATUS)  //Device is currently on
         {
            //printf("Status 1 Set Power");
            GSMPWR=1;
@@ -926,7 +926,7 @@ static unsigned char CIICR_ErrorResponse=0;
       case 93:  //Module must be turned on     92
     Log("GPRS93")
         CallReady=0;
-        if(GSMSTATUS) 
+        if (GSMSTATUS) 
         {
           //printf("Status 1 Go 95");
           CurrentConnectionStep=95;
@@ -951,7 +951,7 @@ static unsigned char CIICR_ErrorResponse=0;
         USART_SendStr(USART3, "at\n");
         //CurrentConnectionStep=1;
 			  
-        if(CallReady)
+        if (CallReady)
         {
           EmptyGSMRXBuffer();
           USART_SendStr(USART3, "at\n");
@@ -962,7 +962,7 @@ static unsigned char CIICR_ErrorResponse=0;
         }
         else Command_Retry++;
      
-        if(Command_Retry>=5) 
+        if (Command_Retry>=5) 
         {
           //CurrentConnectionStep=1;
           //Command_Retry=0;
@@ -977,7 +977,7 @@ static unsigned char CIICR_ErrorResponse=0;
         break;
       case 1:
     Log("GPRS1")
-        if(GetGSMResponse2("OK"))
+        if (GetGSMResponse2("OK"))
         {
           uart3_init(19200);    
           GUI_Delay(100);
@@ -1010,7 +1010,7 @@ static unsigned char CIICR_ErrorResponse=0;
         break;
       case 2:
     Log("GPRS2")
-        if(Command_Retry>=10) 
+        if (Command_Retry>=10) 
         {
 					/*
           SetColor(RGB(84,75,80));
@@ -1028,11 +1028,11 @@ static unsigned char CIICR_ErrorResponse=0;
         }  
       
 				Temp=GetGSMResponse2("+CPIN: READY");
-        if(Temp)
+        if (Temp)
         {
           Command_Retry++;
           USART_SendStr(USART3, "AT+CPIN?\n");
-          if((Command_Retry>3)&&(Temp==1))
+          if ((Command_Retry>3) && (Temp==1))
             CurrentConnectionStep=90;
         }
         else
@@ -1047,7 +1047,7 @@ static unsigned char CIICR_ErrorResponse=0;
         break;
       case 3:
     Log("GPRS3")
-        if(!GetGSMResponse2("CREG: 0,0"))
+        if (!GetGSMResponse2("CREG: 0,0"))
         {
           Command_Retry++;
           USART_SendStr(USART3, "at+creg?\n");
@@ -1059,7 +1059,7 @@ static unsigned char CIICR_ErrorResponse=0;
           Command_Retry=0;
         } 
         
-        if(Command_Retry>=30) 
+        if (Command_Retry>=30) 
         {
           CurrentConnectionStep=90;
           Command_Retry=0;
@@ -1072,14 +1072,14 @@ static unsigned char CIICR_ErrorResponse=0;
         break;
       case 5:
     Log("GPRS5")
-        if(GetGSMResponse2("CGATT: 1"))
+        if (GetGSMResponse2("CGATT: 1"))
         {
           Command_Retry++;
           CurrentConnectionStep--;
         }
         else
         {
-      		switch(Config.SIMCardType)
+      		switch (Config.SIMCardType)
 		      {
 			      case 2: //MCI
 			      case 20:
@@ -1099,7 +1099,7 @@ static unsigned char CIICR_ErrorResponse=0;
           Command_Retry=0;
         } 
         
-        if(Command_Retry>=15) 
+        if (Command_Retry>=15) 
         {
           CurrentConnectionStep=90;
           Command_Retry=0;
@@ -1107,7 +1107,7 @@ static unsigned char CIICR_ErrorResponse=0;
         break;
       case 6:
     Log("GPRS6")
-        if(GetGSMResponse2("OK"))
+        if (GetGSMResponse2("OK"))
           Command_Retry++;
         else
         {
@@ -1119,7 +1119,7 @@ static unsigned char CIICR_ErrorResponse=0;
           Command_Retry=0;
         } 
         
-        if(Command_Retry>=15) 
+        if (Command_Retry>=15) 
         {
           CurrentConnectionStep=90;
           Command_Retry=0;
@@ -1128,10 +1128,10 @@ static unsigned char CIICR_ErrorResponse=0;
       case 7:
     Log("GPRS7")
         EmptyGSMRXBuffer();
-        for(Counter=0;Counter<15;Counter++) Ip_Temp[Counter]=Config.HostIP[Counter];
-        Ip_Temp[Counter]=0;
+        for (Counter=0;Counter<15;Counter++) Ip_Temp[Counter] =Config.HostIP[Counter];
+        Ip_Temp[Counter] =0;
         sprintf(str,"at+cipstart=\"TCP\",\"%s\",\"10045\"\n",Ip_Temp);
-			  #if(DeviceType==Basket)
+			  #if (DeviceType==Basket)
         sprintf(str,"at+cipstart=\"TCP\",\"%s\",\"10068\"\n",Ip_Temp); 
 			  #endif
         USART_SendStr(USART3, str); 
@@ -1148,7 +1148,7 @@ static unsigned char CIICR_ErrorResponse=0;
 			  /*
 	  		EmptyGSMRXBuffer();
         GPRSRetry++;
-        if(GPRSRetry<4)
+        if (GPRSRetry<4)
         {
           USART_SendStr(USART3, "at+cipclose\n");
           CurrentConnectionStep=7;
@@ -1166,7 +1166,7 @@ static unsigned char CIICR_ErrorResponse=0;
 			  /*
         EmptyGSMRXBuffer();
         GPRSRetry++;
-        if(GPRSRetry<6) 
+        if (GPRSRetry<6) 
         {
           USART_SendStr(USART3, "at+cipshut\n");
           CurrentConnectionStep=4;
@@ -1198,7 +1198,7 @@ char str[60];
     Log("CheckGPRSEnmter")
   LastSIMCardChargeRequest++;
 	
-  if(GPRSConnectOK)
+  if (GPRSConnectOK)
   {
     Log("GPRSConnectOK")
     GSMResp=0;  
@@ -1211,11 +1211,11 @@ char str[60];
     cntGPRSLowError=0;
   }
   
-  if(GPRSConnecting)
+  if (GPRSConnecting)
   {
     Log("GPRSConnecting")
     GSMResp=0;  
-    if(++cntGPRSLowError>2)
+    if (++cntGPRSLowError>2)
     {
       CurrentConnectionStep=13;
       GPRSStatus=Connecting;
@@ -1224,7 +1224,7 @@ char str[60];
     GPRSConnecting=0;
   }
   
-  if(GPRSClose)
+  if (GPRSClose)
   {
     Log("GPRSClose")
     GSMResp=0;  
@@ -1233,7 +1233,7 @@ char str[60];
     GPRSClose=0;
   }
   
-  if(GPRSDeact)
+  if (GPRSDeact)
   {
     Log("GPRSDeact")
     GSMResp=0;  
@@ -1242,7 +1242,7 @@ char str[60];
     GPRSDeact=0;
   }
 
-  if((ConnectionError>3)&&(cntGPRSLowError==0))
+  if ((ConnectionError>3) && (cntGPRSLowError==0))
   {
     Log("cntGPRSLowError")
     CurrentConnectionStep=14;
@@ -1250,17 +1250,17 @@ char str[60];
     ConnectionError=0;
   }
   
-  if(GPRSStatus==Connecting)
+  if (GPRSStatus==Connecting)
 	{
     Log("DISP3")
   	DisplayToolbar(3);
     PasssGPRSConnectionSteps();
 	}
   
-  if(GPRSStatus==Connected)
+  if (GPRSStatus==Connected)
   {
     Log("Connected")
-    if(LastSIMCardChargeRequest>3600)
+    if (LastSIMCardChargeRequest>3600)
     {
       Log("GetSimCardChargeInt")
       LastSIMCardChargeRequest=0;
@@ -1269,7 +1269,7 @@ char str[60];
     }
   }
     
-  if(CUSDReady)
+  if (CUSDReady)
   {
     Log("CUSDReady")
     CUSDReady=0;
@@ -1277,18 +1277,18 @@ char str[60];
     Charge=GetSimCardChargeInt(2);
 		//printf("\n\rNew Charge: %d", Charge);
     ChargeRequest=0;
-		if(Charge>=0)
+		if (Charge>=0)
 			DeviceInfo.Charge=Charge;
-		#if(DeviceUC!=UC_KASHAN)
-    if((Charge>=0)&&(Charge<4000))
+		#if (DeviceUC!=UC_KASHAN)
+    if ((Charge>=0) && (Charge<4000))
       ChargeRequest=1;
 		#endif
   }
     
-  if(GPRSStatus==ChargeQuering)
+  if (GPRSStatus==ChargeQuering)
   {
     Log("ChargeQuering")
-    if(LastSIMCardChargeRequest>10)
+    if (LastSIMCardChargeRequest>10)
     {
       GPRSStatus=Connected;
       Charge=-1;
@@ -1296,13 +1296,13 @@ char str[60];
     return;
   }
 
-  if(++GPRSCHECK==3)
+  if (++GPRSCHECK==3)
     USART_SendStr(USART3, "AT+CSQ\n");
   
-  if(GPRSStatus==Connected)
-    if(++GPRSCHECK>6)
+  if (GPRSStatus==Connected)
+    if (++GPRSCHECK>6)
     {
-      if(++GSMResp>3)
+      if (++GSMResp>3)
       {
         Log("++GSMResp>3")
         CurrentConnectionStep=90;
@@ -1316,14 +1316,14 @@ char str[60];
       USART_SendStr(USART3, "AT+CIPSTATUS\n");
     }
   Log("GPRSStatus")
-	switch(GPRSStatus)
+	switch (GPRSStatus)
 	{
 		case Connected:	GUI_SetColor(GUI_GREEN); break;
 		case ChargeQuering:	GUI_SetColor(GUI_BLUE); break;
 		case Connecting:	GUI_SetColor(GUI_RED); break;
 	}
 	GUI_FillCircle(300, TFT_START_Y+11, 4);
-  if(GPRSCHECK>6)
+  if (GPRSCHECK>6)
     GPRSCHECK=0;
 }
 
@@ -1333,24 +1333,24 @@ unsigned char GSMGetTime(void)
 unsigned char CurLoc=0;
 unsigned char Byte, Idx=0;
 unsigned char str[128];
-unsigned char Message[]="+CCLK: \"";
+unsigned char Message[] ="+CCLK: \"";
 const unsigned char Len=8;
 unsigned long int time=0;
 
   USART_SendStr(USART3, "at+cclk?\n");
   
-  while((GSM_GCF(&Byte))&&(Idx<128)) 
+  while ((GSM_GCF(&Byte)) && (Idx<128)) 
   {
-    if(CurLoc<Len)
+    if (CurLoc<Len)
       CurLoc=(Byte==Message[CurLoc])?CurLoc+1:0;
-    else if(CurLoc==Len) CurLoc++;
-    if(CurLoc>Len)
-      str[Idx++]=Byte;
+    else if (CurLoc==Len) CurLoc++;
+    if (CurLoc>Len)
+      str[Idx++] =Byte;
   }
   
-  if(Idx<21) return(1);
-  if((str[2]!='/')||(str[5]!='/')||(str[8]!=',')||(str[11]!=':')||(str[14]!=':')||(str[17]!='+'))
-    return(2);
+  if (Idx<21) return 1;
+  if ((str[2]!='/') || (str[5]!='/') || (str[8]!=',') || (str[11]!=':') || (str[14]!=':') || (str[17]!='+'))
+    return 2;
   
   Year=(str[0]-'0')*10+(str[1]-'0'); Year+=2000;
   Month=(str[3]-'0')*10+(str[4]-'0');
@@ -1364,7 +1364,7 @@ unsigned long int time=0;
   Month=CurrentDate.month;
   Day=CurrentDate.day;
   DayOfWeek=GetDayOfWeek(Year,Month,Day);
-  return(0);
+  return 0;
 }
 
 //==================================================================================
@@ -1380,17 +1380,17 @@ unsigned char Byte;
                                                                            CurrentDate.day/10,CurrentDate.day%10,
                                                                            Hour/10,Hour%10,Min/10,Min%10,Sec/10,Sec%10);
   USART_SendStr(USART3, str);
-  if(GetGSMResponse("OK")) return(2);
+  if (GetGSMResponse("OK")) return 2;
   
-  return(0);
+  return 0;
 }
 
 //==================================================================================
 unsigned char _IsPrintable(unsigned char ch)
 {
-  if(ch<32) return(0);
-  if(ch>200) return(0);
-  return(1);
+  if (ch<32) return 0;
+  if (ch>200) return 0;
+  return 1;
 }
 //==================================================================================
 void GetGPRSStatus(void)
@@ -1401,15 +1401,15 @@ unsigned char ReceiveBuf[100];
 
   USART_SendStr(USART3, "at+cipstatus\n");
   ReceiveBufLen=0;
-  if(GSM_GCL(&Byte))
-    ReceiveBuf[ReceiveBufLen++]=Byte;  
+  if (GSM_GCL(&Byte))
+    ReceiveBuf[ReceiveBufLen++] =Byte;  
   else 
     return;
       
-  while((GSM_GCF(&Byte))&&(ReceiveBufLen<70)) 
-    ReceiveBuf[ReceiveBufLen++]=Byte;
+  while ((GSM_GCF(&Byte)) && (ReceiveBufLen<70)) 
+    ReceiveBuf[ReceiveBufLen++] =Byte;
 
-  ReceiveBuf[ReceiveBufLen]=0; 
+  ReceiveBuf[ReceiveBufLen] =0; 
   
 }
 
@@ -1422,31 +1422,31 @@ unsigned char ReceiveBuf[100];
 
   USART_SendStr(USART3, "at+cipstatus\n");
   ReceiveBufLen=0;
-  if(GSM_GCL(&Byte))
-    ReceiveBuf[ReceiveBufLen++]=Byte;  
+  if (GSM_GCL(&Byte))
+    ReceiveBuf[ReceiveBufLen++] =Byte;  
   else 
-    return(0);
+    return 0;
       
-  while((GSM_GCF(&Byte))&&(ReceiveBufLen<70)) 
-    ReceiveBuf[ReceiveBufLen++]=Byte;
+  while ((GSM_GCF(&Byte)) && (ReceiveBufLen<70)) 
+    ReceiveBuf[ReceiveBufLen++] =Byte;
 
-  ReceiveBuf[ReceiveBufLen]=0; 
+  ReceiveBuf[ReceiveBufLen] =0; 
   
   Byte=0; 
-  for(k=0,i=0; i<ReceiveBufLen; i++)
+  for (k=0,i=0; i<ReceiveBufLen; i++)
   {
-    if((Byte==1)&&_IsPrintable(ReceiveBuf[i]))
-      Status[k++]=ReceiveBuf[i];
-    if(ReceiveBuf[i]==':')
+    if ((Byte==1)&&_IsPrintable(ReceiveBuf[i]))
+      Status[k++] =ReceiveBuf[i];
+    if (ReceiveBuf[i] ==':')
     {
       Byte=1;
-      if((ReceiveBufLen-i)>16) ReceiveBufLen=i+16;
+      if ((ReceiveBufLen-i)>16) ReceiveBufLen=i+16;
       i++;
     }  
   }  
-  Status[k++]=0;
+  Status[k++] =0;
   
-  return(1);
+  return 1;
 }
 
 //================================================================================================
@@ -1458,11 +1458,11 @@ unsigned long int Li;
     
   EmptyGSMRXBuffer();
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("CREG: 0,1")) return(2);  
+  if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-	switch(Config.SIMCardType)
+	switch (Config.SIMCardType)
   {
     case 2: //MCI
     case 20:
@@ -1476,15 +1476,15 @@ unsigned long int Li;
       break;			
   }
 
-  if(GetGSMResponse("OK")) return(3);
+  if (GetGSMResponse("OK")) return 3;
   
 	i=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=6000)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=6000)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
   }
@@ -1493,31 +1493,31 @@ unsigned long int Li;
   i=0;
   k=0;
   Idx=0;
-  while(GSM_GCL(&Byte)&&(Idx<220)) 
+  while (GSM_GCL(&Byte) && (Idx<220)) 
   {  
-   if(k++<10) continue;
-   if(!_IsPrintable(Byte)) continue;
-    if(++j>17)
+   if (k++<10) continue;
+   if (!_IsPrintable(Byte)) continue;
+    if (++j>17)
     {
-      if(++i>7) break;
+      if (++i>7) break;
       j=0;
     }
     Idx++;
   }
   
-  if(Idx==0) return(4);
+  if (Idx==0) return 4;
 
 	i=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=6000)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=6000)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
     i=ScanKeyboard();
-    if((i==BOK)||(i==BCANCEL)) break;
+    if ((i==BOK) || (i==BCANCEL)) break;
   }                    
                       
 }
@@ -1532,15 +1532,15 @@ signed long int N;
 char Charge[20];
 
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("CREG: 0,1")) return(2);  
+  if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-  if(JustChargeQuery==0)
-    if(GetChargeCode()==0) 
-			return(1);  
+  if (JustChargeQuery==0)
+    if (GetChargeCode()==0) 
+			return 1;  
   
-	switch(Config.SIMCardType)
+	switch (Config.SIMCardType)
   {
     case 2: //MCI
     case 20:
@@ -1554,24 +1554,24 @@ char Charge[20];
       break;			
   }
   
-  if(JustChargeQuery==0)
+  if (JustChargeQuery==0)
   {
-    for(i=0; (i<16) && (ChargeCode[i]!=0); i++) 
+    for (i=0; (i<16) && (ChargeCode[i]!=0); i++) 
       USART_SendData(USART3,ChargeCode[i]); 
   }else{
     USART_SendData(USART3,'1'); 
   }
   USART_SendData(USART3,'#'); 
   USART_SendData(USART3,13); 
-  if(GetGSMResponse("OK")) return(3);    
+  if (GetGSMResponse("OK")) return 3;    
   
 	i=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=6000)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=6000)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
   }
@@ -1581,21 +1581,21 @@ char Charge[20];
   k=0;
   Idx=4;
   m=0;
-  while(GSM_GCL(&Byte)&&(Idx<200)) 
+  while (GSM_GCL(&Byte) && (Idx<200)) 
   {  
-    if(k++<10) continue;
-    if(!_IsPrintable(Byte)) continue;
-    ResText[m++]=Byte;
-    ResText[m]=0;
-    if(++j>17)
+    if (k++<10) continue;
+    if (!_IsPrintable(Byte)) continue;
+    ResText[m++] =Byte;
+    ResText[m] =0;
+    if (++j>17)
     {
-      if(++i>7) break;
+      if (++i>7) break;
       j=0;
     }
     Idx++;
   }
   
-  if(Idx==4) return(4);
+  if (Idx==4) return 4;
   
   //G_LoadBMPPart(0, 0, 0, 0, 320, 240-25, "0:desktop/0000.bmp");
   //SetFgColor(WHITE);
@@ -1606,11 +1606,11 @@ char Charge[20];
  j=0;
  i=0;
  NewCharge=0;
- while((ResText[i]!=0)&&(j<20))
+ while ((ResText[i]!=0) && (j<20))
  {
    Byte=ResText[i];
    i++;
-    switch(Byte)
+    switch (Byte)
       {
         case '0':
         case '1':
@@ -1622,12 +1622,12 @@ char Charge[20];
         case '7':
         case '8':
         case '9':  
-          if(NumberDone==1)
+          if (NumberDone==1)
           {
             NumberDone=0;
             j=0;
           }  
-          Charge[j++]=Byte;
+          Charge[j++] =Byte;
           break;                 
         case 'R':
         case 'r':
@@ -1635,21 +1635,21 @@ char Charge[20];
           break;  
         case 'I':
         case 'i':
-          if(RialPosition==1)
+          if (RialPosition==1)
             RialPosition=2;
           else
             RialPosition=0;
           break;  
         case 'A':
         case 'a':
-          if(RialPosition==2)
+          if (RialPosition==2)
             RialPosition=3;
           else
             RialPosition=0;
           break;  
         case 'L':
         case 'l':
-          if(RialPosition==3)
+          if (RialPosition==3)
             RialPosition=4;
           else
             RialPosition=0;
@@ -1660,25 +1660,25 @@ char Charge[20];
           break;
       }//switch
 
-      if(RialPosition==4)
+      if (RialPosition==4)
       {
-        Charge[j]=0;
+        Charge[j] =0;
         NewCharge=atol(Charge);
       }  
  }
 
   //GetTimeStamp();
   //Li=timestamp; 
-  while(1)                
+  while (1)                
   {
     i=ScanKeyboard();
     //GetTimeStamp();
-    //if(timestamp-Li>60000) {if(NewCharge)  return(5);}
-    if((i==BOK)||(i==BCANCEL)||(i==120)||(i==BLEFT)||(i=='A')) break;
+    //if (timestamp-Li>60000) {if (NewCharge)  return 5;}
+    if ((i==BOK) || (i==BCANCEL) || (i==120) || (i==BLEFT) || (i=='A')) break;
   } 
 
-  if(NewCharge) return(5);  
-  return(4);
+  if (NewCharge) return 5;  
+  return 4;
 
 }  
 
@@ -1690,11 +1690,11 @@ unsigned long int Li;
 unsigned int crc=0;
 
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("CREG: 0,1")) return(2);  
+  if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-	switch(Config.SIMCardType)
+	switch (Config.SIMCardType)
   {
     case 2: //MCI
     case 20:
@@ -1707,46 +1707,46 @@ unsigned int crc=0;
       USART_SendStr(USART3, "atd*141*1#\n");
       break;			
   }
-  if(GetGSMResponse("OK")) return(3);      
+  if (GetGSMResponse("OK")) return 3;      
   
 	i=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=6000)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=6000)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
   }
 
-  SendBuf[0]=STX;
-  SendBuf[1]=11; //Result
-  SendBuf[2]=Config.DeviceID%256;
-  SendBuf[3]=Config.DeviceID/256;
-  SendBuf[4]=0;
-  SendBuf[5]=0;
-  SendBuf[6]=30;
+  SendBuf[0] =STX;
+  SendBuf[1] =11; //Result
+  SendBuf[2] =Config.DeviceID%256;
+  SendBuf[3] =Config.DeviceID/256;
+  SendBuf[4] =0;
+  SendBuf[5] =0;
+  SendBuf[6] =30;
   Idx=7;   
 
-  while(GSM_GCL(&Byte)&&(Idx<200)) 
+  while (GSM_GCL(&Byte) && (Idx<200)) 
   {  
-   if(j++<10) continue;
-   if(!_IsPrintable(Byte)) continue;
-   SendBuf[Idx++]=Byte;
+   if (j++<10) continue;
+   if (!_IsPrintable(Byte)) continue;
+   SendBuf[Idx++] =Byte;
   }
   
-  SendBuf[4]=(Idx-6)%256;
-  SendBuf[5]=(Idx-6)/256;
+  SendBuf[4] =(Idx-6)%256;
+  SendBuf[5] =(Idx-6)/256;
   //crc=crc16(0, SendBuf+1, Idx-1);
-  SendBuf[Idx++]=crc%256;
-  SendBuf[Idx++]=crc/256;
-  SendBuf[Idx++]=ETX;
+  SendBuf[Idx++] =crc%256;
+  SendBuf[Idx++] =crc/256;
+  SendBuf[Idx++] =ETX;
 
-  switch(ActivePort)
+  switch (ActivePort)
   {
     case 0:
-      for(i=0; i<Idx; i++)
+      for (i=0; i<Idx; i++)
         USART_SendData(USART1, SendBuf[i]);
       break;
     case 1:
@@ -1768,40 +1768,40 @@ unsigned char j=0, NumberDone=0, RialPosition=0;
 unsigned char SendBuf[300];
 
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("CREG: 0,1")) return(2);  
+  if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-  for(i=0; (i<50) && (ChargeCode[i]!=0); i++) 
+  for (i=0; (i<50) && (ChargeCode[i]!=0); i++) 
      USART_SendData(USART3,ChargeCode[i]); 
-  if(GetGSMResponse("OK")) return(3);
+  if (GetGSMResponse("OK")) return 3;
     
 	Li=OS_TimeMS;
-  while(1)
+  while (1)
   {
-    if(rxd3_counter>10)
+    if (rxd3_counter>10)
       break;
-  	if(Li>OS_TimeMS) 
-			return(4);
-	  if(OS_TimeMS-Li>=6000) //6 sec
-			return(5);
+  	if (Li>OS_TimeMS) 
+			return 4;
+	  if (OS_TimeMS-Li>=6000) //6 sec
+			return 5;
 		GUI_Delay(1);
   }
-  if(rxd3_counter==0)
-    return(6);
+  if (rxd3_counter==0)
+    return 6;
   
-  SendBuf[0]=STX;
-  SendBuf[1]=11; //Result
-  SendBuf[2]=Config.DeviceID%256;
-  SendBuf[3]=Config.DeviceID/256;
-  SendBuf[4]=0;
-  SendBuf[5]=0;
-  SendBuf[6]=32;
+  SendBuf[0] =STX;
+  SendBuf[1] =11; //Result
+  SendBuf[2] =Config.DeviceID%256;
+  SendBuf[3] =Config.DeviceID/256;
+  SendBuf[4] =0;
+  SendBuf[5] =0;
+  SendBuf[6] =32;
   Idx=7;   
   j=0;
-  while(GSM_GCF(&Byte)&&(Idx<220)) 
+  while (GSM_GCF(&Byte) && (Idx<220)) 
   {  
-    switch(Byte)
+    switch (Byte)
     {
       case '0':
       case '1':
@@ -1813,12 +1813,12 @@ unsigned char SendBuf[300];
       case '7':
       case '8':
       case '9':  
-        if(NumberDone==1)
+        if (NumberDone==1)
         {
           NumberDone=0;
           j=0;
         }  
-        Charge[j++]=Byte;
+        Charge[j++] =Byte;
         break;                 
       case 'R':
       case 'r':
@@ -1826,21 +1826,21 @@ unsigned char SendBuf[300];
         break;  
       case 'I':
       case 'i':
-        if(RialPosition==1)
+        if (RialPosition==1)
           RialPosition=2;
         else
           RialPosition=0;
         break;  
       case 'A':
       case 'a':
-        if(RialPosition==2)
+        if (RialPosition==2)
           RialPosition=3;
         else
           RialPosition=0;
         break;  
       case 'L':
       case 'l':
-        if(RialPosition==3)
+        if (RialPosition==3)
           RialPosition=4;
         else
           RialPosition=0;
@@ -1851,25 +1851,25 @@ unsigned char SendBuf[300];
         break;
     }//switch
 
-    if((RialPosition==4)&&(SIMCharge==0))
+    if ((RialPosition==4) && (SIMCharge==0))
     {
-      Charge[j]=0;
+      Charge[j] =0;
       SIMCharge=atol(Charge);
     }  
-    if(!_IsPrintable(Byte)) continue;
-    SendBuf[Idx++]=Byte;
+    if (!_IsPrintable(Byte)) continue;
+    SendBuf[Idx++] =Byte;
   }
   
-  SendBuf[4]=(Idx-6)%256;
-  SendBuf[5]=(Idx-6)/256;
+  SendBuf[4] =(Idx-6)%256;
+  SendBuf[5] =(Idx-6)/256;
   //crc=crc16(0, SendBuf+1, Idx-1);
-  SendBuf[Idx++]=crc%256;
-  SendBuf[Idx++]=crc/256;
-  SendBuf[Idx++]=ETX;
-  switch(ActivePort)
+  SendBuf[Idx++] =crc%256;
+  SendBuf[Idx++] =crc/256;
+  SendBuf[Idx++] =ETX;
+  switch (ActivePort)
   {
     case 0:
-      for(i=0; i<Idx; i++)
+      for (i=0; i<Idx; i++)
         USART_SendData(USART1, SendBuf[i]);
       break;
     case 1:
@@ -1878,13 +1878,13 @@ unsigned char SendBuf[300];
   }
   OkBip(1);
 	/*
-  if(SIMCharge>10)
+  if (SIMCharge>10)
   {
     SaveFromRamToDF(addIndicators+20+20, 49, ChargeCode);
     SaveFromRamToDF(addIndicators+20+20+50, Idx-7, &SendBuf[7]);
   }
 	*/
-  return(SIMCharge);
+  return SIMCharge;
 
 }
 
@@ -1896,11 +1896,11 @@ unsigned long int Li;
 unsigned int crc=0;
 
   USART_SendStr(USART3, "at\n");
-  if(GetGSMResponse("OK")) return(1);
+  if (GetGSMResponse("OK")) return 1;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
-  if(GetGSMResponse("CREG: 0,1")) return(2);  
+  if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-	switch(Config.SIMCardType)
+	switch (Config.SIMCardType)
   {
     case 2: //MCI
     case 20:
@@ -1914,49 +1914,49 @@ unsigned int crc=0;
       break;			
   }
   
-  for(i=0; (i<12) && (ChargeCode[i]!=0); i++) 
+  for (i=0; (i<12) && (ChargeCode[i]!=0); i++) 
     USART_SendData(USART3,ChargeCode[i]); 
   USART_SendData(USART3,'#'); 
   USART_SendData(USART3,13);   
-  if(GetGSMResponse("OK")) return(3);      
+  if (GetGSMResponse("OK")) return 3;      
 
 	i=OS_TimeMS;
-  while(1)
+  while (1)
   {
-  	if(i>OS_TimeMS) return(0);
-	  if(OS_TimeMS-i>=6000)
-			return(0);
-    if(rxd3_counter!=0) 
+  	if (i>OS_TimeMS) return 0;
+	  if (OS_TimeMS-i>=6000)
+			return 0;
+    if (rxd3_counter!=0) 
       break;
 		GUI_Delay(1);
   }
  
-  SendBuf[0]=STX;
-  SendBuf[1]=11; //Result
-  SendBuf[2]=Config.DeviceID%256;
-  SendBuf[3]=Config.DeviceID/256;
-  SendBuf[4]=0;
-  SendBuf[5]=0;
-  SendBuf[6]=31;
+  SendBuf[0] =STX;
+  SendBuf[1] =11; //Result
+  SendBuf[2] =Config.DeviceID%256;
+  SendBuf[3] =Config.DeviceID/256;
+  SendBuf[4] =0;
+  SendBuf[5] =0;
+  SendBuf[6] =31;
   Idx=7;   
 
-  while(GSM_GCL(&Byte)&&(Idx<220)) 
+  while (GSM_GCL(&Byte) && (Idx<220)) 
   {  
-   if(j++<10) continue;
-   if(!_IsPrintable(Byte)) continue;
-    SendBuf[Idx++]=Byte;
+   if (j++<10) continue;
+   if (!_IsPrintable(Byte)) continue;
+    SendBuf[Idx++] =Byte;
   }
   
-  SendBuf[4]=(Idx-6)%256;
-  SendBuf[5]=(Idx-6)/256;
+  SendBuf[4] =(Idx-6)%256;
+  SendBuf[5] =(Idx-6)/256;
   //crc=crc16(0, SendBuf+1, Idx-1);
-  SendBuf[Idx++]=crc%256;
-  SendBuf[Idx++]=crc/256;
-  SendBuf[Idx++]=ETX;
-  switch(ActivePort)
+  SendBuf[Idx++] =crc%256;
+  SendBuf[Idx++] =crc/256;
+  SendBuf[Idx++] =ETX;
+  switch (ActivePort)
   {
     case 0:
-      for(i=0; i<Idx; i++)
+      for (i=0; i<Idx; i++)
         USART_SendData(USART1, SendBuf[i]);
       break;
     case 1:
@@ -1964,7 +1964,7 @@ unsigned int crc=0;
       break;  
   }
   OkBip(1);
-  return(0);
+  return 0;
 }
 
 //=========================================================================
@@ -1975,11 +1975,11 @@ signed long int N;
 unsigned long int Li;
 char Charge[20];
   
-  switch(background)
+  switch (background)
   {
     case 0:
       EmptyGSMRXBuffer();
-    	switch(Config.SIMCardType)
+    	switch (Config.SIMCardType)
       {
         case 2: //MCI
         case 20:
@@ -1992,11 +1992,11 @@ char Charge[20];
           USART_SendStr(USART3, "atd*141*1#\n");
           break;			
       }
-      if(GetGSMResponse("OK")) return(-1);  
+      if (GetGSMResponse("OK")) return -1;  
       break;
     case 1:  
       EmptyGSMRXBuffer();
-    	switch(Config.SIMCardType)
+    	switch (Config.SIMCardType)
       {
         case 2: //MCI
         case 20:
@@ -2009,36 +2009,36 @@ char Charge[20];
           USART_SendStr(USART3, "atd*141*1#\n");
           break;			
       }
-      if(GetGSMResponse("OK")) return(-1);  
-      if(background==1)
-        return(-1);
+      if (GetGSMResponse("OK")) return -1;  
+      if (background==1)
+        return -1;
       break;
     case 2:  
       break;
   }
   
 	Li=OS_TimeMS;
-  while(background==0)
+  while (background==0)
   {
-    if(rxd3_counter>10)
+    if (rxd3_counter>10)
       break;
-  	if(Li>OS_TimeMS) 
-			return(0);
-	  if(OS_TimeMS-Li>=6000) //6 sec
-			return(0);
+  	if (Li>OS_TimeMS) 
+			return 0;
+	  if (OS_TimeMS-Li>=6000) //6 sec
+			return 0;
     Byte=ScanKeyboard();
-    if(Byte==BLEFT) 
+    if (Byte==BLEFT) 
     {
       EmptyGSMRXBuffer();
-      return(-1);
+      return -1;
     }
   }
   //printf("\n\rReceived: ");/////////////
   j=0;
-  while((GSM_GCF(&Byte))&&(j<20)) 
+  while ((GSM_GCF(&Byte)) && (j<20)) 
   { 
     //printf("%c",Byte);/////////////  
-    switch(Byte)
+    switch (Byte)
       {
         case '0':
         case '1':
@@ -2050,12 +2050,12 @@ char Charge[20];
         case '7':
         case '8':
         case '9':  
-          if(NumberDone==1)
+          if (NumberDone==1)
           {
             NumberDone=0;
             j=0;
           }  
-          Charge[j++]=Byte;
+          Charge[j++] =Byte;
           break;                 
         case 'R':
         case 'r':
@@ -2063,21 +2063,21 @@ char Charge[20];
           break;  
         case 'I':
         case 'i':
-          if(RialPosition==1)
+          if (RialPosition==1)
             RialPosition=2;
           else
             RialPosition=0;
           break;  
         case 'A':
         case 'a':
-          if(RialPosition==2)
+          if (RialPosition==2)
             RialPosition=3;
           else
             RialPosition=0;
           break;  
         case 'L':
         case 'l':
-          if(RialPosition==3)
+          if (RialPosition==3)
             RialPosition=4;
           else
             RialPosition=0;
@@ -2088,14 +2088,14 @@ char Charge[20];
           break;
       }//switch
       
-      if(RialPosition==4)
+      if (RialPosition==4)
       {
-        Charge[j]=0;
+        Charge[j] =0;
         N=atol(Charge);
-        return(N);
+        return N;
       }  
   }//for    
   EmptyGSMRXBuffer();
-  return(-1);
+  return -1;
                       
 }

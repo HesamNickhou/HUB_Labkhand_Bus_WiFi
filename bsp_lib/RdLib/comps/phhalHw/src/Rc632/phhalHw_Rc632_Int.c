@@ -25,7 +25,7 @@
 
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 #include <string.h>
@@ -474,7 +474,7 @@ phStatus_t phhalHw_Rc632_Command_Int(
 
     /* Check if an error occured */
     phhalHw_Rc632_ReadRegister(PHHAL_HW_RC632_REG_PRIMARY_STATUS, &bError);
-    if(bError & 0x4)
+    if (bError & 0x4)
     {
         /* read the error register */
         phhalHw_Rc632_ReadRegister(PHHAL_HW_RC632_REG_ERROR_FLAG, &bError);
@@ -484,7 +484,7 @@ phStatus_t phhalHw_Rc632_Command_Int(
         {
             status = PH_ERR_KEY;
         }*/
-        if(bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
+        if (bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
         {
             status = PH_ERR_INTERNAL_ERROR;
         }
@@ -503,7 +503,7 @@ phStatus_t phhalHw_Rc632_Command_Int(
         {
             status = PH_ERR_PROTOCOL_ERROR;
         }
-        else if(bError & PHHAL_HW_RC632_BIT_CRC_ERR)
+        else if (bError & PHHAL_HW_RC632_BIT_CRC_ERR)
         {
             status = PH_ERR_INTEGRITY_ERROR;
         }
@@ -545,7 +545,7 @@ phStatus_t  phhalHw_Rc632_MfcAuthenticate_Int(phhalHw_Rc632_DataParams_t* pDataP
 
     bTxBuffer[1] = bBlockNo;    /* write block number for authentication */
     pMem = memcpy(&bTxBuffer[2], pUid, 4); /* write 4 bytes card serial number  */
-    if(pMem == NULL)
+    if (pMem == NULL)
     {
         return PH_ADD_COMPCODE(PH_ERR_INTERNAL_ERROR, PH_COMP_HAL);        
     }
@@ -662,7 +662,7 @@ phStatus_t phhalHw_Rc632_WriteData(
     uint16_t     wBytesRead;
     uint8_t *    pTxBufferTmp;
 
-    if(wLength == 0)
+    if (wLength == 0)
     {
         return PH_ADD_COMPCODE(PH_ERR_SUCCESS, PH_COMP_HAL);
     }
@@ -699,7 +699,7 @@ phStatus_t phhalHw_Rc632_ReadData(
     phStatus_t   statusTmp;
     uint16_t     wBytesRead;
     uint8_t *    pTxBufferTmp;
-    if(wLength == 0)
+    if (wLength == 0)
     {
         return PH_ADD_COMPCODE(PH_ERR_SUCCESS, PH_COMP_HAL);
     }

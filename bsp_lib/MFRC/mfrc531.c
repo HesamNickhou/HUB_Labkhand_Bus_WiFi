@@ -225,14 +225,14 @@ u8 Num=0;
 	#else
 	SCK(0);	
 	MOSI(0);
-	for(count=0;count<8;count++)  
+	for (count=0;count<8;count++)  
 	{ 	  
-		if(data&0x80) MOSI(1);  
+		if (data&0x80) MOSI(1);  
 		else          MOSI(0);   
 		data<<=1;    
 		SCK(1); 	 
 		Num<<=1; 	 
-		if(MISO) Num++; 		 
+		if (MISO) Num++; 		 
 		SCK(0);		       
 	}		
   #endif 	
@@ -240,21 +240,21 @@ u8 Num=0;
   #else	
 	SCK=0;	
 	MOSI=0;
-	for(count=0;count<8;count++)  
+	for (count=0;count<8;count++)  
 	{ 	  
-		if(data&0x80)  MOSI=1;  
+		if (data&0x80)  MOSI=1;  
 		else           MOSI=0;   
 		
 		data<<=1;    
 		SCK=1; 	 
 		Num<<=1; 	 
-		if(MISO) Num++; 		 
+		if (MISO) Num++; 		 
 		SCK=0;		       
 	}		 	
   #endif	
 	
 	//Num>>=4;
-	return(Num);   
+	return Num;   
 #endif
 }
 
@@ -262,7 +262,7 @@ u8 Num=0;
 //          G E N E R I C    R E A D
 ///////////////////////////////////////////////////////////////////////////////
 
-#if(ReaderType!=NewRoutine)
+#if (ReaderType!=NewRoutine)
 void WriteRC(unsigned char Address, unsigned char value)
 {
 unsigned char Byte;
@@ -457,24 +457,24 @@ signed char Mf500PcdConfig(void)
 {
    signed char status = MI_RESETERR;
       
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rPCDReset");
    #endif
 
    status = PcdReset(); 
    
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rPCDReset Status %d", status);
    #endif
 
    if (status == MI_OK)
    {
-     #if(DEBUG==1)
+     #if (DEBUG==1)
      printf("\n\rPCDReset OK");
      #endif
      if ((status = PcdBasicRegisterConfiguration()) == MI_OK);
      {
-        #if(DEBUG==1)
+        #if (DEBUG==1)
         printf("\n\rPCDBasicRegisterConfiguration OK");
         #endif
         Mf500PcdWriteAttrib(); // write current modulation parameters
@@ -584,14 +584,14 @@ signed char Mf500PiccCommonRequest(unsigned char req_code,
 {
    char status = MI_OK;
 
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rCommonRequest");
    #endif
     //************* initialize ******************************
    if ((status = Mf500PcdSetDefaultAttrib()) == MI_OK)
    {
    
-      #if(DEBUG==1)
+      #if (DEBUG==1)
       printf("\n\rAttrib OK");
       #endif
       PcdSetTmo(60);
@@ -611,7 +611,7 @@ signed char Mf500PiccCommonRequest(unsigned char req_code,
       if ((status == MI_OK) && (MInfo.nBitsReceived != 16)) // 2 bytes expected
       {
          status = MI_BITCOUNTERR;
-         #if(DEBUG==1)
+         #if (DEBUG==1)
          printf("\n\rMI_BITCOUNTERR");
          #endif
       } 
@@ -621,8 +621,8 @@ signed char Mf500PiccCommonRequest(unsigned char req_code,
       // in any case, copy received data to output - for debugging reasons
       if (MInfo.nBytesReceived >= 2)
       {
-         atq[0]=MRcvBuffer[0];      
-         atq[1]=MRcvBuffer[1];      
+         atq[0] =MRcvBuffer[0];      
+         atq[1] =MRcvBuffer[1];      
       }
       else
       {
@@ -672,10 +672,10 @@ signed char Mf500PiccCascAnticoll (unsigned char select_code,
    {
       PcdSetTmo(106);
       
-      snr_in[0]=snr[0];   
-      snr_in[1]=snr[1];   
-      snr_in[2]=snr[2];   
-      snr_in[3]=snr[3];   
+      snr_in[0] =snr[0];   
+      snr_in[1] =snr[1];   
+      snr_in[2] =snr[2];   
+      snr_in[3] =snr[3];   
       
       WriteRC(RegDecoderControl,0x28); // ZeroAfterColl aktivieren   
       ClearBitMask(RegControl,0x08);    // disable crypto 1 unit
@@ -685,7 +685,7 @@ signed char Mf500PiccCascAnticoll (unsigned char select_code,
 		  k=0;
       while (!complete && (status == MI_OK) )
       {
-         if(++k>1000)
+         if (++k>1000)
            break;
          // if there is a communication problem on the RF interface, bcnt 
          // could be larger than 32 - folowing loops will be defective.
@@ -798,10 +798,10 @@ signed char Mf500PiccCascAnticoll (unsigned char select_code,
    }
    // transfer snr_in to snr - even in case of an error - for 
    // debugging reasons
-   snr[0]=snr_in[0];
-   snr[1]=snr_in[1];
-   snr[2]=snr_in[2];
-   snr[3]=snr_in[3];
+   snr[0] =snr_in[0];
+   snr[1] =snr_in[1];
+   snr[2] =snr_in[2];
+   snr[3] =snr_in[3];
 
    //----------------------Einstellungen aus Initialisierung ruecksetzen 
    ClearBitMask(RegDecoderControl,0x20); // ZeroAfterColl disable
@@ -841,10 +841,10 @@ signed char Mf500PiccCascSelect(unsigned char select_code,
       MSndBuffer[0] = select_code;
       MSndBuffer[1] = 0x70;         // number of bytes send
       
-      MSndBuffer[2]=snr[0];
-      MSndBuffer[3]=snr[1];
-      MSndBuffer[4]=snr[2];
-      MSndBuffer[5]=snr[3];
+      MSndBuffer[2] =snr[0];
+      MSndBuffer[3] =snr[1];
+      MSndBuffer[4] =snr[2];
+      MSndBuffer[5] =snr[3];
 
       MSndBuffer[6] = MSndBuffer[2] 
                       ^ MSndBuffer[3] 
@@ -866,10 +866,10 @@ signed char Mf500PiccCascSelect(unsigned char select_code,
          }
          else
          {
-            MLastSelectedSnr[0]=snr[0];            
-            MLastSelectedSnr[1]=snr[1];            
-            MLastSelectedSnr[2]=snr[2];            
-            MLastSelectedSnr[3]=snr[3];            
+            MLastSelectedSnr[0] =snr[0];            
+            MLastSelectedSnr[1] =snr[1];            
+            MLastSelectedSnr[2] =snr[2];            
+            MLastSelectedSnr[3] =snr[3];            
          }
       }
       // copy received data in any case - for debugging reasons
@@ -904,7 +904,7 @@ signed char Mf500PiccActivateIdle(unsigned char br,
   }
   if (status == MI_OK)
   {
-     if((atq[0] & 0x1F) == 0x00) // check lower 5 bits, for tag-type
+     if ((atq[0] & 0x1F) == 0x00) // check lower 5 bits, for tag-type
                                  // all tags within this 5 bits have to
                                  // provide a bitwise anticollision
      {
@@ -915,7 +915,7 @@ signed char Mf500PiccActivateIdle(unsigned char br,
   {
       //Get UID in 1 - 3 levels (standard, [double], [triple] )
       //-------
-      switch(br)
+      switch (br)
       {
          case 0: cmdASEL = PICC_ANTICOLL1; break;
          case 1: cmdASEL = PICC_ANTICOLL11; break;
@@ -932,7 +932,7 @@ signed char Mf500PiccActivateIdle(unsigned char br,
 		  k=0;
       do
       {
-        if(++k>1000)
+        if (++k>1000)
           break;
         //Select code depends on cascade level
         sel_code   = cmdASEL + (2 * cascade_level);
@@ -952,9 +952,9 @@ signed char Mf500PiccActivateIdle(unsigned char br,
               {
                  //this UID is cascaded, remove the cascaded tag that is
                  //0x88 as first of the 4 byte received
-                 uid[uid_index+0]=uid[uid_index+1];
-                 uid[uid_index+1]=uid[uid_index+2];
-                 uid[uid_index+2]=uid[uid_index+3];
+                 uid[uid_index+0] =uid[uid_index+1];
+                 uid[uid_index+1] =uid[uid_index+2];
+                 uid[uid_index+2] =uid[uid_index+3];
                  uid_index += 3;
                  *uid_len += 3;
               }
@@ -967,7 +967,7 @@ signed char Mf500PiccActivateIdle(unsigned char br,
            }
         }
       }
-      while((status == MI_OK)        // error status
+      while ((status == MI_OK)        // error status
             && (*sak & 0x04)         // no further cascade level
             && (cascade_level < 3)); // highest cascade level is reached
    }
@@ -1021,7 +1021,7 @@ signed char Mf500PiccActivateWakeup(unsigned char br,
    {
       //Get UID in 1 - 3 levels (standard, [double], [triple] )
       //-------
-      switch(br)
+      switch (br)
       {
          case 0: cmdASEL = PICC_ANTICOLL1; break;
          case 1: cmdASEL = PICC_ANTICOLL11; break;
@@ -1042,37 +1042,37 @@ signed char Mf500PiccActivateWakeup(unsigned char br,
       k=0;
       do
       {
-        if(++k>1000)
+        if (++k>1000)
           break;
         sel_code   = cmdASEL + (2 * cascade_level);
         cmdASEL = PICC_ANTICOLL1; // reset anticollistion level for calculation
         //get the next UID part if we need to cascade
-        if((uid_len - uid_index) > 4)
+        if ((uid_len - uid_index) > 4)
         {
           //ok, we need to cascade the UID
-          tmpuid[1]=uid[uid_index+0];
-          tmpuid[2]=uid[uid_index+1];
-          tmpuid[3]=uid[uid_index+2];
+          tmpuid[1] =uid[uid_index+0];
+          tmpuid[2] =uid[uid_index+1];
+          tmpuid[3] =uid[uid_index+2];
           uid_index += 3;
         }
         else
         {
           //ah, how nice. no need to cascade
-          tmpuid[0]=uid[uid_index+0];
-          tmpuid[1]=uid[uid_index+1];
-          tmpuid[2]=uid[uid_index+2];
-          tmpuid[3]=uid[uid_index+3];
+          tmpuid[0] =uid[uid_index+0];
+          tmpuid[1] =uid[uid_index+1];
+          tmpuid[2] =uid[uid_index+2];
+          tmpuid[3] =uid[uid_index+3];
           uid_index += 4;
         }
 
         status = Mf500PiccCascSelect(sel_code, tmpuid, sak);
 
-        if(status == MI_OK)
+        if (status == MI_OK)
         {
           cascade_level++;
         }
       }
-      while((status == MI_OK )    // error occured
+      while ((status == MI_OK )    // error occured
             && (*sak & 0x04)       // no further cascade level
             && ((uid_index + 1) < uid_len) // all bytes of snr sent
             && (cascade_level < 3)); // highest cascade level reached
@@ -1140,8 +1140,8 @@ signed char Mf500PiccAuthE2(   unsigned char auth_mode,   // PICC_AUTHENT1A or P
    FlushFIFO();    // empty FIFO
    ResetInfo(MInfo);
 
-   MSndBuffer[0]=e2addrbuf[0]; // write low and high byte of address
-   MSndBuffer[1]=e2addrbuf[1];
+   MSndBuffer[0] =e2addrbuf[0]; // write low and high byte of address
+   MSndBuffer[1] =e2addrbuf[1];
    MInfo.nBytesToSend   = 2;
     // write load command
    if ((status=PcdSingleResponseCmd(PCD_LOADKEYE2,MSndBuffer,MRcvBuffer,&MInfo)) == MI_OK)
@@ -1188,8 +1188,8 @@ signed char Mf500PiccAuthKey(  unsigned char auth_mode,
    PcdSetTmo(106);
    FlushFIFO();    // empty FIFO
    ResetInfo(MInfo);
-   for(i=0; i<12; i++)         // write 12 bytes of the key
-     MSndBuffer[i]=keys[i];
+   for (i=0; i<12; i++)         // write 12 bytes of the key
+     MSndBuffer[i] =keys[i];
    MInfo.nBytesToSend = 12;
     // write load command
    if ((status=PcdSingleResponseCmd(PCD_LOADKEY,MSndBuffer,MRcvBuffer,&MInfo)) == MI_OK)
@@ -1239,10 +1239,10 @@ char Mf500PiccAuthState(unsigned char auth_mode,
    MSndBuffer[0] = auth_mode;        // write authentication command
 
    MSndBuffer[1] = block;    // write block number for authentication
-   MSndBuffer[2]=snr[0]; // write 4 bytes card serial number 
-   MSndBuffer[3]=snr[1];
-   MSndBuffer[4]=snr[2];
-   MSndBuffer[5]=snr[3];
+   MSndBuffer[2] =snr[0]; // write 4 bytes card serial number 
+   MSndBuffer[3] =snr[1];
+   MSndBuffer[4] =snr[2];
+   MSndBuffer[5] =snr[3];
    ResetInfo(MInfo);
    MInfo.nBytesToSend = 6;
    if ((status = PcdSingleResponseCmd(PCD_AUTHENT1,
@@ -1352,10 +1352,10 @@ signed char Mf500PiccCommonRead(  unsigned char cmd,
           {
              // return data - even if an error occured - for debugging reasons
              if (MInfo.nBytesReceived >= datalen) 
-               for(j=0; j<datalen; j++) data[j]=MRcvBuffer[j];
+               for (j=0; j<datalen; j++) data[j] =MRcvBuffer[j];
              else
              {
-                for(j=0; j<MInfo.nBytesReceived; j++) data[j]=MRcvBuffer[j];
+                for (j=0; j<MInfo.nBytesReceived; j++) data[j] =MRcvBuffer[j];
                 for (i = MInfo.nBytesReceived; i < datalen; i++)
                 {
                    data[i] = 0x00;
@@ -1365,7 +1365,7 @@ signed char Mf500PiccCommonRead(  unsigned char cmd,
              
       }
       else
-         for(j=0; j<datalen; j++) data[j]='0'; // in case of an error initialise 
+         for (j=0; j<datalen; j++) data[j] ='0'; // in case of an error initialise 
                                              // data
    }
    else   // Response Processing
@@ -1375,10 +1375,10 @@ signed char Mf500PiccCommonRead(  unsigned char cmd,
          status = MI_BYTECOUNTERR;
          // return data, even if an error occured
          if (MInfo.nBytesReceived >= datalen)
-            for(j=0; j<datalen; j++) data[j]=MRcvBuffer[j];
+            for (j=0; j<datalen; j++) data[j] =MRcvBuffer[j];
          else
          {
-            for(j=0; j<MInfo.nBytesReceived; j++) data[j]=MRcvBuffer[j];
+            for (j=0; j<MInfo.nBytesReceived; j++) data[j] =MRcvBuffer[j];
             for (i = MInfo.nBytesReceived; i < datalen; i++)
             {
                data[i] = 0x00;
@@ -1387,7 +1387,7 @@ signed char Mf500PiccCommonRead(  unsigned char cmd,
       }
       else
       {
-         for(j=0; j<datalen; j++) data[j]=MRcvBuffer[j];
+         for (j=0; j<datalen; j++) data[j] =MRcvBuffer[j];
       }
    }
    return status; 
@@ -1419,10 +1419,10 @@ signed char Mf500PiccWrite4( unsigned char addr,
    ResetInfo(MInfo);   
    MSndBuffer[0] = PICC_WRITE4;  // Write command code
    MSndBuffer[1] = addr;
-   MSndBuffer[2]=data[0];
-   MSndBuffer[3]=data[1];
-   MSndBuffer[4]=data[2];
-   MSndBuffer[5]=data[3];
+   MSndBuffer[2] =data[0];
+   MSndBuffer[3] =data[1];
+   MSndBuffer[4] =data[2];
+   MSndBuffer[5] =data[3];
    MInfo.nBytesToSend   = 6;
    status = PcdSingleResponseCmd(PCD_TRANSCEIVE,
                          MSndBuffer,
@@ -1454,7 +1454,7 @@ signed char Mf500PiccWrite4( unsigned char addr,
       else                     // 4 bit received
       {
          MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-         switch(MRcvBuffer[0])
+         switch (MRcvBuffer[0])
          {
             case 0x00: 
                status = MI_NOTAUTHERR;
@@ -1522,7 +1522,7 @@ signed char Mf500PiccCommonWrite( unsigned char cmd,
       else                     // 4 bit received
       {
          MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-         switch(MRcvBuffer[0])
+         switch (MRcvBuffer[0])
          {
             case 0x00: 
                status = MI_NOTAUTHERR;
@@ -1540,7 +1540,7 @@ signed char Mf500PiccCommonWrite( unsigned char cmd,
    if ( status == MI_OK)
    {
       ResetInfo(MInfo);   
-      for(j=0; j<datalen; j++) MSndBuffer[j]=data[j]; 
+      for (j=0; j<datalen; j++) MSndBuffer[j] =data[j]; 
       MInfo.nBytesToSend   = datalen;
       status = PcdSingleResponseCmd(PCD_TRANSCEIVE,
                             MSndBuffer,
@@ -1573,7 +1573,7 @@ signed char Mf500PiccCommonWrite( unsigned char cmd,
          else                     // 4 bit received
          {
             MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-            switch(MRcvBuffer[0])
+            switch (MRcvBuffer[0])
             {
                case 0x00: 
                   status = MI_WRITEERR;
@@ -1644,7 +1644,7 @@ char status = MI_OK;
         else                     // 4 bit received
         {
            MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-           switch(MRcvBuffer[0])
+           switch (MRcvBuffer[0])
            {
               case 0x00: 
                  status = MI_NOTAUTHERR;
@@ -1667,10 +1667,10 @@ char status = MI_OK;
         PcdSetTmo(1000);     // long timeout 
 
         ResetInfo(MInfo);   
-        MSndBuffer[0]=value[0];
-        MSndBuffer[1]=value[1];
-        MSndBuffer[2]=value[2];
-        MSndBuffer[3]=value[3];
+        MSndBuffer[0] =value[0];
+        MSndBuffer[1] =value[1];
+        MSndBuffer[2] =value[2];
+        MSndBuffer[3] =value[3];
         MInfo.nBytesToSend   = 4;
         status = PcdSingleResponseCmd(PCD_TRANSCEIVE,
                             MSndBuffer,
@@ -1705,7 +1705,7 @@ char status = MI_OK;
             else                     // 4 bit received
             {
                MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-               switch(MRcvBuffer[0])
+               switch (MRcvBuffer[0])
                {
                   case 0x00: 
                      status = MI_NOTAUTHERR;
@@ -1763,7 +1763,7 @@ char status = MI_OK;
             else                     // 4 bit received
             {
                MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-               switch(MRcvBuffer[0])
+               switch (MRcvBuffer[0])
                {
                   case 0x00: 
                      status = MI_NOTAUTHERR;
@@ -1834,7 +1834,7 @@ signed char Mf500PiccCopyBlock(unsigned char addr,
         else                     // 4 bit received
         {
            MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-           switch(MRcvBuffer[0])
+           switch (MRcvBuffer[0])
            {
               case 0x00: 
                  status = MI_NOTAUTHERR;
@@ -1889,7 +1889,7 @@ signed char Mf500PiccCopyBlock(unsigned char addr,
             else                     // 4 bit received
             {
                MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-               switch(MRcvBuffer[0])
+               switch (MRcvBuffer[0])
                {
                   case 0x00: 
                      status = MI_NOTAUTHERR;
@@ -1958,7 +1958,7 @@ signed char Mf500PiccValueDebit(unsigned char dd_mode,
         else                     // 4 bit received
         {
            MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-           switch(MRcvBuffer[0])
+           switch (MRcvBuffer[0])
            {
               case 0x00: 
                  status = MI_NOTAUTHERR;
@@ -1981,10 +1981,10 @@ signed char Mf500PiccValueDebit(unsigned char dd_mode,
         PcdSetTmo(1000);     // long timeout 
 
         ResetInfo(MInfo);   
-        MSndBuffer[0]=value[0];
-        MSndBuffer[1]=value[1];
-        MSndBuffer[2]=value[2];
-        MSndBuffer[3]=value[3];
+        MSndBuffer[0] =value[0];
+        MSndBuffer[1] =value[1];
+        MSndBuffer[2] =value[2];
+        MSndBuffer[3] =value[3];
         MInfo.nBytesToSend   = 4;
         status = PcdSingleResponseCmd(PCD_TRANSCEIVE,
                             MSndBuffer,
@@ -2016,7 +2016,7 @@ signed char Mf500PiccValueDebit(unsigned char dd_mode,
             else                     // 4 bit received
             {
                MRcvBuffer[0] &= 0x0f; // mask out upper nibble
-               switch(MRcvBuffer[0])
+               switch (MRcvBuffer[0])
                {
                   case 0x00: 
                      status = MI_NOTAUTHERR;
@@ -2102,7 +2102,7 @@ signed char Mf500PcdGetAttrib(unsigned char *FSCImax,
     *DRsupp  = TCLDRMAX;     // max. baudrate PCD --> PICC
     *DREQDS  = 0x00; // different send and receive baudrates are
                      // possible
-    return(MI_OK);
+    return MI_OK;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2134,56 +2134,56 @@ char Mf500PcdWriteAttrib(void)
 {
     char   status = MI_OK;
 
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     printf("\n\r-------------------------");   
     #endif
     // adjust baudrate and pauselength of reader
     WriteRC(RegBPSKDemControl,0x0e);   // RegBPSKDemControl  
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegBPSKDemControl); 
     printf("\n\rRegBPSKDemControl = %d", status);
     #endif
     
     // set reader send baudrate
     WriteRC(RegCoderControl,MDRCfg[MDRI].CoderRate);
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegCoderControl); 
     printf("\n\rRegCoderControl = %d", status);
     #endif
     
     WriteRC(RegModWidth,MDRCfg[MDRI].ModWidth);
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegModWidth); 
     printf("\n\rRegModWidth = %d", status);
     #endif
     
     // set reader receive baudrate
     WriteRC(RegRxControl1,MDSCfg[MDSI].SubCarrierPulses);
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegRxControl1); 
     printf("\n\rRegRxControl1  = %d", status);
     #endif
     
     WriteRC(RegDecoderControl,MDSCfg[MDSI].RxCoding);      
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegDecoderControl); 
     printf("\n\rRegDecoderControl  = %d", status);
     #endif
     
     WriteRC(RegRxThreshold,MDSCfg[MDSI].RxThreshold);
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegRxThreshold); 
     printf("\n\rRegRxThreshold  = %d", status);
     #endif
     WriteRC(RegBPSKDemControl,MDSCfg[MDSI].BPSKDemControl);
     
-    #if(DEBUG==1)
+    #if (DEBUG==1)
     status=ReadRC(RegBPSKDemControl); 
     printf("\n\rRegBPSKDemControl  = %d", status);
     #endif
     
     status = MI_OK;
-    return(status);
+    return status;
 }
  
 //////////////////////////////////////////////////////////////////////
@@ -2263,7 +2263,7 @@ signed char PcdSetTmo(unsigned long tmoLength)
 //      M I F A R E   M O D U L E   R E S E T 
 ///////////////////////////////////////////////////////////////////////
 
-#if(ReaderType!=NewRoutine)
+#if (ReaderType!=NewRoutine)
 
 signed char PcdReset(void)
 {
@@ -2285,7 +2285,7 @@ unsigned int i=0;
 	
 	
 	
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rHReset Done");
    #endif
 
@@ -2295,11 +2295,11 @@ unsigned int i=0;
    // while reset sequence in progress
    while ((ReadRC(RegCommand) & 0x3F))
    {
-     if(++i>7000) 
-       return(MI_INTERFACEERR);
+     if (++i>7000) 
+       return MI_INTERFACEERR;
    }
 
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rCommand Recognized");
    #endif
    
@@ -2337,7 +2337,7 @@ signed char ExchangeByteStream(unsigned char Cmd,
 
    if (send_bytelen > 0)
    {
-      for(j=0; j<send_bytelen; j++) MSndBuffer[j]=send_data[j]; // write n bytes
+      for (j=0; j<send_bytelen; j++) MSndBuffer[j] =send_data[j]; // write n bytes
       MInfo.nBytesToSend = send_bytelen;
       // write load command
       status = PcdSingleResponseCmd(Cmd,
@@ -2348,7 +2348,7 @@ signed char ExchangeByteStream(unsigned char Cmd,
       // copy data to output, even in case of an error
       if (*rec_bytelen)
       {
-        for(j=0; j<*rec_bytelen; j++) rec_data[j]=MRcvBuffer[j];
+        for (j=0; j<*rec_bytelen; j++) rec_data[j] =MRcvBuffer[j];
       }
    }
    else
@@ -2394,9 +2394,9 @@ signed char PcdReadE2(unsigned short startaddr,
                          &MInfo);
    // return data, even in case of an error - for debugging reasons                         
    if (MInfo.nBytesReceived >= length)
-      for(j=0; j<length;j++) data[j]=MRcvBuffer[j]; 
+      for (j=0; j<length;j++) data[j] =MRcvBuffer[j]; 
    else
-      for(j=0; j<MInfo.nBytesReceived;j++) data[j]=MRcvBuffer[j]; 
+      for (j=0; j<MInfo.nBytesReceived;j++) data[j] =MRcvBuffer[j]; 
    return status ;
 }
 
@@ -2416,7 +2416,7 @@ signed char PcdWriteE2(  unsigned int startaddr,
    ResetInfo(MInfo);   
    MSndBuffer[0] = startaddr & 0xFF;
    MSndBuffer[1] = (startaddr >> 8) & 0xFF;
-   for(j=0; j<length;j++) MSndBuffer[j+2]=data[j]; 
+   for (j=0; j<length;j++) MSndBuffer[j+2] =data[j]; 
    MInfo.nBytesToSend   = length + 2;
          
    status = PcdSingleResponseCmd(PCD_WRITEE2,
@@ -2527,15 +2527,15 @@ unsigned long int Li=0;
    // ATTENTION: the guard timer must not expire earlier than 10 ms
    FlushFIFO();            // flush FIFO buffer
 
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rPcdSingleResponseCmd");
    #endif
 
    // wait until e2 programming is finished
 	 k=0;
-   while (((ReadRC(RegSecondaryStatus) & 0x40) == 0)) if(++k>100) break;
+   while (((ReadRC(RegSecondaryStatus) & 0x40) == 0)) if (++k>100) break;
 
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rE2 Done");
    #endif
 
@@ -2554,7 +2554,7 @@ unsigned long int Li=0;
 
    // depending on the command code, appropriate interrupts are enabled (irqEn)
    // and the commit interrupt is choosen (waitFor).
-   switch(cmd)
+   switch (cmd)
    {
       case PCD_IDLE:                   // nothing else required
          irqEn = 0x00;
@@ -2647,7 +2647,7 @@ unsigned long int Li=0;
       for ( cnt = 0;cnt < MpIsrInfo->nBytesToSend;cnt++)
                     {
                        WriteRC(RegFIFOData,MpIsrOut[MpIsrInfo->nBytesSent]);
-                       #if(DEBUG==1)
+                       #if (DEBUG==1)
                        printf("%d ,",MpIsrOut[MpIsrInfo->nBytesSent]);
                        #endif
                        MpIsrInfo->nBytesSent++;
@@ -2664,16 +2664,16 @@ unsigned long int Li=0;
                                          // wait for cmd completion or timeout
       {
         
-        if(++Li>500) //100000
+        if (++Li>500) //100000
         {
           Mf500PcdConfig();
-          //#if(DeviceType==Simorgh)
+          //#if (DeviceType==Simorgh)
           //SaveExtraOP(39);
           //#endif
-          return(MI_NY_IMPLEMENTED);
+          return MI_NY_IMPLEMENTED;
         }
         
-        if(ReadRC(RegPrimaryStatus) & 0x08) // loop while IRQ pending
+        if (ReadRC(RegPrimaryStatus) & 0x08) // loop while IRQ pending
               {
                  //printf("\n\rInt. pending");
                  MpIsrInfo->errFlags = ReadRC(RegErrorFlag) & 0x0F; // save error state
@@ -2692,7 +2692,7 @@ unsigned long int Li=0;
                  //************ LoAlertIRQ ******************
                  if (irqBits & 0x01)    // LoAlert
                  {  
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\rLoAlert");
                     #endif
                     /*
@@ -2707,7 +2707,7 @@ unsigned long int Li=0;
                     for ( cnt = 0;cnt < nbytes;cnt++)
                     {
                        WriteRC(RegFIFOData,MpIsrOut[MpIsrInfo->nBytesSent]);
-                       #if(DEBUG==1)
+                       #if (DEBUG==1)
                        printf("%d,",MpIsrOut[MpIsrInfo->nBytesSent]);
                        #endif
                        MpIsrInfo->nBytesSent++;
@@ -2720,7 +2720,7 @@ unsigned long int Li=0;
                  //************* TxIRQ Handling **************
                  if (irqBits & 0x10)       // TxIRQ
                  {
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\rTxIRQ");
                     #endif
                     WriteRC(RegInterruptRq,0x10);    // reset IRQ bit 
@@ -2734,7 +2734,7 @@ unsigned long int Li=0;
                  //**************** RxIRQ Handling *******************************
                  if (irqBits & 0x08) // RxIRQ - possible End of response processing
                  {
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\rRxIRQ");
                     #endif
                      // no error or collision during
@@ -2760,7 +2760,7 @@ unsigned long int Li=0;
                  if (irqBits & 0x0E) // HiAlert, Idle or valid RxIRQ
                  {
                    
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\rHiAlert");
                     #endif
                     // read some bytes ( length of FIFO queue)              
@@ -2770,7 +2770,7 @@ unsigned long int Li=0;
 									  k=0;
                     do
                     {
-                        if(++k>1000)
+                        if (++k>1000)
                           break;
                         for ( cnt = 0; cnt < nbytes; cnt++)               
                         {
@@ -2799,7 +2799,7 @@ unsigned long int Li=0;
                  //************* additional HiAlertIRQ Handling ***
                  if (irqBits & 0x02)
                  {
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\radditional HiAlertIRQ");
                     #endif
                     // if highAlertIRQ is pending and the receiver is still
@@ -2817,7 +2817,7 @@ unsigned long int Li=0;
                  //************** additional IdleIRQ Handling ******
                  if (irqBits & 0x04)     // Idle IRQ
                  {
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\rIdle IRQ");
                     #endif
                     WriteRC(RegInterruptEn,0x20); // disable Timer IRQ
@@ -2834,14 +2834,14 @@ unsigned long int Li=0;
                  //************* TimerIRQ Handling ***********
                  if (irqBits & 0x20)       // timer IRQ
                  {
-                    #if(DEBUG==1)
+                    #if (DEBUG==1)
                     printf("\n\rtimer IRQ");
                     #endif
                     WriteRC(RegInterruptRq,0x20); // reset IRQ bit 
                     // only if no other error occured
                     if (MpIsrInfo->status == MI_OK)
                     {
-											 if((cmd==PCD_TRANSCEIVE)&&(MpIsrInfo->nBytesToSend==4))//MM
+											 if ((cmd==PCD_TRANSCEIVE) && (MpIsrInfo->nBytesToSend==4))//MM
 											   MpIsrInfo->status = MI_OK;  //ignore error
                        else
 											   MpIsrInfo->status = MI_NOTAGERR; // timeout error
@@ -2850,7 +2850,7 @@ unsigned long int Li=0;
               }
       }//while                                   
       
-   #if(DEBUG==1)
+   #if (DEBUG==1)
    printf("\n\rCurrent Command Status=%d",ReadRC(RegCommand));
       
    printf("\n\rCurrent IRQ Register=%d",ReadRC(RegInterruptRq));
@@ -2862,7 +2862,7 @@ unsigned long int Li=0;
 
    // restore the previous value for the FIFO water level
    WriteRC(RegFIFOLevel, waterLevelBackup);
-      #if(DEBUG==1)
+      #if (DEBUG==1)
          lastBits = ReadRC(RegSecondaryStatus) & 0x07;
          printf("\n\r1>LastBits:%d",lastBits);
       printf("\n\rMpIsrInfo");
@@ -2881,7 +2881,7 @@ unsigned long int Li=0;
       printf("\n\rDisableDF=%d",MpIsrInfo->DisableDF); 
       
       printf("\n\rReceived Data:");
-      for(i=0; i<MpIsrInfo->nBytesReceived; i++)
+      for (i=0; i<MpIsrInfo->nBytesReceived; i++)
         printf("%X", MpIsrIn[i]);
       printf("\n\r////////////////////////");
       #endif
@@ -2946,7 +2946,7 @@ unsigned long int Li=0;
       
       if (!rxMultiple)
          ClearBitMask(RegDecoderControl,0x40);
-   }//if(Status==MI_OK)
+   }//if (Status==MI_OK)
 
    MpIsrInfo = 0;         // reset interface variables for ISR
    MpIsrOut  = 0;
@@ -2972,13 +2972,13 @@ unsigned char status;
 
   // test clock Q calibration - value in the range of 0x46 expected
   WriteRC(RegClockQControl,0x0);
-  #if(DEBUG==1)
+  #if (DEBUG==1)
   status=ReadRC(RegClockQControl); //OK
   printf("\n\rRegClockQControl = %d",status);
   #endif
   
   WriteRC(RegClockQControl,0x40);
-  #if(DEBUG==1)
+  #if (DEBUG==1)
   status=ReadRC(RegClockQControl); //ok
   printf("\n\rRegClockQControl = %d",status);
   #endif
@@ -2988,13 +2988,13 @@ unsigned char status;
                                        // further calibration
   // enable auto power down
   WriteRC(RegRxControl2,0x41);
-  #if(DEBUG==1)
+  #if (DEBUG==1)
   status=ReadRC(RegRxControl2); //ok
   printf("\n\rRegRxControl2 = %d",status);
   #endif
   
   WriteRC(RegIRqPinConfig,0x3); // interrupt active low enable
-  #if(DEBUG==1)
+  #if (DEBUG==1)
   status=ReadRC(RegIRqPinConfig); //ok
   printf("\n\rRegIRqPinConfig = %d",status);
   #endif
@@ -3041,12 +3041,12 @@ unsigned long int Li=0;
    */
    
    //4 Sec
-   if(times==1)
+   if (times==1)
    {
      WriteRC(RegTimerClock,0x12); // TAutoRestart=0,TPrescale=128
      WriteRC(RegTimerReload,207);// TReloadVal = '
    }
-   if(times==2)
+   if (times==2)
    {
      WriteRC(RegTimerClock,0x15); // TAutoRestart=0,TPrescale=128
      WriteRC(RegTimerReload,194);// TReloadVal = '
@@ -3062,7 +3062,7 @@ unsigned long int Li=0;
 
    // wait until e2 programming is finished
 	 k=0;
-   while (((ReadRC(RegSecondaryStatus) & 0x40) == 0)) if(++k>100) break;
+   while (((ReadRC(RegSecondaryStatus) & 0x40) == 0)) if (++k>100) break;
 
    WriteRC(RegCommand,PCD_IDLE); // terminate probably running command
 
@@ -3101,17 +3101,17 @@ unsigned long int Li=0;
       while (1)  // wait for cmd completion or timeout
       {
         /*
-        if(++Li>500) //100000
+        if (++Li>500) //100000
         {
           Mf500PcdConfig();
-          #if(DeviceType==Simorgh)
+          #if (DeviceType==Simorgh)
           SaveExtraOP(39);
           #endif
-          return(MI_NY_IMPLEMENTED);
+          return MI_NY_IMPLEMENTED;
         }
         */
         
-        if(ReadRC(RegPrimaryStatus) & 0x08) // loop while IRQ pending
+        if (ReadRC(RegPrimaryStatus) & 0x08) // loop while IRQ pending
               {
                  MpIsrInfo->errFlags = ReadRC(RegErrorFlag) & 0x0F; // save error state
 
@@ -3151,7 +3151,7 @@ unsigned long int Li=0;
     if (MpIsrInfo->irqSource & 0x20) // if timeout expired - look at old error state
        MpIsrInfo->errFlags |= MpIsrInfo->saveErrorState;
     MpIsrInfo->errFlags &=  validErrorFlags;
-  }//if(Status==MI_OK)
+  }//if (Status==MI_OK)
 
   MpIsrInfo = 0;         // reset interface variables for ISR
   MpIsrOut  = 0;
@@ -3174,7 +3174,7 @@ const int NRSTPD = 5;
 //4 bytes Serial number of card, the 5 bytes is verfiy bytes
 uchar serNum[5];
 
-uchar  writeData[16]={
+uchar  writeData[16] ={
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100};  //initialize to 100 USD
 uchar  moneyConsume = 18 ;  //Deduct 18 USD
 uchar  moneyAdd = 10 ;  //Charge up 10 USD
@@ -3393,7 +3393,7 @@ uchar MFRC522_Check(uint8_t* id)
  //Find cards, return card type
  status = MFRC522_Request(0x52, id); //PICC_CMD_WUPA
 
- if(status == MI_OK) {
+ if (status == MI_OK) {
 		//Card detected
 		//Anti-collision, return card serial number 4 bytes
 		status = MFRC522_Anticoll(id);
@@ -3466,7 +3466,7 @@ uchar MFRC522_ToCard(uchar command, uchar *sendData, uchar sendLen, uchar *backD
     //CommIrqReg[7..0]
     //Set1 TxIRq RxIRq IdleIRq HiAlerIRq LoAlertIRq ErrIRq TimerIRq
     n = Read_MFRC522(CommIrqReg);
-		if((OS_TimeMS-i)>50)
+		if ((OS_TimeMS-i)>50)
 		{
 			i=0;
 			break;
@@ -3479,7 +3479,7 @@ uchar MFRC522_ToCard(uchar command, uchar *sendData, uchar sendLen, uchar *backD
 
     if (i != 0)
   {    
-    if(!(Read_MFRC522(ErrorReg) & 0x1B))	//BufferOvfl Collerr CRCErr ProtecolErr
+    if (!(Read_MFRC522(ErrorReg) & 0x1B))	//BufferOvfl Collerr CRCErr ProtecolErr
     {
       status = MI_OK;
       if (n & irqEn & 0x01)
@@ -3776,14 +3776,14 @@ uchar buff[18];
 
   if (status == MI_OK)
   {
-    buff[0]=value[0];
-    buff[1]=value[1];
-    buff[2]=value[2];
-    buff[3]=value[3];
+    buff[0] =value[0];
+    buff[1] =value[1];
+    buff[2] =value[2];
+    buff[3] =value[3];
     CalulateCRC(buff, 4, &buff[4]);
     status = MFRC522_ToCard(MFRC522_PCD_TRANSCEIVE, buff, 6, buff, &recvBits);
 
-		if(status == MI_NOTAGERR)
+		if (status == MI_NOTAGERR)
 			status = MI_OK;  // no response after 4 byte value -
 		                   // transfer command has to follow
     if ((status == MI_OK))

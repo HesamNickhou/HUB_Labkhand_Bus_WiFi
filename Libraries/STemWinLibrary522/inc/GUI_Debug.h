@@ -107,22 +107,22 @@ Purpose     : Debug macros
   #define GUI_DEBUG_ERROROUT2(s,p0,p1)       GUI_ErrorOut2(s,p0,p1)
   #define GUI_DEBUG_ERROROUT3(s,p0,p1,p2)    GUI_ErrorOut3(s,p0,p1,p2)
   #define GUI_DEBUG_ERROROUT4(s,p0,p1,p2,p3) GUI_ErrorOut4(s,p0,p1,p2,p3)
-  #define GUI_DEBUG_ERROROUT_IF(exp,s)              { if (exp) GUI_DEBUG_ERROROUT(s); }
-  #define GUI_DEBUG_ERROROUT1_IF(exp,s,p0)          { if (exp) GUI_DEBUG_ERROROUT1(s,p0); }
-  #define GUI_DEBUG_ERROROUT2_IF(exp,s,p0,p1)       { if (exp) GUI_DEBUG_ERROROUT2(s,p0,p1); }
-  #define GUI_DEBUG_ERROROUT3_IF(exp,s,p0,p1,p2)    { if (exp) GUI_DEBUG_ERROROUT3(s,p0,p1,p2); }
-  #define GUI_DEBUG_ERROROUT4_IF(exp,s,p0,p1,p2,p3) { if (exp) GUI_DEBUG_ERROROUT4(s,p0,p1,p2,p3); }
+  #define GUI_DEBUG_ERROROUT_if (exp,s)              { if (exp) GUI_DEBUG_ERROROUT(s); }
+  #define GUI_DEBUG_ERROROUT1_if (exp,s,p0)          { if (exp) GUI_DEBUG_ERROROUT1(s,p0); }
+  #define GUI_DEBUG_ERROROUT2_if (exp,s,p0,p1)       { if (exp) GUI_DEBUG_ERROROUT2(s,p0,p1); }
+  #define GUI_DEBUG_ERROROUT3_if (exp,s,p0,p1,p2)    { if (exp) GUI_DEBUG_ERROROUT3(s,p0,p1,p2); }
+  #define GUI_DEBUG_ERROROUT4_if (exp,s,p0,p1,p2,p3) { if (exp) GUI_DEBUG_ERROROUT4(s,p0,p1,p2,p3); }
 #else
   #define GUI_DEBUG_ERROROUT(s)
   #define GUI_DEBUG_ERROROUT1(s,p0)
   #define GUI_DEBUG_ERROROUT2(s,p0,p1)
   #define GUI_DEBUG_ERROROUT3(s,p0,p1,p2)
   #define GUI_DEBUG_ERROROUT4(s,p0,p1,p2,p3)
-  #define GUI_DEBUG_ERROROUT_IF(exp,s)
-  #define GUI_DEBUG_ERROROUT1_IF(exp,s,p0)
-  #define GUI_DEBUG_ERROROUT2_IF(exp,s,p0,p1)
-  #define GUI_DEBUG_ERROROUT3_IF(exp,s,p0,p1,p2)
-  #define GUI_DEBUG_ERROROUT4_IF(exp,s,p0,p1,p2,p3)
+  #define GUI_DEBUG_ERROROUT_if (exp,s)
+  #define GUI_DEBUG_ERROROUT1_if (exp,s,p0)
+  #define GUI_DEBUG_ERROROUT2_if (exp,s,p0,p1)
+  #define GUI_DEBUG_ERROROUT3_if (exp,s,p0,p1,p2)
+  #define GUI_DEBUG_ERROROUT4_if (exp,s,p0,p1,p2,p3)
 #endif
 
 /*******************************************************************
@@ -140,22 +140,22 @@ Purpose     : Debug macros
   #define GUI_DEBUG_WARN2(s,p0,p1)       GUI_Warn2(s,p0,p1)
   #define GUI_DEBUG_WARN3(s,p0,p1,p2)    GUI_Warn3(s,p0,p1,p2)
   #define GUI_DEBUG_WARN4(s,p0,p1,p2,p3) GUI_Warn4(s,p0,p1,p2,p3)
-  #define GUI_DEBUG_WARN_IF(exp,s)                  { if (exp) GUI_DEBUG_WARN(s); }
-  #define GUI_DEBUG_WARN1_IF(exp,s,p0)              { if (exp) GUI_DEBUG_WARN1(s,p0); }
-  #define GUI_DEBUG_WARN2_IF(exp,s,p0,p1)           { if (exp) GUI_DEBUG_WARN2(s,p0,p1); }
-  #define GUI_DEBUG_WARN3_IF(exp,s,p0,p1,p2)        { if (exp) GUI_DEBUG_WARN3(s,p0,p1,p2); }
-  #define GUI_DEBUG_WARN4_IF(exp,s,p0,p1,p2,p3)     { if (exp) GUI_DEBUG_WARN4(s,p0,p1,p2,p3); }
+  #define GUI_DEBUG_WARN_if (exp,s)                  { if (exp) GUI_DEBUG_WARN(s); }
+  #define GUI_DEBUG_WARN1_if (exp,s,p0)              { if (exp) GUI_DEBUG_WARN1(s,p0); }
+  #define GUI_DEBUG_WARN2_if (exp,s,p0,p1)           { if (exp) GUI_DEBUG_WARN2(s,p0,p1); }
+  #define GUI_DEBUG_WARN3_if (exp,s,p0,p1,p2)        { if (exp) GUI_DEBUG_WARN3(s,p0,p1,p2); }
+  #define GUI_DEBUG_WARN4_if (exp,s,p0,p1,p2,p3)     { if (exp) GUI_DEBUG_WARN4(s,p0,p1,p2,p3); }
 #else
   #define GUI_DEBUG_WARN(s)
   #define GUI_DEBUG_WARN1(s,p0)
   #define GUI_DEBUG_WARN2(s,p0,p1)
   #define GUI_DEBUG_WARN3(s,p0,p1,p2)
   #define GUI_DEBUG_WARN4(s,p0,p1,p2,p3)
-  #define GUI_DEBUG_WARN_IF(exp,s)
-  #define GUI_DEBUG_WARN1_IF(exp,s,p0)
-  #define GUI_DEBUG_WARN2_IF(exp,s,p0,p1)
-  #define GUI_DEBUG_WARN3_IF(exp,s,p0,p1,p2)
-  #define GUI_DEBUG_WARN4_IF(exp,s,p0,p1,p2,p3)
+  #define GUI_DEBUG_WARN_if (exp,s)
+  #define GUI_DEBUG_WARN1_if (exp,s,p0)
+  #define GUI_DEBUG_WARN2_if (exp,s,p0,p1)
+  #define GUI_DEBUG_WARN3_if (exp,s,p0,p1,p2)
+  #define GUI_DEBUG_WARN4_if (exp,s,p0,p1,p2,p3)
 #endif
 
 /*******************************************************************
@@ -172,22 +172,22 @@ Purpose     : Debug macros
   #define GUI_DEBUG_LOG2(s,p0,p1)       GUI_Warn2(s,p0,p1)
   #define GUI_DEBUG_LOG3(s,p0,p1,p2)    GUI_Warn3(s,p0,p1,p2)
   #define GUI_DEBUG_LOG4(s,p0,p1,p2,p3) GUI_Warn4(s,p0,p1,p2,p3)
-  #define GUI_DEBUG_LOG_IF(exp,s)                   { if (exp) GUI_DEBUG_LOG(s); }
-  #define GUI_DEBUG_LOG1_IF(exp,s,p0)               { if (exp) GUI_DEBUG_LOG1(s,p0); }
-  #define GUI_DEBUG_LOG2_IF(exp,s,p0,p1)            { if (exp) GUI_DEBUG_LOG2(s,p0,p1); }
-  #define GUI_DEBUG_LOG3_IF(exp,s,p0,p1,p2)         { if (exp) GUI_DEBUG_LOG3(s,p0,p1,p2); }
-  #define GUI_DEBUG_LOG4_IF(exp,s,p0,p1,p2,p3)      { if (exp) GUI_DEBUG_LOG4(s,p0,p1,p2,p3); }
+  #define GUI_DEBUG_LOG_if (exp,s)                   { if (exp) GUI_DEBUG_LOG(s); }
+  #define GUI_DEBUG_LOG1_if (exp,s,p0)               { if (exp) GUI_DEBUG_LOG1(s,p0); }
+  #define GUI_DEBUG_LOG2_if (exp,s,p0,p1)            { if (exp) GUI_DEBUG_LOG2(s,p0,p1); }
+  #define GUI_DEBUG_LOG3_if (exp,s,p0,p1,p2)         { if (exp) GUI_DEBUG_LOG3(s,p0,p1,p2); }
+  #define GUI_DEBUG_LOG4_if (exp,s,p0,p1,p2,p3)      { if (exp) GUI_DEBUG_LOG4(s,p0,p1,p2,p3); }
 #else
   #define GUI_DEBUG_LOG(s)
   #define GUI_DEBUG_LOG1(s,p0)
   #define GUI_DEBUG_LOG2(s,p0,p1)
   #define GUI_DEBUG_LOG3(s,p0,p1,p2)
   #define GUI_DEBUG_LOG4(s,p0,p1,p2,p3)
-  #define GUI_DEBUG_LOG_IF(exp,s)
-  #define GUI_DEBUG_LOG1_IF(exp,s,p0)
-  #define GUI_DEBUG_LOG2_IF(exp,s,p0,p1)
-  #define GUI_DEBUG_LOG3_IF(exp,s,p0,p1,p2)
-  #define GUI_DEBUG_LOG4_IF(exp,s,p0,p1,p2,p3)
+  #define GUI_DEBUG_LOG_if (exp,s)
+  #define GUI_DEBUG_LOG1_if (exp,s,p0)
+  #define GUI_DEBUG_LOG2_if (exp,s,p0,p1)
+  #define GUI_DEBUG_LOG3_if (exp,s,p0,p1,p2)
+  #define GUI_DEBUG_LOG4_if (exp,s,p0,p1,p2,p3)
 #endif
 
 /*******************************************************************

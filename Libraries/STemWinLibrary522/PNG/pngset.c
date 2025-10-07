@@ -172,7 +172,7 @@ png_set_gAMA(png_structp png_ptr, png_infop info_ptr, double file_gamma)
    info_ptr->int_gamma = (int)(gamma*100000.+.5);
 #endif
    info_ptr->valid |= PNG_INFO_gAMA;
-   if(gamma == 0.0)
+   if (gamma == 0.0)
       png_warning(png_ptr, "Setting gamma=0");
 }
 #endif
@@ -208,7 +208,7 @@ png_set_gAMA_fixed(png_structp png_ptr, png_infop info_ptr, png_fixed_point
    info_ptr->int_gamma = gamma;
 #endif
    info_ptr->valid |= PNG_INFO_gAMA;
-   if(gamma == 0)
+   if (gamma == 0)
       png_warning(png_ptr, "Setting gamma=0");
 }
 #endif
@@ -317,21 +317,21 @@ png_set_IHDR(png_structp png_ptr, png_infop info_ptr,
     * 4. The filter_method is 64 and
     * 5. The color_type is RGB or RGBA
     */
-   if((png_ptr->mode&PNG_HAVE_PNG_SIGNATURE)&&png_ptr->mng_features_permitted)
+   if ((png_ptr->mode&PNG_HAVE_PNG_SIGNATURE)&&png_ptr->mng_features_permitted)
       png_warning(png_ptr,"MNG features are not allowed in a PNG datastream");
-   if(filter_type != PNG_FILTER_TYPE_BASE)
+   if (filter_type != PNG_FILTER_TYPE_BASE)
    {
-     if(!((png_ptr->mng_features_permitted & PNG_FLAG_MNG_FILTER_64) &&
+     if (!((png_ptr->mng_features_permitted & PNG_FLAG_MNG_FILTER_64) &&
         (filter_type == PNG_INTRAPIXEL_DIFFERENCING) &&
         ((png_ptr->mode&PNG_HAVE_PNG_SIGNATURE) == 0) &&
         (color_type == PNG_COLOR_TYPE_RGB ||
          color_type == PNG_COLOR_TYPE_RGB_ALPHA)))
         png_error(png_ptr, "Unknown filter method in IHDR");
-     if(png_ptr->mode&PNG_HAVE_PNG_SIGNATURE)
+     if (png_ptr->mode&PNG_HAVE_PNG_SIGNATURE)
         png_warning(png_ptr, "Invalid filter method in IHDR");
    }
 #else
-   if(filter_type != PNG_FILTER_TYPE_BASE)
+   if (filter_type != PNG_FILTER_TYPE_BASE)
       png_error(png_ptr, "Unknown filter method in IHDR");
 #endif
 
@@ -734,7 +734,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
       "text" : (png_const_charp)png_ptr->chunk_name));
 
    if (png_ptr == NULL || info_ptr == NULL || num_text == 0)
-      return(0);
+      return 0;
 
    /* Make sure we have enough space in the "text" array in info_struct
     * to hold all of the incoming text_ptr objects.
@@ -754,7 +754,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
          if (info_ptr->text == NULL)
            {
              png_free(png_ptr, old_text);
-             return(1);
+             return 1;
            }
          png_memcpy(info_ptr->text, old_text, (png_size_t)(old_max *
             png_sizeof(png_text)));
@@ -767,7 +767,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
          info_ptr->text = (png_textp)png_malloc_warn(png_ptr,
             (png_uint_32)(info_ptr->max_text * png_sizeof (png_text)));
          if (info_ptr->text == NULL)
-           return(1);
+           return 1;
 #ifdef PNG_FREE_ME_SUPPORTED
          info_ptr->free_me |= PNG_FREE_TEXT;
 #endif
@@ -786,7 +786,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
 
       key_len = png_strlen(text_ptr[i].key);
 
-      if(text_ptr[i].compression <= 0)
+      if (text_ptr[i].compression <= 0)
       {
         lang_len = 0;
         lang_key_len = 0;
@@ -815,7 +815,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
       {
          text_length = 0;
 #ifdef PNG_iTXt_SUPPORTED
-         if(text_ptr[i].compression > 0)
+         if (text_ptr[i].compression > 0)
             textp->compression = PNG_ITXT_COMPRESSION_NONE;
          else
 #endif
@@ -830,7 +830,7 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
       textp->key = (png_charp)png_malloc_warn(png_ptr,
          (png_uint_32)(key_len + text_length + lang_len + lang_key_len + 4));
       if (textp->key == NULL)
-        return(1);
+        return 1;
       png_debug2(2, "Allocated %lu bytes at %x in png_set_text\n",
          (png_uint_32)(key_len + lang_len + lang_key_len + text_length + 4),
          (int)textp->key);
@@ -858,13 +858,13 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
 #endif
          textp->text=textp->key + key_len + 1;
       }
-      if(text_length)
+      if (text_length)
          png_memcpy(textp->text, text_ptr[i].text,
             (png_size_t)(text_length));
       *(textp->text+text_length) = '\0';
 
 #ifdef PNG_iTXt_SUPPORTED
-      if(textp->compression > 0)
+      if (textp->compression > 0)
       {
          textp->text_length = 0;
          textp->itxt_length = text_length;
@@ -877,11 +877,11 @@ png_set_text_2(png_structp png_ptr, png_infop info_ptr, png_textp text_ptr,
          textp->itxt_length = 0;
 #endif
       }
-      info_ptr->text[info_ptr->num_text]= *textp;
+      info_ptr->text[info_ptr->num_text] = *textp;
       info_ptr->num_text++;
       png_debug1(3, "transferred text chunk %d\n", info_ptr->num_text);
    }
-   return(0);
+   return 0;
 }
 #endif
 
@@ -1049,7 +1049,7 @@ void PNGAPI
 png_set_unknown_chunk_location(png_structp png_ptr, png_infop info_ptr,
    int chunk, int location)
 {
-   if(png_ptr != NULL && info_ptr != NULL && chunk >= 0 && chunk <
+   if (png_ptr != NULL && info_ptr != NULL && chunk >= 0 && chunk <
          (int)info_ptr->unknown_chunks_num)
       info_ptr->unknown_chunks[chunk].location = (png_byte)location;
 }
@@ -1097,12 +1097,12 @@ png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_bytep
        return;
     if (num_chunks == 0)
     {
-      if(keep == PNG_HANDLE_CHUNK_ALWAYS || keep == PNG_HANDLE_CHUNK_IF_SAFE)
+      if (keep == PNG_HANDLE_CHUNK_ALWAYS || keep == PNG_HANDLE_CHUNK_IF_SAFE)
         png_ptr->flags |= PNG_FLAG_KEEP_UNKNOWN_CHUNKS;
       else
         png_ptr->flags &= ~PNG_FLAG_KEEP_UNKNOWN_CHUNKS;
 
-      if(keep == PNG_HANDLE_CHUNK_ALWAYS)
+      if (keep == PNG_HANDLE_CHUNK_ALWAYS)
         png_ptr->flags |= PNG_FLAG_KEEP_UNSAFE_CHUNKS;
       else
         png_ptr->flags &= ~PNG_FLAG_KEEP_UNSAFE_CHUNKS;
@@ -1113,7 +1113,7 @@ png_set_keep_unknown_chunks(png_structp png_ptr, int keep, png_bytep
     old_num_chunks=png_ptr->num_chunk_list;
     new_list=(png_bytep)png_malloc(png_ptr,
        (png_uint_32)(5*(num_chunks+old_num_chunks)));
-    if(png_ptr->chunk_list != NULL)
+    if (png_ptr->chunk_list != NULL)
     {
        png_memcpy(new_list, png_ptr->chunk_list,
           (png_size_t)(5*old_num_chunks));
@@ -1154,10 +1154,10 @@ png_set_rows(png_structp png_ptr, png_infop info_ptr, png_bytepp row_pointers)
    if (png_ptr == NULL || info_ptr == NULL)
       return;
 
-   if(info_ptr->row_pointers && (info_ptr->row_pointers != row_pointers))
+   if (info_ptr->row_pointers && (info_ptr->row_pointers != row_pointers))
       png_free_data(png_ptr, info_ptr, PNG_FREE_ROWS, 0);
    info_ptr->row_pointers = row_pointers;
-   if(row_pointers)
+   if (row_pointers)
       info_ptr->valid |= PNG_INFO_IDAT;
 }
 #endif
@@ -1168,7 +1168,7 @@ png_set_compression_buffer_size(png_structp png_ptr, png_uint_32 size)
 {
     if (png_ptr == NULL)
        return;
-    if(png_ptr->zbuf)
+    if (png_ptr->zbuf)
        png_free(png_ptr, png_ptr->zbuf);
     png_ptr->zbuf_size = (png_size_t)size;
     png_ptr->zbuf = (png_bytep)png_malloc(png_ptr, size);
@@ -1259,7 +1259,7 @@ png_set_user_limits (png_structp png_ptr, png_uint_32 user_width_max,
      * rejected by png_set_IHDR().  To accept any PNG datastream
      * regardless of dimensions, set both limits to 0x7ffffffL.
      */
-    if(png_ptr == NULL) return;
+    if (png_ptr == NULL) return;
     png_ptr->user_width_max = user_width_max;
     png_ptr->user_height_max = user_height_max;
 }

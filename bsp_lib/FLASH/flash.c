@@ -99,9 +99,9 @@ void SPI_Flash_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead)
     SPI2_ReadWriteByte((u8)((ReadAddr)>>16)); 
     SPI2_ReadWriteByte((u8)((ReadAddr)>>8));   
     SPI2_ReadWriteByte((u8)ReadAddr);   
-    for(i=0;i<NumByteToRead;i++)
+    for (i=0;i<NumByteToRead;i++)
 	{ 
-        pBuffer[i]=SPI2_ReadWriteByte(0XFF);  
+        pBuffer[i] =SPI2_ReadWriteByte(0XFF);  
     }
 	SPI_FLASH_CS=1;                           
 }  
@@ -116,9 +116,9 @@ unsigned char SPI_Flash_Write_Page(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
     SPI2_ReadWriteByte((u8)((WriteAddr)>>16)); 
     SPI2_ReadWriteByte((u8)((WriteAddr)>>8));   
     SPI2_ReadWriteByte((u8)WriteAddr);   
-    for(i=0;i<NumByteToWrite;i++) SPI2_ReadWriteByte(pBuffer[i]);
+    for (i=0;i<NumByteToWrite;i++) SPI2_ReadWriteByte(pBuffer[i]);
 	SPI_FLASH_CS=1;                   
-	return(SPI_Flash_Wait_Busy());					  
+	return SPI_Flash_Wait_Busy();					  
 } 
 
 //=============================================================================
@@ -126,18 +126,18 @@ void SPI_Flash_Write_NoCheck(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
 { 			 		 
 	u16 pageremain;	   
 	pageremain=256-WriteAddr%256; 
-	if(NumByteToWrite<=pageremain)pageremain=NumByteToWrite;
-	while(1)
+	if (NumByteToWrite<=pageremain)pageremain=NumByteToWrite;
+	while (1)
 	{	   
 		SPI_Flash_Write_Page(pBuffer,WriteAddr,pageremain);
-		if(NumByteToWrite==pageremain)break;
+		if (NumByteToWrite==pageremain)break;
 	 	else 
 		{
 			pBuffer+=pageremain;
 			WriteAddr+=pageremain;	
 
 			NumByteToWrite-=pageremain;			 
-			if(NumByteToWrite>256)pageremain=256;
+			if (NumByteToWrite>256)pageremain=256;
 			else pageremain=NumByteToWrite; 	  
 		}
 	};	    
@@ -174,10 +174,10 @@ unsigned char Month, Day, Hour, Min;
 	SPI_Flash_Read(SPI_FLASH_BUF,Sector*4096,4096);
 	
 	printf("\n\rFirst:\n\r");
-	for(i=0; i<4096; i++)
+	for (i=0; i<4096; i++)
 	  printf("%X ", SPI_FLASH_BUF[i]);
 
-	for(i=0; i<4096; i+=256)
+	for (i=0; i<4096; i+=256)
 	{
   	printf("\n\rRecords %d:", i);
 		j=i;
@@ -196,30 +196,30 @@ unsigned char Month, Day, Hour, Min;
 
 	SPI_Flash_Read(SPI_FLASH_BUF,Sector*4096,4096);
 	
-	for(i=0; i<Offset; i+=256)
+	for (i=0; i<Offset; i+=256)
 	{
  		//printf("\n\rCheck %d",i);
     crc=crc16(0, SPI_FLASH_BUF+i, 256-6);
 		j=SPI_FLASH_BUF[i+251]; j<<=8;
 		j+=SPI_FLASH_BUF[i+250];
-		if(j!=crc)
+		if (j!=crc)
 		{
   		//printf("\n\rCRC Error: \n\r");
-			//for(j=0; j<256; j++)
+			//for (j=0; j<256; j++)
 			//  printf("%X ", SPI_FLASH_BUF[i+j]);
-			return(1);
+			return 1;
 		}
 	}
 	
-	if(EmptyCheck)
-    for(i=0; i<256; i++)
-	    if(SPI_FLASH_BUF[Offset+i]!=0xFF)
+	if (EmptyCheck)
+    for (i=0; i<256; i++)
+	    if (SPI_FLASH_BUF[Offset+i]!=0xFF)
 	    {
   	    //printf("\n\rEmpty Error");
-		    return(2);
+		    return 2;
 	    }
 		
-	return(0);
+	return 0;
 }
 
 //=============================================================================
@@ -236,46 +236,46 @@ unsigned short i;
 	//printf("\n\rWrite Address: %X",WriteAddr);
 	
 	//Write to new sector then need erase sector
-	if((WriteAddr%4096)==0)
+	if ((WriteAddr%4096)==0)
 	{
 		//printf("\n\r[Erase] Start Sector");
 		SPI_Flash_Erase_Sector(WriteAddr/4096);
 	}
 	else
 	{
-		if(((WriteAddr+256)%4096)==0) 
+		if (((WriteAddr+256)%4096)==0) 
 		{
 			//Now, We must erase next sector 
   		//printf("\n\r[Erase] Next Sector");
-			if((WriteAddr+256) >= addTransactions+0x100000)
+			if ((WriteAddr+256) >= addTransactions+0x100000)
   		  SPI_Flash_Erase_Sector(addTransactions/4096);  //Next record is first position of ring
 			else
   		  SPI_Flash_Erase_Sector((WriteAddr+256)/4096);
 		}
-		if(CheckSector(WriteAddr/4096, WriteAddr%4096, 1))
+		if (CheckSector(WriteAddr/4096, WriteAddr%4096, 1))
 		{
 			RecoverSector(WriteAddr);
-			if(CheckSector(WriteAddr/4096, WriteAddr%4096, 1))
-			  return(1);
+			if (CheckSector(WriteAddr/4096, WriteAddr%4096, 1))
+			  return 1;
 		}
 	}
 	
-	if(SPI_Flash_Write_Page(pBuffer,WriteAddr,256)==1) return(1);  //Error in write
+	if (SPI_Flash_Write_Page(pBuffer,WriteAddr,256)==1) return 1;  //Error in write
 	
 	//Check wroted data
 	SPI_Flash_Read(SPI_FLASH_BUF,WriteAddr,256);
-	for(i=0; i<256; i++)
-	  if(SPI_FLASH_BUF[i]!=pBuffer[i])
+	for (i=0; i<256; i++)
+	  if (SPI_FLASH_BUF[i]!=pBuffer[i])
 			break;
-	if(i<256)
+	if (i<256)
 	{
 		//printf("\n\rCheck Error");
-    return(1);		//Read Error
+    return 1;		//Read Error
 	}
 	//printf("\n\rWrite OK");
-	if(SaveMirror(WriteAddr, pBuffer))
+	if (SaveMirror(WriteAddr, pBuffer))
 		SaveMirrorSector(WriteAddr);
-	return(0);
+	return 0;
 }
 
 //=============================================================================
@@ -285,11 +285,11 @@ unsigned short i, crc;
 	
 	//printf("\n\rRead Address: %X",ReadAddr);
 	
-  if(CheckSector(ReadAddr/4096, ReadAddr%4096, 0))
+  if (CheckSector(ReadAddr/4096, ReadAddr%4096, 0))
 	{
 		RecoverSector(ReadAddr);
-		if(CheckSector(ReadAddr/4096, ReadAddr%4096, 0))
-		  return(1);
+		if (CheckSector(ReadAddr/4096, ReadAddr%4096, 0))
+		  return 1;
 	}
 	
 	//Check wroted data
@@ -298,13 +298,13 @@ unsigned short i, crc;
   crc=crc16(0, pBuffer, 256-6);
   i=pBuffer[251]; i<<=8;
 	i+=pBuffer[250];
-	if(i!=crc)
+	if (i!=crc)
 	{
 		//printf("\n\rCheck Error");
-    return(2);		//Read Error
+    return 2;		//Read Error
 	}
 	//printf("\n\rRead OK");
-	return(0);
+	return 0;
 }
 
 //=============================================================================
@@ -319,40 +319,40 @@ u16 i;
 	secoff=WriteAddr%4096;
 	secremain=4096-secoff;
 
-	if((secoff==0)&&(secpos!=0))
+	if ((secoff==0) && (secpos!=0))
 		SPI_Flash_Erase_Sector(secpos);
 	
-	if(NumByteToWrite<=secremain)secremain=NumByteToWrite;
+	if (NumByteToWrite<=secremain)secremain=NumByteToWrite;
 
-	while(1) 
+	while (1) 
 	{	
 		SPI_Flash_Read(SPI_FLASH_BUF,secpos*4096,4096);
-		for(i=0;i<secremain;i++)
+		for (i=0;i<secremain;i++)
 		{
-			if(SPI_FLASH_BUF[secoff+i]!=0XFF)break;
+			if (SPI_FLASH_BUF[secoff+i]!=0XFF)break;
 		}
-		if(i<secremain)
+		if (i<secremain)
 		{
 			SPI_Flash_Erase_Sector(secpos);
-			for(i=0;i<secremain;i++)	  
+			for (i=0;i<secremain;i++)	  
 			{
-				SPI_FLASH_BUF[i+secoff]=pBuffer[i];	  
+				SPI_FLASH_BUF[i+secoff] =pBuffer[i];	  
 			}
 			SPI_Flash_Write_NoCheck(SPI_FLASH_BUF,secpos*4096,4096);
 
 		}else SPI_Flash_Write_NoCheck(pBuffer,WriteAddr,secremain);
 
 
-		for(i=0; i<secremain; i++)	  
-			SPI_FLASH_BUF[i]=0;	  
+		for (i=0; i<secremain; i++)	  
+			SPI_FLASH_BUF[i] =0;	  
 		SPI_Flash_Read(SPI_FLASH_BUF,WriteAddr,secremain);
-		for(i=0; i<secremain; i++)	  
-		  if(SPI_FLASH_BUF[i]!=pBuffer[i])
+		for (i=0; i<secremain; i++)	  
+		  if (SPI_FLASH_BUF[i]!=pBuffer[i])
 				break;
-    if(i<secremain)
-      return(1);			
+    if (i<secremain)
+      return 1;			
 
-		if(NumByteToWrite==secremain)break;
+		if (NumByteToWrite==secremain)break;
 
 		secpos++;
 		secoff=0;
@@ -360,12 +360,12 @@ u16 i;
    	pBuffer+=secremain;
 		WriteAddr+=secremain;
    	NumByteToWrite-=secremain;
-		if(NumByteToWrite>4096)secremain=4096;
+		if (NumByteToWrite>4096)secremain=4096;
 		else secremain=NumByteToWrite;			
 
 	};	 	 
 
-	return(0);
+	return 0;
 }
 
 //=============================================================================
@@ -402,10 +402,10 @@ unsigned long int i=0;
 	while ((SPI_Flash_ReadSR()&0x01)==0x01)
 	{
 		WDTR;
-		if(++i>10000000)
-			return(1);
+		if (++i>10000000)
+			return 1;
 	}
-	return(0);
+	return 0;
 }  
 
 //=============================================================================

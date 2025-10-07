@@ -82,9 +82,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   case WM_NOTIFY_PARENT:
     Id    = WM_GetId(pMsg->hWinSrc);
     NCode = pMsg->Data.v;
-    switch(Id) {
+    switch (Id) {
     case ID_BUTTON_0: // Notifications sent by 'OK'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
@@ -98,7 +98,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_BUTTON_1: // Notifications sent by 'Cancel'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END
@@ -112,7 +112,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
       }
       break;
     case ID_EDIT_0: // Notifications sent by 'Edit'
-      switch(NCode) {
+      switch (NCode) {
       case WM_NOTIFICATION_CLICKED:
         // USER START (Optionally insert code for reacting on notification message)
         // USER END

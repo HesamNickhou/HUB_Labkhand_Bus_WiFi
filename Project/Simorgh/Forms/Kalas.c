@@ -1,6 +1,6 @@
 #include "config.h"
 
-#if(DeviceType==Basket)
+#if (DeviceType==Basket)
 #include "DIALOG.h"
 #include "futil.h"
 
@@ -67,11 +67,11 @@ unsigned short i, Idx, ID;
 unsigned char j, k;
 char str[40];
 
-  if(0)
+  if (0)
 	{
 		//ShowMessageDlg(mtWarning, "رکوردي وجود ندارد",0);
 		GUI_Delay(2000);
-    return(255);
+    return 255;
 	}
 	//LoadFont("0:fonts/Tahoma20.sif");
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
@@ -79,20 +79,20 @@ char str[40];
   hItem = WM_GetDialogItem(hWin, ID_LISTVIEW_0);
 	i=0;
 	Idx=0;
-	for(i=0; i<30; i++)
+	for (i=0; i<30; i++)
 	{
-		if(Kalas[i].ID==0)
+		if (Kalas[i].ID==0)
 			break;
 		
     LISTVIEW_AddRow(hItem, NULL);
 		
-		switch(Kalas[i].KalaType)
+		switch (Kalas[i].KalaType)
 		{
 			case 0: LISTVIEW_SetItemText(hItem, 0, i, "آزاد"); break;
 			case 1: LISTVIEW_SetItemText(hItem, 0, i, "سهميه اي"); break;
 		}
     
-		switch(Kalas[i].KalaUnit)
+		switch (Kalas[i].KalaUnit)
 		{
 			case 0: LISTVIEW_SetItemText(hItem, 1, i, "کيسه"); break;
 			case 1: LISTVIEW_SetItemText(hItem, 1, i, "کيلو"); break;
@@ -107,7 +107,7 @@ char str[40];
 	}
 	KalaCode=255;
 	HandleForm(hWin, 0);
-	return(KalaCode);
+	return KalaCode;
 }
 #endif
 

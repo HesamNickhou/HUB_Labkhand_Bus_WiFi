@@ -897,11 +897,11 @@ uint8_t CAN_WakeUp(CAN_TypeDef* CANx)
   CANx->MCR &= ~(uint32_t)CAN_MCR_SLEEP;
     
   /* Sleep mode status */
-  while(((CANx->MSR & CAN_MSR_SLAK) == CAN_MSR_SLAK)&&(wait_slak!=0x00))
+  while (((CANx->MSR & CAN_MSR_SLAK) == CAN_MSR_SLAK) && (wait_slak!=0x00))
   {
    wait_slak--;
   }
-  if((CANx->MSR & CAN_MSR_SLAK) != CAN_MSR_SLAK)
+  if ((CANx->MSR & CAN_MSR_SLAK) != CAN_MSR_SLAK)
   {
    /* wake up done : Sleep mode exited */
     wakeupstatus = CAN_WakeUp_Ok;
@@ -1055,7 +1055,7 @@ FlagStatus CAN_GetFlagStatus(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
   assert_param(IS_CAN_GET_FLAG(CAN_FLAG));
   
 
-  if((CAN_FLAG & CAN_FLAGS_ESR) != (uint32_t)RESET)
+  if ((CAN_FLAG & CAN_FLAGS_ESR) != (uint32_t)RESET)
   { 
     /* Check the status of the specified CAN flag */
     if ((CANx->ESR & (CAN_FLAG & 0x000FFFFF)) != (uint32_t)RESET)
@@ -1069,7 +1069,7 @@ FlagStatus CAN_GetFlagStatus(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
       bitstatus = RESET;
     }
   }
-  else if((CAN_FLAG & CAN_FLAGS_MSR) != (uint32_t)RESET)
+  else if ((CAN_FLAG & CAN_FLAGS_MSR) != (uint32_t)RESET)
   { 
     /* Check the status of the specified CAN flag */
     if ((CANx->MSR & (CAN_FLAG & 0x000FFFFF)) != (uint32_t)RESET)
@@ -1083,7 +1083,7 @@ FlagStatus CAN_GetFlagStatus(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
       bitstatus = RESET;
     }
   }
-  else if((CAN_FLAG & CAN_FLAGS_TSR) != (uint32_t)RESET)
+  else if ((CAN_FLAG & CAN_FLAGS_TSR) != (uint32_t)RESET)
   { 
     /* Check the status of the specified CAN flag */
     if ((CANx->TSR & (CAN_FLAG & 0x000FFFFF)) != (uint32_t)RESET)
@@ -1097,7 +1097,7 @@ FlagStatus CAN_GetFlagStatus(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
       bitstatus = RESET;
     }
   }
-  else if((CAN_FLAG & CAN_FLAGS_RF0R) != (uint32_t)RESET)
+  else if ((CAN_FLAG & CAN_FLAGS_RF0R) != (uint32_t)RESET)
   { 
     /* Check the status of the specified CAN flag */
     if ((CANx->RF0R & (CAN_FLAG & 0x000FFFFF)) != (uint32_t)RESET)
@@ -1111,7 +1111,7 @@ FlagStatus CAN_GetFlagStatus(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
       bitstatus = RESET;
     }
   }
-  else /* If(CAN_FLAG & CAN_FLAGS_RF1R != (uint32_t)RESET) */
+  else /* if (CAN_FLAG & CAN_FLAGS_RF1R != (uint32_t)RESET) */
   { 
     /* Check the status of the specified CAN flag */
     if ((uint32_t)(CANx->RF1R & (CAN_FLAG & 0x000FFFFF)) != (uint32_t)RESET)
@@ -1177,7 +1177,7 @@ void CAN_ClearFlag(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
       /* Transmit Flags */
       CANx->TSR = (uint32_t)(flagtmp);
     }
-    else /* If((CAN_FLAG & CAN_FLAGS_MSR)!=(uint32_t)RESET) */
+    else /* if ((CAN_FLAG & CAN_FLAGS_MSR)!=(uint32_t)RESET) */
     {
       /* Operating mode Flags */
       CANx->MSR = (uint32_t)(flagtmp);
@@ -1214,7 +1214,7 @@ ITStatus CAN_GetITStatus(CAN_TypeDef* CANx, uint32_t CAN_IT)
   assert_param(IS_CAN_IT(CAN_IT));
   
   /* check the enable interrupt bit */
- if((CANx->IER & CAN_IT) != RESET)
+ if ((CANx->IER & CAN_IT) != RESET)
  {
    /* in case the Interrupt is enabled, .... */
     switch (CAN_IT)

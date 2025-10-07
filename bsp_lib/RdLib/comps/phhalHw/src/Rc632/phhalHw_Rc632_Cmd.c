@@ -25,7 +25,7 @@
 
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 #include <string.h>
@@ -312,7 +312,7 @@ phStatus_t phhalHw_Rc632_Cmd_CalcCrc(
     {
         status = PH_ERR_KEY;
     }
-    else if(bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
+    else if (bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
     {
         status = PH_ERR_INTERNAL_ERROR;
     }
@@ -331,7 +331,7 @@ phStatus_t phhalHw_Rc632_Cmd_CalcCrc(
     {
         status = PH_ERR_PROTOCOL_ERROR;
     }
-    else if(bError & PHHAL_HW_RC632_BIT_CRC_ERR)
+    else if (bError & PHHAL_HW_RC632_BIT_CRC_ERR)
     {
         status = PH_ERR_INTEGRITY_ERROR;
     }
@@ -567,7 +567,7 @@ phStatus_t phhalHw_Rc632_Cmd_Transmit(
         /* read the error register */
         phhalHw_Rc632_ReadRegister(PHHAL_HW_RC632_REG_ERROR_FLAG, &bError);
 
-        if(bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
+        if (bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
         {
             status = PH_ERR_INTERNAL_ERROR;
         }
@@ -586,7 +586,7 @@ phStatus_t phhalHw_Rc632_Cmd_Transmit(
         {
             status = PH_ERR_PROTOCOL_ERROR;
         }
-        else if(bError & PHHAL_HW_RC632_BIT_CRC_ERR)
+        else if (bError & PHHAL_HW_RC632_BIT_CRC_ERR)
         {
             status = PH_ERR_INTEGRITY_ERROR;
         }
@@ -766,7 +766,7 @@ phStatus_t phhalHw_Rc632_Cmd_Receive(
         /* read the error register */
         phhalHw_Rc632_ReadRegister(PHHAL_HW_RC632_REG_ERROR_FLAG, &bError);
 
-        if(bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
+        if (bError & PHHAL_HW_RC632_BIT_ACCESS_ERR)
         {
             status = PH_ERR_INTERNAL_ERROR;
         }
@@ -780,7 +780,7 @@ phStatus_t phhalHw_Rc632_Cmd_Receive(
         {
             status = PH_ERR_FRAMING_ERROR;
         }
-        else if(bError & PHHAL_HW_RC632_BIT_COLL_ERR)
+        else if (bError & PHHAL_HW_RC632_BIT_COLL_ERR)
         {
             /* No bytes received -> timeout */
             if (wTmpBufferLen == 0)
@@ -794,7 +794,7 @@ phStatus_t phhalHw_Rc632_Cmd_Receive(
 
                 /* Retreive collision position*/
                 phhalHw_Rc632_ReadRegister(PHHAL_HW_RC632_REG_COLL_POS,&bRegister);
-                if(bRegister == 0x0)
+                if (bRegister == 0x0)
                 {
                     wTmpBufferLen = 0;
 
@@ -834,7 +834,7 @@ phStatus_t phhalHw_Rc632_Cmd_Receive(
         {
             status = PH_ERR_PROTOCOL_ERROR;
         }
-        else if(bError & PHHAL_HW_RC632_BIT_CRC_ERR)
+        else if (bError & PHHAL_HW_RC632_BIT_CRC_ERR)
         {
             status = PH_ERR_INTEGRITY_ERROR;
         }

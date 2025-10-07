@@ -1,6 +1,6 @@
 #include "config.h"
 
-#if(DeviceType==Basket)
+#if (DeviceType==Basket)
 #include "DIALOG.h"
 #include "futil.h"
 
@@ -68,11 +68,11 @@ unsigned char j, k;
 unsigned char S[30];
 char str[40];
 
-  if(0)
+  if (0)
 	{
 		//ShowMessageDlg(mtWarning, "رکوردي وجود ندارد",0);
 		GUI_Delay(2000);
-    return(255);
+    return 255;
 	}
 	//LoadFont("0:fonts/Tahoma20.sif");
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
@@ -80,23 +80,23 @@ char str[40];
   hItem = WM_GetDialogItem(hWin, ID_LISTVIEW_0);
 	i=0;
 	Idx=0;
-	for(i=0; i<30; i++)
+	for (i=0; i<30; i++)
 	{
-		if(Series[i].ID==0)
+		if (Series[i].ID==0)
 			break;
-		if(Series[i].KalaCode!=Kalas[KalaIndex].ID)
+		if (Series[i].KalaCode!=Kalas[KalaIndex].ID)
 			continue;
     LISTVIEW_AddRow(hItem, NULL);
-		S[Idx]=i;
-		switch(Series[i].Status)
+		S[Idx] =i;
+		switch (Series[i].Status)
 		{
-	    case 2: for(j=0; j<4; j++) LISTVIEW_SetItemBkColor(hItem, j, Idx, 0, GUI_DARKGRAY); break;
-	    case 3: for(j=0; j<4; j++) LISTVIEW_SetItemBkColor(hItem, j, Idx, 0, GUI_RED); break;
+	    case 2: for (j=0; j<4; j++) LISTVIEW_SetItemBkColor(hItem, j, Idx, 0, GUI_DARKGRAY); break;
+	    case 3: for (j=0; j<4; j++) LISTVIEW_SetItemBkColor(hItem, j, Idx, 0, GUI_RED); break;
 		}		
     sprintf(str, "%d", Series[i].Amount[Person.Members-1]);		
 		LISTVIEW_SetItemText(hItem, 0, Idx, str);
 
-		switch(Kalas[KalaIndex].KalaUnit)
+		switch (Kalas[KalaIndex].KalaUnit)
 		{
 			case 0: LISTVIEW_SetItemText(hItem, 1, Idx, "کيسه"); break;
 			case 1: LISTVIEW_SetItemText(hItem, 1, Idx, "کيلو"); break;
@@ -112,10 +112,10 @@ char str[40];
 	}
 	SahmiyeCode=255;
 	HandleForm(hWin, 0);
-	if(SahmiyeCode==255)
-	  return(255);
+	if (SahmiyeCode==255)
+	  return 255;
 	else
-	  return(S[SahmiyeCode]);
+	  return S[SahmiyeCode];
 }
 #endif
 

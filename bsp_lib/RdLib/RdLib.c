@@ -65,15 +65,15 @@ signed char PcdReset(void)
  GUI_Delay(500);
 
  // while reset sequence in progress
- while((ReadRC(PHHAL_HW_RC632_REG_COMMAND) & 0x3F))
+ while ((ReadRC(PHHAL_HW_RC632_REG_COMMAND) & 0x3F))
    {
-     if(++i>7000) 
-       return(1);
+     if (++i>7000) 
+       return 1;
    }
 
  WriteRC(0x00,0); //denay PageSelect method
 
- if(ReadRC(PHHAL_HW_RC632_REG_COMMAND) != 0x00)
+ if (ReadRC(PHHAL_HW_RC632_REG_COMMAND) != 0x00)
    {          
     status = 250;
    }
@@ -82,7 +82,7 @@ signed char PcdReset(void)
 
  
 
-   return(status);
+   return status;
 }
 
 //===========================================================================
@@ -130,7 +130,7 @@ uint8_t pAtqa[2];
 	
   status = phhalHw_FieldReset(&halReader);
 				
-	return(status);
+	return status;
 	
 }
 
@@ -144,9 +144,9 @@ unsigned int i;
   status=phpalI14443p4_Exchange(&palI14443p4, PH_EXCHANGE_DEFAULT, &bBufferReader[3], ApduLen,
                         (void *)&bBufferReader[0], ResultLen);
 	
-	for(i=0; i<*ResultLen; i++)
-	  Result[i]=ppRxBuffer[0][i];
-	return(status);
+	for (i=0; i<*ResultLen; i++)
+	  Result[i] =ppRxBuffer[0][i];
+	return status;
 }
 
 
@@ -200,8 +200,8 @@ unsigned char phpalI14443p3a_MyActivateCard(
     /* Status check */
     else
     {
-      if(PH_ERR_SUCCESS != status) 
-		    return(0);
+      if (PH_ERR_SUCCESS != status) 
+		    return 0;
     }
 
     /* Go through all cascade levels */
@@ -277,15 +277,15 @@ unsigned char phpalI14443p3a_MyActivateCard(
             }
             else
             {
-              if(PH_ERR_SUCCESS != status) 
-		            return(0);
+              if (PH_ERR_SUCCESS != status) 
+		            return 0;
             }
         }
 
         /* Select cascade level */
         statusTmp=phpalI14443p3a_Select(pDataParams, bCascadeLevel, bUid, &bSak);
-        if(PH_ERR_SUCCESS != statusTmp) 
-	  	    return(0);
+        if (PH_ERR_SUCCESS != statusTmp) 
+	  	    return 0;
 
         /* Cascade Bit is cleared -> no further cascade levels */
         if (!(bSak & 0x04))
@@ -294,20 +294,20 @@ unsigned char phpalI14443p3a_MyActivateCard(
         }
     }
 
-    if(PH_ERR_SUCCESS != status) 
- 	    return(0);
+    if (PH_ERR_SUCCESS != status) 
+ 	    return 0;
     /* Return UID */
     memcpy(pUidOut, pDataParams->abUid, pDataParams->bUidLength);  /* PRQA S 3200 */
     *pLenUidOut = pDataParams->bUidLength;
 		
 	  if ((bSak & 0x20) && (bAtqa[1] & 0x03))
-  		return(CARD_DESFIRE);
+  		return CARD_DESFIRE;
     else if ((bSak & 0x20) && (bAtqa[1] == 0))
-		  return(CARD_MIFAREPLUS);
+		  return CARD_MIFAREPLUS;
     else if (0x08 == (bSak & 0x08))
-		  return(CARD_MIFARECLASSIC);
+		  return CARD_MIFARECLASSIC;
     else
-		  return(CARD_MIFAREUL);
+		  return CARD_MIFAREUL;
 
 }
 
@@ -320,7 +320,7 @@ uint8_t pAtqa[2];
 	
   status = phpalI14443p3a_MyActivateCard(&palI14443p3a, NULL, 0, snr, &bLenUidOut);
 
-  return(status);
+  return status;
 	
   
 	

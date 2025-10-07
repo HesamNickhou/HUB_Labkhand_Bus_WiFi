@@ -34,7 +34,7 @@ extern char CheckReader;
 91  کاربري دربستي
 92  کاربري گردشي
 */
-const TResource Voices[]= 
+const TResource Voices[] = 
 {
 {"01.wav",0,25050},
 {"10.wav",25050,42256},
@@ -73,28 +73,28 @@ unsigned char i=0;
 unsigned char j=0;
 
   *Len=0; 
-  for(i=0; (Voices[i].Title[0]!=0) && (i<200); i++)
+  for (i=0; (Voices[i].Title[0]!=0) && (i<200); i++)
   {
-    for(j=0; j<250; j++)
+    for (j=0; j<250; j++)
     {
-      if(title[j]==0)
+      if (title[j] ==0)
       {
         *Len=Voices[i].Len;
 				*StartAddress=addVoices+Voices[i].StartAddress;
-        return(0);
+        return 0;
       }
-      if(Voices[i].Title[j]!=title[j])
+      if (Voices[i].Title[j]!=title[j])
         break;
     }
   }
 
-  return(1);
+  return 1;
 }
 
 //==============================================================================
 void PlayVoice(const char* FileName)
 {
-const unsigned char chkLIST[]="LIST";
+const unsigned char chkLIST[] ="LIST";
 unsigned int i,j,k;
 unsigned short ByteRead;
 unsigned int StartAddress, Len;
@@ -103,16 +103,16 @@ unsigned short b=0;
 unsigned int TIM6ARRValue = 1088,ReadedSector=0;
 	
 		
-	  if(GetVoiceAddress((char *)FileName, &StartAddress, &Len))
+	  if (GetVoiceAddress((char *)FileName, &StartAddress, &Len))
 			return;
 
 		
 		VOICEEN=1; 
 
     Len+=StartAddress;
-    while(1)
+    while (1)
     {
-			if(FirstSector)
+			if (FirstSector)
 			{
         LoadFromDFToRam(StartAddress, 44, _acBuffer);
 
@@ -145,50 +145,50 @@ unsigned int TIM6ARRValue = 1088,ReadedSector=0;
 				FirstSector=0;
 			}
  			ByteRead=512;
-			if(StartAddress+512>Len)
+			if (StartAddress+512>Len)
   			ByteRead=Len-StartAddress;
       LoadFromDFToRam(StartAddress, ByteRead, _acBuffer);
 
-			for(i=0; i<ByteRead; i++)
-				if(_acBuffer[i]==chkLIST[EndCounter2])
+			for (i=0; i<ByteRead; i++)
+				if (_acBuffer[i] ==chkLIST[EndCounter2])
 				{
-					if(++EndCounter2>=4) ByteRead=i-4;
+					if (++EndCounter2>=4) ByteRead=i-4;
 				}else
 					EndCounter2=0;
 
-			for(i=0; i<ByteRead; i++)
+			for (i=0; i<ByteRead; i++)
 			{
   			DAC_SetChannel2Data(DAC_Align_8b_R, _acBuffer[i]);	
-					//	for(j=1; j<340; j++)
-					for(j=1; j<350; j++)
+					//	for (j=1; j<340; j++)
+					for (j=1; j<350; j++)
 		  __NOP();
 			}
 
 			ReadedSector++;
-			#if(DeviceType==BUSDOOR)
-			if(CheckReader)
+			#if (DeviceType==BUSDOOR)
+			if (CheckReader)
 			{
 				
-				if((ReadedSector%50)==0)
+				if ((ReadedSector%50)==0)
 				{
 					#ifdef WithSAMCARD
 					#ifdef CLRC_CHIP
 					k=ISO14443_SingleTagSelect2(snr);
 					#else
-					if(!ISO14443_SingleTagSelect(snr))
+					if (!ISO14443_SingleTagSelect(snr))
 						k=2;
 					else
 						k=0;
 					#endif
 					
-				  if((k==2)||(k==3)) break;
+				  if ((k==2) || (k==3)) break;
 					#endif
 				}
 			}
 			#endif
 			
 			StartAddress+=ByteRead;
-      if(ByteRead<512)
+      if (ByteRead<512)
         break;
     }
 

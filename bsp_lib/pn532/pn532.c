@@ -163,7 +163,7 @@ int offset, i;
   readdata(pn532_packetbuffer, 12);
 	
 	printf("\n\rVersion");
-for(i=0 ;i<12 ;i++)
+for (i=0 ;i<12 ;i++)
 	  printf("%X ", pn532_packetbuffer[i]);
 	
 	
@@ -338,7 +338,7 @@ int p3offset;
     printf("\n\rP7 GPIO: 0x"); PN532DEBUGPRINT.println(pn532_packetbuffer[p3offset+1], HEX);
     printf("\n\rIO GPIO: 0x"); PN532DEBUGPRINT.println(pn532_packetbuffer[p3offset+2], HEX);
     // Note: You can use the IO GPIO value to detect the serial bus being used
-    switch(pn532_packetbuffer[p3offset+2])
+    switch (pn532_packetbuffer[p3offset+2])
     {
       case 0x00:    // Using UART
         printf("\n\rUsing UART (IO = 0x00)");
@@ -550,7 +550,7 @@ uint8_t i;
       #endif
       return FALSE;
     }
-    if (pn532_packetbuffer[5]==PN532_PN532TOHOST && pn532_packetbuffer[6]==PN532_RESPONSE_INDATAEXCHANGE) {
+    if (pn532_packetbuffer[5] ==PN532_PN532TOHOST && pn532_packetbuffer[6] ==PN532_RESPONSE_INDATAEXCHANGE) {
       if ((pn532_packetbuffer[7] & 0x3f)!=0) {
         #ifdef PN532DEBUG
           printf("\n\rStatus code indicates an error");
@@ -621,7 +621,7 @@ bool inListPassiveTarget() {
       #endif
       return FALSE;
     }
-    if (pn532_packetbuffer[5]==PN532_PN532TOHOST && pn532_packetbuffer[6]==PN532_RESPONSE_INLISTPASSIVETARGET) {
+    if (pn532_packetbuffer[5] ==PN532_PN532TOHOST && pn532_packetbuffer[6] ==PN532_RESPONSE_INLISTPASSIVETARGET) {
       if (pn532_packetbuffer[7] != 1) {
         #ifdef PN532DEBUG
         printf("\n\rUnhandled number of targets inlisted");
@@ -1314,7 +1314,7 @@ uint8_t ntag2xx_WriteNDEFURI (uint8_t uriIdentifier, char * url, uint8_t dataLen
 
   // Write URI (starting at page 7)
   currentPage = 7;
-  while(len)
+  while (len)
   {
     if (len < 4)
     {
@@ -1416,7 +1416,7 @@ bool isready() {
 /**************************************************************************/
 bool waitready(uint16_t timeout) {
   uint16_t timer = 0;
-  while(!isready()) {
+  while (!isready()) {
     if (timeout != 0) {
       timer += 10;
       if (timer > timeout) {

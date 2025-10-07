@@ -108,7 +108,7 @@ u8 SPI2_ReadWriteByte(u8 TxData)
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET)
 		{
 		retry++;
-		if(retry>200)return 0;
+		if (retry>200)return 0;
 		}			  
 	SPI_I2S_SendData(SPI2, TxData);
 	retry=0;
@@ -116,7 +116,7 @@ u8 SPI2_ReadWriteByte(u8 TxData)
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET) 
 		{
 		retry++;
-		if(retry>200)return 0;
+		if (retry>200)return 0;
 		}	  						    
 	return SPI_I2S_ReceiveData(SPI2); 
 }

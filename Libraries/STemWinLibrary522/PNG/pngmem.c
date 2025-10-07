@@ -48,7 +48,7 @@ png_create_struct_2(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr)
      return (png_get_copyright(NULL));
 
 #ifdef PNG_USER_MEM_SUPPORTED
-   if(malloc_fn != NULL)
+   if (malloc_fn != NULL)
    {
       png_struct dummy_struct;
       png_structp png_ptr = &dummy_struct;
@@ -80,7 +80,7 @@ png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
    if (struct_ptr != NULL)
    {
 #ifdef PNG_USER_MEM_SUPPORTED
-      if(free_fn != NULL)
+      if (free_fn != NULL)
       {
          png_struct dummy_struct;
          png_structp png_ptr = &dummy_struct;
@@ -122,7 +122,7 @@ png_malloc(png_structp png_ptr, png_uint_32 size)
       return (NULL);
 
 #ifdef PNG_USER_MEM_SUPPORTED
-   if(png_ptr->malloc_fn != NULL)
+   if (png_ptr->malloc_fn != NULL)
        ret = ((png_voidp)(*(png_ptr->malloc_fn))(png_ptr, (png_size_t)size));
    else
        ret = (png_malloc_default(png_ptr, size));
@@ -171,7 +171,7 @@ png_malloc_default(png_structp png_ptr, png_uint_32 size)
                ret = NULL;
             }
 
-            if(png_ptr->zlib_window_bits > 14)
+            if (png_ptr->zlib_window_bits > 14)
                num_blocks = (int)(1 << (png_ptr->zlib_window_bits - 14));
             else
                num_blocks = 1;
@@ -293,7 +293,7 @@ png_free_default(png_structp png_ptr, png_voidp ptr)
 {
 #endif /* PNG_USER_MEM_SUPPORTED */
 
-   if(png_ptr == NULL) return;
+   if (png_ptr == NULL) return;
 
    if (png_ptr->offset_table != NULL)
    {
@@ -353,7 +353,7 @@ png_create_struct_2(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr)
       return (NULL);
 
 #ifdef PNG_USER_MEM_SUPPORTED
-   if(malloc_fn != NULL)
+   if (malloc_fn != NULL)
    {
       png_struct dummy_struct;
       png_structp png_ptr = &dummy_struct;
@@ -398,7 +398,7 @@ png_destroy_struct_2(png_voidp struct_ptr, png_free_ptr free_fn,
    if (struct_ptr != NULL)
    {
 #ifdef PNG_USER_MEM_SUPPORTED
-      if(free_fn != NULL)
+      if (free_fn != NULL)
       {
          png_struct dummy_struct;
          png_structp png_ptr = &dummy_struct;
@@ -434,7 +434,7 @@ png_malloc(png_structp png_ptr, png_uint_32 size)
    if (png_ptr == NULL || size == 0)
       return (NULL);
 
-   if(png_ptr->malloc_fn != NULL)
+   if (png_ptr->malloc_fn != NULL)
        ret = ((png_voidp)(*(png_ptr->malloc_fn))(png_ptr, (png_size_t)size));
    else
        ret = (png_malloc_default(png_ptr, size));
@@ -456,7 +456,7 @@ png_malloc_default(png_structp png_ptr, png_uint_32 size)
    if (size > (png_uint_32)65536L)
    {
 #ifndef PNG_USER_MEM_SUPPORTED
-      if(png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
+      if (png_ptr->flags&PNG_FLAG_MALLOC_NULL_MEM_OK) == 0)
          png_error(png_ptr, "Cannot Allocate > 64K");
       else
 #endif
@@ -542,13 +542,13 @@ png_malloc_warn(png_structp png_ptr, png_uint_32 size)
 {
    png_voidp ptr;
    png_uint_32 save_flags;
-   if(png_ptr == NULL) return (NULL);
+   if (png_ptr == NULL) return (NULL);
 
    save_flags=png_ptr->flags;
    png_ptr->flags|=PNG_FLAG_MALLOC_NULL_MEM_OK;
    ptr = (png_voidp)png_malloc((png_structp)png_ptr, size);
    png_ptr->flags=save_flags;
-   return(ptr);
+   return ptr;
 }
 #endif
 
@@ -562,7 +562,7 @@ png_memcpy_check (png_structp png_ptr, png_voidp s1, png_voidp s2,
    if ((png_uint_32)size != length)
       png_error(png_ptr,"Overflow in png_memcpy_check.");
 
-   return(png_memcpy (s1, s2, size));
+   return png_memcpy (s1, s2, size);
 }
 
 png_voidp PNGAPI
@@ -587,7 +587,7 @@ void PNGAPI
 png_set_mem_fn(png_structp png_ptr, png_voidp mem_ptr, png_malloc_ptr
   malloc_fn, png_free_ptr free_fn)
 {
-   if(png_ptr != NULL) {
+   if (png_ptr != NULL) {
    png_ptr->mem_ptr = mem_ptr;
    png_ptr->malloc_fn = malloc_fn;
    png_ptr->free_fn = free_fn;
@@ -601,7 +601,7 @@ png_set_mem_fn(png_structp png_ptr, png_voidp mem_ptr, png_malloc_ptr
 png_voidp PNGAPI
 png_get_mem_ptr(png_structp png_ptr)
 {
-   if(png_ptr == NULL) return (NULL);
+   if (png_ptr == NULL) return (NULL);
    return ((png_voidp)png_ptr->mem_ptr);
 }
 #endif /* PNG_USER_MEM_SUPPORTED */

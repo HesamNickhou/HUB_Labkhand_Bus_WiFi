@@ -49,8 +49,8 @@ png_error(png_structp png_ptr, png_const_charp error_message)
            {
               int i;
               for (i=0; i<offset-1; i++)
-                 msg[i]=error_message[i+1];
-              msg[i]='\0';
+                 msg[i] =error_message[i+1];
+              msg[i] ='\0';
               error_message=msg;
            }
            else
@@ -60,8 +60,8 @@ png_error(png_structp png_ptr, png_const_charp error_message)
        {
            if (png_ptr->flags&PNG_FLAG_STRIP_ERROR_TEXT)
            {
-              msg[0]='0';
-              msg[1]='\0';
+              msg[0] ='0';
+              msg[1] ='\0';
               error_message=msg;
            }
        }
@@ -197,9 +197,9 @@ png_default_error(png_structp png_ptr, png_const_charp error_message)
          if (*(error_message+offset) == ' ')
              break;
      }
-     if((offset > 1) && (offset < 15))
+     if ((offset > 1) && (offset < 15))
      {
-       error_number[offset-1]='\0';
+       error_number[offset-1] ='\0';
        fprintf(stderr, "libpng error no. %s: %s\n", error_number,
           error_message+offset);
      }
@@ -250,13 +250,13 @@ png_default_warning(png_structp png_ptr, png_const_charp warning_message)
      char warning_number[16];
      for (offset=0; offset<15; offset++)
      {
-        warning_number[offset]=*(warning_message+offset+1);
+        warning_number[offset] =*(warning_message+offset+1);
         if (*(warning_message+offset) == ' ')
             break;
      }
-     if((offset > 1) && (offset < 15))
+     if ((offset > 1) && (offset < 15))
      {
-       warning_number[offset-1]='\0';
+       warning_number[offset-1] ='\0';
        fprintf(stderr, "libpng warning no. %s: %s\n", warning_number,
           warning_message+offset);
      }
@@ -310,7 +310,7 @@ png_get_error_ptr(png_structp png_ptr)
 void PNGAPI
 png_set_strip_error_numbers(png_structp png_ptr, png_uint_32 strip_mode)
 {
-   if(png_ptr != NULL)
+   if (png_ptr != NULL)
    {
      png_ptr->flags &=
        ((~(PNG_FLAG_STRIP_ERROR_NUMBERS|PNG_FLAG_STRIP_ERROR_TEXT))&strip_mode);

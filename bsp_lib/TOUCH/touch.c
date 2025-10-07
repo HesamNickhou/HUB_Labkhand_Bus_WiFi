@@ -32,9 +32,9 @@ u8 CMD_RDY=0X90;
 void TP_Write_Byte(u8 num)    
 {  
 	u8 count=0;   
-	for(count=0;count<8;count++)  
+	for (count=0;count<8;count++)  
 	{ 	  
-		if(num&0x80)TDIN=1;  
+		if (num&0x80)TDIN=1;  
 		else TDIN=0;   
 		num<<=1;    
 		TCLK=0; 	 
@@ -61,7 +61,7 @@ uint16_t ADS_Read_AD(uint8_t CMD)
   __nop();__nop();
 	__nop();__nop();
 	TCLK=0; 	     	    
-	for(count=0;count<16;count++) 
+	for (count=0;count<16;count++) 
 	{ 				  
 		Num<<=1; 	 
 		TCLK=0;	  	   
@@ -69,11 +69,11 @@ uint16_t ADS_Read_AD(uint8_t CMD)
 		__nop();__nop();
 		TCLK=1;
   	__nop();__nop();
-		if(DOUT)Num++; 		 
+		if (DOUT)Num++; 		 
 	}  	
 	Num>>=4;   	 
 	TCS=1;		  
-	return(Num);    
+	return Num;    
 }
     
  
@@ -83,22 +83,22 @@ u16 TP_Read_XOY(u8 xy)
 	u16 buf[READ_TIMES];
 	u16 sum=0;
 	u16 temp;
-	for(i=0;i<10;i++)buf[i]=ADS_Read_AD(xy);		 		    
-	for(i=0;i<READ_TIMES;i++)buf[i]=ADS_Read_AD(xy);		 		    
-	for(i=0;i<READ_TIMES-1; i++)//ƅѲ
+	for (i=0;i<10;i++)buf[i] =ADS_Read_AD(xy);		 		    
+	for (i=0;i<READ_TIMES;i++)buf[i] =ADS_Read_AD(xy);		 		    
+	for (i=0;i<READ_TIMES-1; i++)//ƅѲ
 	{
-		for(j=i+1;j<READ_TIMES;j++)
+		for (j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])//ʽѲƅ
+			if (buf[i]>buf[j])//ʽѲƅ
 			{
 				temp=buf[i];
-				buf[i]=buf[j];
-				buf[j]=temp;
+				buf[i] =buf[j];
+				buf[j] =temp;
 			}
 		}
 	}	  
 	sum=0;
-	for(i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	return temp;   
 } 
@@ -108,7 +108,7 @@ u8 TP_Read_XY(u16 *x,u16 *y)
 	u16 xtemp,ytemp;			 	 		  
 	xtemp=TP_Read_XOY(CMD_RDX);
 	ytemp=TP_Read_XOY(CMD_RDY);	  												   
-	//if(xtemp<100||ytemp<100)return 0; 
+	//if (xtemp<100||ytemp<100)return 0; 
 	#ifdef Tabriz
 	*x=ytemp;
 	*y=xtemp;
@@ -125,11 +125,11 @@ u8 TP_Read_XY2(u16 *x,u16 *y)
  	u16 x2,y2;
  	u8 flag;    
     flag=TP_Read_XY(&x1,&y1);   
-    if(flag==0)return(0);
+    if (flag==0)return 0;
     flag=TP_Read_XY(&x2,&y2);	   
-    if(flag==0)return(0);   
-    if(((x2<=x1&&x1<x2+ERR_RANGE)||(x1<=x2&&x2<x1+ERR_RANGE))
-    &&((y2<=y1&&y1<y2+ERR_RANGE)||(y1<=y2&&y2<y1+ERR_RANGE)))
+    if (flag==0)return 0;   
+    if (((x2<=x1&&x1<x2+ERR_RANGE) || (x1<=x2&&x2<x1+ERR_RANGE))
+    &&((y2<=y1&&y1<y2+ERR_RANGE) || (y1<=y2&&y2<y1+ERR_RANGE)))
     {
         *x=(x1+x2)/2;
         *y=(y1+y2)/2;
@@ -163,15 +163,15 @@ void TP_Draw_Big_Point(u16 x,u16 y,u16 color)
 
 u8 TP_Scan(u8 tp)
 {			   
-	if(PEN==0)
+	if (PEN==0)
 	{
-		if(tp)TP_Read_XY2(&tp_dev.x,&tp_dev.y);
-		else if(TP_Read_XY2(&tp_dev.x,&tp_dev.y))
+		if (tp)TP_Read_XY2(&tp_dev.x,&tp_dev.y);
+		else if (TP_Read_XY2(&tp_dev.x,&tp_dev.y))
 		{
 	 		tp_dev.x=tp_dev.xfac*tp_dev.x+tp_dev.xoff;
 			tp_dev.y=tp_dev.yfac*tp_dev.y+tp_dev.yoff;  
 	 	} 
-		if((tp_dev.sta&TP_PRES_DOWN)==0)
+		if ((tp_dev.sta&TP_PRES_DOWN)==0)
 		{		 
 			tp_dev.sta=TP_PRES_DOWN|TP_CATH_PRES;  
 			tp_dev.x0=tp_dev.x;
@@ -179,7 +179,7 @@ u8 TP_Scan(u8 tp)
 		}			   
 	}else
 	{
-		if(tp_dev.sta&TP_PRES_DOWN)
+		if (tp_dev.sta&TP_PRES_DOWN)
 		{
 			tp_dev.sta&=~(1<<7);	
 		}else
@@ -207,24 +207,24 @@ uint16_t ADS_Read_XY(uint8_t xy)
 	uint16_t buf[READ_TIMES];
 	uint16_t sum=0;
 	uint16_t temp;
-	for(i=0;i<READ_TIMES;i++)
+	for (i=0;i<READ_TIMES;i++)
 	{				 
-		buf[i]=ADS_Read_AD(xy);	    
+		buf[i] =ADS_Read_AD(xy);	    
 	}				    
-	for(i=0;i<READ_TIMES-1; i++)			//ƅѲ
+	for (i=0;i<READ_TIMES-1; i++)			//ƅѲ
 	{
-		for(j=i+1;j<READ_TIMES;j++)
+		for (j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])				//ʽѲƅ
+			if (buf[i]>buf[j])				//ʽѲƅ
 			{
 				temp=buf[i];
-				buf[i]=buf[j];
-				buf[j]=temp;
+				buf[i] =buf[j];
+				buf[j] =temp;
 			}
 		}
 	}	  
 	sum=0;
-	for(i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	return temp;   
 } 
@@ -240,7 +240,7 @@ uint8_t Read_ADSX(uint16_t *x)
 {
 	uint16_t xtemp;			 	 		  
 	xtemp=ADS_Read_XY(CMD_RDX);	  												   
-	if(xtemp<100)return 0;					//ׁ˽ʧќ
+	if (xtemp<100)return 0;					//ׁ˽ʧќ
 	*x=xtemp;
 
 	return 1;								//ׁ˽ԉ٦
@@ -256,7 +256,7 @@ uint8_t Read_ADSY(uint16_t *y)
 {
 	uint16_t ytemp;			 	 		  
 	ytemp=ADS_Read_XY(CMD_RDY);	  												   
-	if(ytemp<100)return 0;					//ׁ˽ʧќ
+	if (ytemp<100)return 0;					//ׁ˽ʧќ
 	*y=ytemp;
 
 	return 1;								//ׁ˽ԉ٦
@@ -284,67 +284,67 @@ uint8_t Touch_GexX(uint16_t *x,uint8_t ext)
 	u16 sum=0;
 	u16 temp;
 
-	if(ext){
+	if (ext){
 		/*ֈսԥǁдЂ*/
-		while(PEN);
+		while (PEN);
 	}    
 	
-	for(i=0;i<40;i++)
+	for (i=0;i<40;i++)
 		Read_ADSX(&x1);   		 		    
-	for(i=0;i<READ_TIMES;i++)
+	for (i=0;i<READ_TIMES;i++)
 	{
 		Read_ADSX(&x1);   		 		    
-	  buf[i]=x1;
+	  buf[i] =x1;
 	}
-	for(i=0;i<READ_TIMES-1; i++)//ƅѲ
+	for (i=0;i<READ_TIMES-1; i++)//ƅѲ
 	{
-		for(j=i+1;j<READ_TIMES;j++)
+		for (j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])//ʽѲƅ
+			if (buf[i]>buf[j])//ʽѲƅ
 			{
 				temp=buf[i];
-				buf[i]=buf[j];
-				buf[j]=temp;
+				buf[i] =buf[j];
+				buf[j] =temp;
 			}
 		}
 	}	  
 	sum=0;
-	for(i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)	sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)	sum+=buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	x1=temp;   	
 	
 	
 	
-	for(i=0;i<40;i++)
+	for (i=0;i<40;i++)
 		Read_ADSX(&x1);   		 		    
-	for(i=0;i<READ_TIMES;i++)
+	for (i=0;i<READ_TIMES;i++)
 	{
 		Read_ADSX(&x2);   		 		    
-	  buf[i]=x2;
+	  buf[i] =x2;
 	}
-	for(i=0;i<READ_TIMES-1; i++)//ƅѲ
+	for (i=0;i<READ_TIMES-1; i++)//ƅѲ
 	{
-		for(j=i+1;j<READ_TIMES;j++)
+		for (j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])//ʽѲƅ
+			if (buf[i]>buf[j])//ʽѲƅ
 			{
 				temp=buf[i];
-				buf[i]=buf[j];
-				buf[j]=temp;
+				buf[i] =buf[j];
+				buf[j] =temp;
 			}
 		}
 	}	  
 	sum=0;
-	for(i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	x2=temp; 
 
 	
 	/*
     flag=Read_ADSX(&x1);   
-    if(flag==0)return(0);
+    if (flag==0)return 0;
     flag=Read_ADSX(&x2);	   
-    if(flag==0)return(0);  
+    if (flag==0)return 0;  
 	*/
 	
 	
@@ -352,11 +352,11 @@ uint8_t Touch_GexX(uint16_t *x,uint8_t ext)
 	
 	
 	
-	if(ext){
+	if (ext){
 		/*ֈսԥǁ̉ߪ*/
-		while(!(PEN));
+		while (!(PEN));
 	} 
-    if(((x2<=x1&&x1<x2+ERR_RANGE)||(x1<=x2&&x2<x1+ERR_RANGE)))//ǰ۳}ՎӉҹ՚+-50Ś
+    if (((x2<=x1&&x1<x2+ERR_RANGE) || (x1<=x2&&x2<x1+ERR_RANGE)))//ǰ۳}ՎӉҹ՚+-50Ś
     {
         *x=(x1+x2)/2;
 //		Printf("x=0x%x\r\n",*x);
@@ -384,9 +384,9 @@ uint8_t Touch_GexY(uint16_t *y,uint8_t ext)
 	u16 sum=0;
 	u16 temp;
 	
-	if(ext){
+	if (ext){
 		/*ֈսԥǁдЂ*/
-		while(PEN);
+		while (PEN);
 	}   
 	
 	
@@ -395,49 +395,49 @@ uint8_t Touch_GexY(uint16_t *y,uint8_t ext)
 	
 	
 	
-	for(i=0;i<READ_TIMES;i++)
+	for (i=0;i<READ_TIMES;i++)
 	{
 		Read_ADSY(&y1);   		 		    
-	  buf[i]=y1;
+	  buf[i] =y1;
 	}
-	for(i=0;i<READ_TIMES-1; i++)//ƅѲ
+	for (i=0;i<READ_TIMES-1; i++)//ƅѲ
 	{
-		for(j=i+1;j<READ_TIMES;j++)
+		for (j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])//ʽѲƅ
+			if (buf[i]>buf[j])//ʽѲƅ
 			{
 				temp=buf[i];
-				buf[i]=buf[j];
-				buf[j]=temp;
+				buf[i] =buf[j];
+				buf[j] =temp;
 			}
 		}
 	}	  
 	sum=0;
-	for(i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	y1=temp;   	
 	
 	
 	
-	for(i=0;i<READ_TIMES;i++)
+	for (i=0;i<READ_TIMES;i++)
 	{
 		Read_ADSY(&y2);   		 		    
-	  buf[i]=y2;
+	  buf[i] =y2;
 	}
-	for(i=0;i<READ_TIMES-1; i++)//ƅѲ
+	for (i=0;i<READ_TIMES-1; i++)//ƅѲ
 	{
-		for(j=i+1;j<READ_TIMES;j++)
+		for (j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])//ʽѲƅ
+			if (buf[i]>buf[j])//ʽѲƅ
 			{
 				temp=buf[i];
-				buf[i]=buf[j];
-				buf[j]=temp;
+				buf[i] =buf[j];
+				buf[j] =temp;
 			}
 		}
 	}	  
 	sum=0;
-	for(i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
+	for (i=LOST_VAL;i<READ_TIMES-LOST_VAL;i++)sum+=buf[i];
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	y2=temp;   	
 
@@ -445,15 +445,15 @@ uint8_t Touch_GexY(uint16_t *y,uint8_t ext)
    /*	
 	
     flag=Read_ADSY(&y1);   
-    if(flag==0)return(0);
+    if (flag==0)return 0;
     flag=Read_ADSY(&y2);	   
-    if(flag==0)return(0);  
+    if (flag==0)return 0;  
 	*/
-	if(ext){
+	if (ext){
 		/*ֈսԥǁ̉ߪ*/
-		while(!(PEN));
+		while (!(PEN));
 	} 
-    if(((y2<=y1&&y1<y2+ERR_RANGE)||(y1<=y2&&y2<y1+ERR_RANGE)))//ǰ۳}ՎӉҹ՚+-50Ś
+    if (((y2<=y1&&y1<y2+ERR_RANGE) || (y1<=y2&&y2<y1+ERR_RANGE)))//ǰ۳}ՎӉҹ՚+-50Ś
     {
         *y=(y1+y2)/2;
 //		Printf("x=0x%x\r\n",*x);
@@ -471,14 +471,14 @@ uint8_t Touch_GexY(uint16_t *y,uint8_t ext)
 *********************************************************************************************************/
 void Touch_GetXY(uint16_t *x,uint16_t* y,uint8_t ext)
 {
-	if(ext){
-		while(PEN) WDTR;
+	if (ext){
+		while (PEN) WDTR;
 	}
 	Touch_GexX(y,0); /////////////////////////////////////////////////////
 	Touch_GexY(x,0);
-	if(ext){
+	if (ext){
 		
-		while(!(PEN)) WDTR;
+		while (!(PEN)) WDTR;
 	}	
 }
 
@@ -520,22 +520,22 @@ void TP_Adjust(void)
 	u32 tem1,tem2;
 	float fac; 
 
-	while(1){
+	while (1){
 								 
-		for(i=0;i<4;i++){
+		for (i=0;i<4;i++){
 		
 			GUI_Clear();
-			if(i==0){
+			if (i==0){
 				Drow_Touch_Point(20,20);
 				Touch_GetXY(&pos_temp[0][0],&pos_temp[0][1],1);
 				//printf("\n\rX1:%d , Y1:%d",pos_temp[0][0],pos_temp[0][1]);
 			}
-			else if(i == 1){
+			else if (i == 1){
 				Drow_Touch_Point(460,20);	
 				Touch_GetXY(&pos_temp[1][0],&pos_temp[1][1],1);	
 				//printf("\n\rX1:%d , Y1:%d",pos_temp[1][0],pos_temp[1][1]);
 			}
-			else if(i == 2){
+			else if (i == 2){
 				Drow_Touch_Point(20,246-10);
 				Touch_GetXY(&pos_temp[2][0],&pos_temp[2][1],1);	
 				//printf("\n\rX1:%d , Y1:%d",pos_temp[2][0],pos_temp[2][1]);
@@ -560,7 +560,7 @@ void TP_Adjust(void)
 			tem2*=tem2;
 			d2=sqrt(tem1+tem2);											//փս3,4քߠk
 			fac=(float)d1/d2;
-			if(fac<0.90||fac>1.10||d1==0||d2==0)						//һۏٱ
+			if (fac<0.90||fac>1.10||d1==0||d2==0)						//һۏٱ
 			{
 				//continue;
 			}
@@ -576,7 +576,7 @@ void TP_Adjust(void)
 			tem2*=tem2;
 			d2=sqrt(tem1+tem2);											//փս2,4քߠk
 			fac=(float)d1/d2;
-			if(fac<0.90||fac>1.10)										//һۏٱ
+			if (fac<0.90||fac>1.10)										//һۏٱ
 			{
 				//continue;
 			}
@@ -595,7 +595,7 @@ void TP_Adjust(void)
 			tem2*=tem2;
 			d2=sqrt(tem1+tem2);										//փս2,3քߠk
 			fac=(float)d1/d2;
-			if(fac<0.90||fac>1.10)//һۏٱ
+			if (fac<0.90||fac>1.10)//һۏٱ
 			{
 				//continue;
 			}
@@ -621,20 +621,20 @@ void TP_Adjust(void)
 	u32 tem1,tem2;
 	float fac; 
 
-	while(1){
+	while (1){
 								 
-		for(i=0;i<4;i++){
+		for (i=0;i<4;i++){
 		
 			GUI_Clear();
-			if(i==0){
+			if (i==0){
 				Drow_Touch_Point(20,20);
 				Touch_GetXY(&pos_temp[0][0],&pos_temp[0][1],1);
 			}
-			else if(i == 1){
+			else if (i == 1){
 				Drow_Touch_Point(460,20);	
 				Touch_GetXY(&pos_temp[1][0],&pos_temp[1][1],1);	
 			}
-			else if(i == 2){
+			else if (i == 2){
 				Drow_Touch_Point(20,252);
 				Touch_GetXY(&pos_temp[2][0],&pos_temp[2][1],1);	
 			}
@@ -657,7 +657,7 @@ void TP_Adjust(void)
 			tem2*=tem2;
 			d2=sqrt(tem1+tem2);											//փս3,4քߠk
 			fac=(float)d1/d2;
-			if(fac<0.95||fac>1.05||d1==0||d2==0)						//һۏٱ
+			if (fac<0.95||fac>1.05||d1==0||d2==0)						//һۏٱ
 			{
 				//continue;
 			}
@@ -673,7 +673,7 @@ void TP_Adjust(void)
 			tem2*=tem2;
 			d2=sqrt(tem1+tem2);											//փս2,4քߠk
 			fac=(float)d1/d2;
-			if(fac<0.95||fac>1.05)										//һۏٱ
+			if (fac<0.95||fac>1.05)										//һۏٱ
 			{
 				//continue;
 			}
@@ -692,7 +692,7 @@ void TP_Adjust(void)
 			tem2*=tem2;
 			d2=sqrt(tem1+tem2);										//փս2,3քߠk
 			fac=(float)d1/d2;
-			if(fac<0.95||fac>1.05)//һۏٱ
+			if (fac<0.95||fac>1.05)//һۏٱ
 			{
 				//continue;
 			}
@@ -744,7 +744,7 @@ u8 TP_Init(void)
  	//AT24CXX_Init(); 
   //TP_Adjust();   
 	/*
-	if(TP_Get_Adjdata())return 0; 
+	if (TP_Get_Adjdata())return 0; 
 	else			   
 	{ 										    
 	  TP_Adjust();   

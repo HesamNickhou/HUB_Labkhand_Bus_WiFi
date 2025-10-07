@@ -11,8 +11,8 @@ int tempo = 300;
 void delayMicroseconds(int d)
 {
 unsigned int i, j;
-  for(i=0; i<d; i++)	
-	  for(j=0; j<2; j++) __NOP();
+  for (i=0; i<d; i++)	
+	  for (j=0; j<2; j++) __NOP();
 }
 
 void playTone(int tone, int duration) {
@@ -71,7 +71,7 @@ U32 i;
   #ifdef Torgheh
 	ShiftChanged();
 	#endif
-  for(i=0;i<delay*30;i++)
+  for (i=0;i<delay*30;i++)
   {
     __NOP();
   }
@@ -81,29 +81,29 @@ void Play_Bizzer(unsigned char type)
 {
 U16 i;
 	
-    for(i=0;i<200;i++)
+    for (i=0;i<200;i++)
     {
       BUZZER=1;
       Bizzer_delay(80);
       BUZZER=0;
       Bizzer_delay(20);
     }
-    for(i=0;i<200;i++)
+    for (i=0;i<200;i++)
     {
       BUZZER=1;
       Bizzer_delay(40);
       BUZZER=0;
       Bizzer_delay(5);
     }
-		if(type==2) return;
-    for(i=0;i<200;i++)
+		if (type==2) return;
+    for (i=0;i<200;i++)
     {
       BUZZER=1;
       Bizzer_delay(40);
       BUZZER=0;
       Bizzer_delay(40);
     }
-    for(i=0;i<200;i++)
+    for (i=0;i<200;i++)
     {
       BUZZER=1;
       Bizzer_delay(100);
@@ -129,7 +129,7 @@ void OkBip(unsigned char LongBip) {
 unsigned char i;
 unsigned int Fr;
 	
-  switch(LongBip)
+  switch (LongBip)
   {
 		case 1:
 			Play_Bizzer(1);
@@ -162,7 +162,7 @@ unsigned int Fr;
 void ErrorBip(unsigned char LongBip) {
 unsigned int i;
 
-  for(i=0;i<400;i++)
+  for (i=0;i<400;i++)
   {
     BUZZER=1;
     Bizzer_delay(200);
@@ -175,7 +175,7 @@ unsigned int i;
 void PlayBip(unsigned char Type) {
 unsigned int i;
 
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
   {
     BUZZER=1;
     Bizzer_delay(100);
@@ -189,7 +189,7 @@ void keyboard_Beep(void)
 {
 unsigned short i;
 	
-  for(i=0;i<100;i++)
+  for (i=0;i<100;i++)
   {
     BUZZER=1;
     Bizzer_delay(50);

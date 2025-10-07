@@ -70,7 +70,7 @@ Purpose     : Display controller initialization
 //
 // Define the available number of bytes available for the GUI
 //
-#if(DeviceType==Simorgh)
+#if (DeviceType==Simorgh)
 #ifdef Simorgh50N
 #define GUI_NUMBYTES  (1024) *  8   // x KByte
 #endif

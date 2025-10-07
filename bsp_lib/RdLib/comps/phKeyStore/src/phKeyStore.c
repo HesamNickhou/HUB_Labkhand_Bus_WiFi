@@ -24,7 +24,7 @@
 */
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 #include "phKeyStore_Int.h"

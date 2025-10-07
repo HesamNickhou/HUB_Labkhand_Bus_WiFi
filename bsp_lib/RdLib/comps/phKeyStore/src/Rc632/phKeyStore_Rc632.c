@@ -24,7 +24,7 @@
 */
 #include <config.h>
 
-#if(ReaderType==NewRoutine)
+#if (ReaderType==NewRoutine)
 
 #include <rdlib/types/RdLib.h>
 
@@ -98,7 +98,7 @@ phStatus_t phKeyStore_Rc632_SetKeyAtPos(
     }
 
     /* Retrieve Key type */
-    switch(wKeyType)
+    switch (wKeyType)
     {
         /* MIFARE keys are the only supported keys */
     case PH_KEYSTORE_KEY_TYPE_MIFARE:
