@@ -73,7 +73,7 @@ unsigned char i=0;
 unsigned char j=0;
 
   *Len=0; 
-  for (i=0; (Voices[i].Title[0]!=0) && (i<200); i++)
+  for (i=0; (Voices[i].Title[0] != 0) && (i<200); i++)
   {
     for (j=0; j<250; j++)
     {
@@ -83,7 +83,7 @@ unsigned char j=0;
 				*StartAddress=addVoices+Voices[i].StartAddress;
         return 0;
       }
-      if (Voices[i].Title[j]!=title[j])
+      if (Voices[i].Title[j] != title[j])
         break;
     }
   }

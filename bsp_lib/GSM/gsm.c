@@ -257,7 +257,7 @@ void USART3_IRQHandler(void) {
           *GSMMessages[i].Received=1;
 					//printf("\n\rMessage: %s ",GSMMessages[i].Message);
           GSMMessages[i].CurLoc=0;
-					if (i!=13)
+					if (i != 13)
 					{
             rxd3_rd_index=rxd3_counter=rxd3_wr_index=0;
 					}
@@ -290,7 +290,7 @@ int i;
 			return 0;
 	  if (OS_TimeMS-i>=6000) //6 sec
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
 		WDTR;
@@ -313,7 +313,7 @@ int i;
 			return 0;
 	  if (OS_TimeMS-i>=1000) //6 sec
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
 		WDTR;
@@ -335,7 +335,7 @@ unsigned int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=200)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
 		WDTR;
@@ -357,7 +357,7 @@ unsigned int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=50) //50 msec
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		WDTR;
 	}		
@@ -385,7 +385,7 @@ unsigned char ReceiveBuf[101];
 	{
     if (GSM_GCL(&Byte))
   	{
-      if ((Byte!=13) && (Byte!=10))
+      if ((Byte != 13) && (Byte != 10))
 		    ReceiveBuf[ReceiveBufLen++] =Byte;  
     }else 
       return 1;
@@ -442,11 +442,11 @@ void USART_SendStr(USART_TypeDef* USARTx, char *str)
 int i=0;
 
 	  //printf("Send:");////////////////////////////////
-    //while (str[i]!=0)
+    //while (str[i] != 0)
     //  USART_SendData(USART1, str[i++]);
 		
   	i=0;
-    while (str[i]!=0)
+    while (str[i] != 0)
     {
       // Send character
       switch (str[i])
@@ -524,7 +524,7 @@ unsigned char Idx, i=0,Byte;
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
   if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-  for (i=0; (i<50) && (ChargeCode[i]!=0); i++) 
+  for (i=0; (i<50) && (ChargeCode[i] != 0); i++) 
      USART_SendData(USART3,ChargeCode[i]);
   USART_SendData(USART3,'#'); 
   USART_SendData(USART3,13);  
@@ -539,7 +539,7 @@ unsigned char Idx, i=0,Byte;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=6000)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
   }
@@ -683,11 +683,11 @@ unsigned char SendConfig=0;
   //printf("\n\rParameter5: %s",Parameters[4]);
   
   
-  for (i=0; (i<6) && (Password[i]!=0); i++)
-    if (Password[i]!=Config.MainPassword[i])
+  for (i=0; (i<6) && (Password[i] != 0); i++)
+    if (Password[i] != Config.MainPassword[i])
       break;
   
-  if ((i<6) || (Password[6]!=0))
+  if ((i<6) || (Password[6] != 0))
   {
     sprintf(str,"Incorrect Password"); 
     str[160] =0;
@@ -698,7 +698,7 @@ unsigned char SendConfig=0;
   
   if (!strcmp("001",CommandNo))  //Change Password
   {
-    for (i=0; (i<20) && (Parameters[0][i]!=0); i++);
+    for (i=0; (i<20) && (Parameters[0][i] != 0); i++);
     if (i==6)
     {
       strcpy(Config.MainPassword, Parameters[0]);
@@ -720,7 +720,7 @@ unsigned char SendConfig=0;
 
   if (!strcmp("088",CommandNo))
   {
-    if ((Parameters[0][0]!=0) && (Parameters[0][0]>='0') && (Parameters[0][0]<='9'))
+    if ((Parameters[0][0] != 0) && (Parameters[0][0]>='0') && (Parameters[0][0]<='9'))
       strcpy(Config.HostIP, Parameters[0]);
     
     SaveConfiguration();
@@ -731,7 +731,7 @@ unsigned char SendConfig=0;
 
   if (!strcmp("020",CommandNo))
   {
-    if ((Parameters[0][0]!=0) && (Parameters[0][0]>='0') && (Parameters[0][0]<='9'))
+    if ((Parameters[0][0] != 0) && (Parameters[0][0]>='0') && (Parameters[0][0]<='9'))
       Config.DeviceID=atoi(Parameters[0]);
     
     SaveConfiguration();
@@ -804,13 +804,13 @@ int i=0;
   USART_SendStr(USART3, "at+cipsend=");
   
   ch=(len/1000)%10;
-  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
+  if (ch != 0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   ch=(len/100)%10;
-  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
+  if (ch != 0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   ch=(len/10)%10;
-  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
+  if (ch != 0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   ch=(len/1)%10;
-  if (ch!=0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
+  if (ch != 0) { USART_SendData(USART3, ch+'0'); i=1; } else { if (i==1) USART_SendData(USART3, '0');}
   USART_SendData(USART3, 13);
   
   
@@ -872,7 +872,7 @@ unsigned char ReceiveBuf[101];
   if (ReceiveBufLen<7)
     return 101;
   
-  if ((ReceiveBuf[0]!='+') || (ReceiveBuf[1]!='C') || (ReceiveBuf[2]!='S') || (ReceiveBuf[3]!='Q') || (ReceiveBuf[4]!=' '))
+  if ((ReceiveBuf[0] != '+') || (ReceiveBuf[1] != 'C') || (ReceiveBuf[2] != 'S') || (ReceiveBuf[3] != 'Q') || (ReceiveBuf[4] != ' '))
     return 102;
   
   if (ReceiveBuf[6] ==',')
@@ -1279,7 +1279,7 @@ char str[60];
     ChargeRequest=0;
 		if (Charge>=0)
 			DeviceInfo.Charge=Charge;
-		#if (DeviceUC!=UC_KASHAN)
+		#if (DeviceUC != UC_KASHAN)
     if ((Charge>=0) && (Charge<4000))
       ChargeRequest=1;
 		#endif
@@ -1349,7 +1349,7 @@ unsigned long int time=0;
   }
   
   if (Idx<21) return 1;
-  if ((str[2]!='/') || (str[5]!='/') || (str[8]!=',') || (str[11]!=':') || (str[14]!=':') || (str[17]!='+'))
+  if ((str[2] != '/') || (str[5] != '/') || (str[8] != ',') || (str[11] != ':') || (str[14] != ':') || (str[17] != '+'))
     return 2;
   
   Year=(str[0]-'0')*10+(str[1]-'0'); Year += 2000;
@@ -1484,7 +1484,7 @@ unsigned long int Li;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=6000)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
   }
@@ -1513,7 +1513,7 @@ unsigned long int Li;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=6000)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
     i=ScanKeyboard();
@@ -1556,7 +1556,7 @@ char Charge[20];
   
   if (JustChargeQuery==0)
   {
-    for (i=0; (i<16) && (ChargeCode[i]!=0); i++) 
+    for (i=0; (i<16) && (ChargeCode[i] != 0); i++) 
       USART_SendData(USART3,ChargeCode[i]); 
   }else{
     USART_SendData(USART3,'1'); 
@@ -1571,7 +1571,7 @@ char Charge[20];
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=6000)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
   }
@@ -1606,7 +1606,7 @@ char Charge[20];
  j=0;
  i=0;
  NewCharge=0;
- while ((ResText[i]!=0) && (j<20))
+ while ((ResText[i] != 0) && (j<20))
  {
    Byte=ResText[i];
    i++;
@@ -1715,7 +1715,7 @@ unsigned int crc=0;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=6000)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
   }
@@ -1772,7 +1772,7 @@ unsigned char SendBuf[300];
   USART_SendStr(USART3, "at+creg?\n"); // BAYAD BA HOROOFE KOOCHAK BASHAD
   if (GetGSMResponse("CREG: 0,1")) return 2;  
 
-  for (i=0; (i<50) && (ChargeCode[i]!=0); i++) 
+  for (i=0; (i<50) && (ChargeCode[i] != 0); i++) 
      USART_SendData(USART3,ChargeCode[i]); 
   if (GetGSMResponse("OK")) return 3;
     
@@ -1914,7 +1914,7 @@ unsigned int crc=0;
       break;			
   }
   
-  for (i=0; (i<12) && (ChargeCode[i]!=0); i++) 
+  for (i=0; (i<12) && (ChargeCode[i] != 0); i++) 
     USART_SendData(USART3,ChargeCode[i]); 
   USART_SendData(USART3,'#'); 
   USART_SendData(USART3,13);   
@@ -1926,7 +1926,7 @@ unsigned int crc=0;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=6000)
 			return 0;
-    if (rxd3_counter!=0) 
+    if (rxd3_counter != 0) 
       break;
 		GUI_Delay(1);
   }

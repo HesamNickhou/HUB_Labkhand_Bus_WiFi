@@ -80,8 +80,8 @@ unsigned char NRF24L01_Check(void)
  NRF24L01_Write_Buf(WRITE_REG_NRF+TX_ADDR,buf,5);
  NRF24L01_Read_Buf(TX_ADDR,buf,5); 
  printf("\n\rbuf[0--4] =%x-%x-%x-%x-%x",buf[0],buf[1],buf[2],buf[3],buf[4]);
-	for (i=0;i<5;i++)  if (buf[i]!=0XA5)break;	 							   
- if (i!=5)  return 1;
+	for (i=0;i<5;i++)  if (buf[i] != 0XA5)break;	 							   
+ if (i != 5)  return 1;
  return 0;		 
 }
 
@@ -141,7 +141,7 @@ unsigned char sta;
   NRF24L01_Write_Buf(WR_TX_PLOAD,txbuf,TX_PLOAD_WIDTH);
  	NRF24L01_CE=1;
 	
-	while (NRF24L01_IRQ!=0);
+	while (NRF24L01_IRQ != 0);
 	//HAL_Delay(50);
 	
 	sta=NRF24L01_Read_Reg(STATUS); 

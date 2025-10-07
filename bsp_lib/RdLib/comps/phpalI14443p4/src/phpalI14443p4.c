@@ -496,7 +496,7 @@ phStatus_t phpalI14443p4_Exchange(
 
                 /* Write Frame to HAL TxBuffer but do not preform Exchange */
 								statusTmp = phhalHw_Rc632_Exchange(pParams, PH_EXCHANGE_BUFFER_FIRST, bIsoFrame, wIsoFrameLen, NULL, NULL);
-								if (statusTmp!=PH_ERR_SUCCESS)
+								if (statusTmp != PH_ERR_SUCCESS)
 								  return statusTmp;	
                 //PH_CHECK_SUCCESS_FCT(statusTmp, phhalHw_Exchange(
                 //    pDataParams->pHalDataParams,

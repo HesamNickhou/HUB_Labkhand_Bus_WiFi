@@ -542,7 +542,7 @@ uint8_t i;
 
   if (pn532_packetbuffer[0] == 0 && pn532_packetbuffer[1] == 0 && pn532_packetbuffer[2] == 0xff) {
     uint8_t length = pn532_packetbuffer[3];
-    if (pn532_packetbuffer[4]!=(uint8_t)(~length+1)) {
+    if (pn532_packetbuffer[4] != (uint8_t)(~length+1)) {
       #ifdef PN532DEBUG
         printf("\n\rLength check invalid");
         PN532DEBUGPRINT.println(length,HEX);
@@ -551,7 +551,7 @@ uint8_t i;
       return FALSE;
     }
     if (pn532_packetbuffer[5] ==PN532_PN532TOHOST && pn532_packetbuffer[6] ==PN532_RESPONSE_INDATAEXCHANGE) {
-      if ((pn532_packetbuffer[7] & 0x3f)!=0) {
+      if ((pn532_packetbuffer[7] & 0x3f) != 0) {
         #ifdef PN532DEBUG
           printf("\n\rStatus code indicates an error");
         #endif
@@ -613,7 +613,7 @@ bool inListPassiveTarget() {
 
   if (pn532_packetbuffer[0] == 0 && pn532_packetbuffer[1] == 0 && pn532_packetbuffer[2] == 0xff) {
     uint8_t length = pn532_packetbuffer[3];
-    if (pn532_packetbuffer[4]!=(uint8_t)(~length+1)) {
+    if (pn532_packetbuffer[4] != (uint8_t)(~length+1)) {
       #ifdef PN532DEBUG
         printf("\n\rLength check invalid");
         PN532DEBUGPRINT.println(length,HEX);

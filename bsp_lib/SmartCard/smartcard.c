@@ -47,7 +47,7 @@ unsigned long int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=2000) //5 Sec
 			return 0;
-    if (rxd2_counter!=0) 
+    if (rxd2_counter != 0) 
       break;
 		GUI_Delay(1);
   	WDTR;
@@ -86,7 +86,7 @@ unsigned long int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=300) 
 			return 0;
-    if (rxd2_counter!=0) 
+    if (rxd2_counter != 0) 
       break;
 		GUI_Delay(1);
   	WDTR;

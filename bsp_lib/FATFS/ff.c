@@ -847,7 +847,7 @@ FRESULT sync_fs (	/* FR_OK: successful, FR_DISK_ERR: failed */
 /*-----------------------------------------------------------------------*/
 
 
-DWORD clust2sect (	/* !=0: Sector number, 0: Failed - invalid cluster# */
+DWORD clust2sect (	/* != 0: Sector number, 0: Failed - invalid cluster# */
 	FATFS* fs,		/* File system object */
 	DWORD clst		/* Cluster# to be converted */
 )
@@ -2023,7 +2023,7 @@ FRESULT create_name (
 /*-----------------------------------------------------------------------*/
 
 static
-FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
+FRESULT follow_path (	/* FR_OK(0): successful, != 0: error code */
 	DIR* dp,			/* Directory object to return last directory and found object */
 	const TCHAR* path	/* Full-path string to find a file or directory */
 )
@@ -2184,10 +2184,10 @@ BYTE check_fs (	/* 0:FAT boor sector, 1:Valid boor sector but not FAT, 2:Not a b
 /* Find logical drive and check if the volume is mounted                 */
 /*-----------------------------------------------------------------------*/
 static
-FRESULT find_volume (	/* FR_OK(0): successful, !=0: any error occurred */
+FRESULT find_volume (	/* FR_OK(0): successful, != 0: any error occurred */
 	FATFS** rfs,		/* Pointer to pointer to the found file system object */
 	const TCHAR** path,	/* Pointer to pointer to the path name (drive number) */
-	BYTE wmode			/* !=0: Check write protection for write access */
+	BYTE wmode			/* != 0: Check write protection for write access */
 )
 {
 	BYTE fmt;
@@ -2366,7 +2366,7 @@ FRESULT find_volume (	/* FR_OK(0): successful, !=0: any error occurred */
 /*-----------------------------------------------------------------------*/
 
 static
-FRESULT validate (	/* FR_OK(0): The object is valid, !=0: Invalid */
+FRESULT validate (	/* FR_OK(0): The object is valid, != 0: Invalid */
 	void* obj		/* Pointer to the object FIL/DIR to check validity */
 )
 {

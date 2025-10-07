@@ -202,7 +202,7 @@ unsigned char Month, Day, Hour, Min;
     crc=crc16(0, SPI_FLASH_BUF+i, 256-6);
 		j=SPI_FLASH_BUF[i+251]; j<<=8;
 		j += SPI_FLASH_BUF[i+250];
-		if (j!=crc)
+		if (j != crc)
 		{
   		//printf("\n\rCRC Error: \n\r");
 			//for (j=0; j<256; j++)
@@ -213,7 +213,7 @@ unsigned char Month, Day, Hour, Min;
 	
 	if (EmptyCheck)
     for (i=0; i<256; i++)
-	    if (SPI_FLASH_BUF[Offset+i]!=0xFF)
+	    if (SPI_FLASH_BUF[Offset+i] != 0xFF)
 	    {
   	    //printf("\n\rEmpty Error");
 		    return 2;
@@ -265,7 +265,7 @@ unsigned short i;
 	//Check wroted data
 	SPI_Flash_Read(SPI_FLASH_BUF,WriteAddr,256);
 	for (i=0; i<256; i++)
-	  if (SPI_FLASH_BUF[i]!=pBuffer[i])
+	  if (SPI_FLASH_BUF[i] != pBuffer[i])
 			break;
 	if (i<256)
 	{
@@ -298,7 +298,7 @@ unsigned short i, crc;
   crc=crc16(0, pBuffer, 256-6);
   i=pBuffer[251]; i<<=8;
 	i += pBuffer[250];
-	if (i!=crc)
+	if (i != crc)
 	{
 		//printf("\n\rCheck Error");
     return 2;		//Read Error
@@ -319,7 +319,7 @@ u16 i;
 	secoff=WriteAddr%4096;
 	secremain=4096-secoff;
 
-	if ((secoff==0) && (secpos!=0))
+	if ((secoff==0) && (secpos != 0))
 		SPI_Flash_Erase_Sector(secpos);
 	
 	if (NumByteToWrite<=secremain)secremain=NumByteToWrite;
@@ -329,7 +329,7 @@ u16 i;
 		SPI_Flash_Read(SPI_FLASH_BUF,secpos*4096,4096);
 		for (i=0;i<secremain;i++)
 		{
-			if (SPI_FLASH_BUF[secoff+i]!=0XFF)break;
+			if (SPI_FLASH_BUF[secoff+i] != 0XFF)break;
 		}
 		if (i<secremain)
 		{
@@ -347,7 +347,7 @@ u16 i;
 			SPI_FLASH_BUF[i] =0;	  
 		SPI_Flash_Read(SPI_FLASH_BUF,WriteAddr,secremain);
 		for (i=0; i<secremain; i++)	  
-		  if (SPI_FLASH_BUF[i]!=pBuffer[i])
+		  if (SPI_FLASH_BUF[i] != pBuffer[i])
 				break;
     if (i<secremain)
       return 1;			

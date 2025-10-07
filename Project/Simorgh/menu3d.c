@@ -86,7 +86,7 @@ unsigned char SetX10(void);
     {{"0:icons/M0002/001.bmp", ""}, {"0:1.bmp", ""}, {"کد دستگاه", ""}, SetDeviceID, 0},
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"کد سازمان", ""}, SetDeviceUC, 0},
 
-		#if (DeviceType!=BUSDOOR)
+		#if (DeviceType != BUSDOOR)
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"ارتباط", ""}, ShowCommunicationMenu, 0},
 		#endif
 		#ifdef Simorgh50N
@@ -105,7 +105,7 @@ unsigned char SetX10(void);
    // {{"0:icons/M0003/000.bmp", ""}, {"0:1.bmp", ""}, {"CreditTest", ""}, 0, 0},
     //{{"0:icons/M0003/001.bmp", ""}, {"0:1.bmp", ""}, {"MemTest", ""}, MemoryTest, 0},
     {{"0:icons/M0003/002.bmp", ""}, {"0:1.bmp", ""}, {"رمز عبور", ""}, ChangePassword, 0},
-		#if (DeviceType!=BUSDOOR)
+		#if (DeviceType != BUSDOOR)
     {{"0:icons/M0003/003.bmp", ""}, {"0:1.bmp", ""}, {"زمان بازي", ""}, SetGameTime, 0},		
     {{"0:icons/M0003/003.bmp", ""}, {"0:1.bmp", ""}, {"زمان رله", ""}, ChangeRelayTimeout, 0},
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"نرخ ويژه", ""}, SetX10, 0},
@@ -312,7 +312,7 @@ unsigned short b=0;
           {
             
           }else{
-            if ((CurRow!=LastRow) && (LastRow!=0))
+            if ((CurRow != LastRow) && (LastRow != 0))
             {
               yPos--;
               NeedRelocate=1;
@@ -398,7 +398,7 @@ unsigned int StartAddress, Len;
         Loc=0;
         if (FirstSector)
         {
-					if ((_acBuffer[0]!='B') || (_acBuffer[1]!='M'))
+					if ((_acBuffer[0] != 'B') || (_acBuffer[1] != 'M'))
 						return 1;
           FirstSector=0;
           biWidth=_acBuffer[21]; biWidth<<=8;
@@ -453,7 +453,7 @@ unsigned int StartAddress, Len;
 					#ifdef Torgheh
           Color=RGB3(B,G,R);
 					#endif
-          if ((CurRow!=LastRow) && (LastRow!=0))
+          if ((CurRow != LastRow) && (LastRow != 0))
           {
             yPos--;
             NeedRelocate=1;
@@ -622,7 +622,7 @@ unsigned short b=0;
           {
             
           }else{
-            if ((CurRow!=LastRow) && (LastRow!=0))
+            if ((CurRow != LastRow) && (LastRow != 0))
             {
               yPos--;
               NeedRelocate=1;
@@ -751,7 +751,7 @@ unsigned short b=0;
           R=_acBuffer[Loc++];
           LastColor=0;
           Color=RGB2(R,G,B);
-          if ((CurRow!=LastRow) && (LastRow!=0))
+          if ((CurRow != LastRow) && (LastRow != 0))
           {
             yPos--;
             NeedRelocate=1;
@@ -954,10 +954,10 @@ void DisplayMenu(MenuStruct const *Menu, unsigned char OldMenuItem, unsigned cha
 	else
 		FirstItem=MenuItem-6;
   Loc=0;
-  for (i=0; (i<7) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
+  for (i=0; (i<7) && (Menu[i+FirstItem].ICON[0][0] != '\0'); i++)
   {
     Loc += 34;
-    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
+    if ((RefreshAllItems != 0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
       if (FirstItem+i==MenuItem)
 			{
@@ -974,7 +974,7 @@ void DisplayMenu(MenuStruct const *Menu, unsigned char OldMenuItem, unsigned cha
       	//GUI_DrawGradientV(0, Loc, 479, Loc+35, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
 			  //GUI_SetColor(GUI_DARKGREEN);
 			}
-		  if (Menu[i+FirstItem].Select!=0) {
+		  if (Menu[i+FirstItem].Select != 0) {
 				if (Menu[i+FirstItem].Select>=100) {
 				  x=1<<(Menu[i+FirstItem].Select-100);
 					if ((Option&x)==x)
@@ -1010,17 +1010,17 @@ unsigned short x;
 	else
 		FirstItem=MenuItem-3;
   Loc=0;
-  for (i=0; (i<4) && (Menu[i+FirstItem].ICON[0][0]!='\0'); i++)
+  for (i=0; (i<4) && (Menu[i+FirstItem].ICON[0][0] != '\0'); i++)
   {
     Loc += 35;
-    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
+    if ((RefreshAllItems != 0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
       if (FirstItem+i==MenuItem)
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
   	  else
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(218,223,228)), GUI_MAKE_ALPHA(0x00, RGB(255,255,255)));
 			GUI_SetColor(GUI_BLACK);
-		  if (Menu[i+FirstItem].Select!=0)
+		  if (Menu[i+FirstItem].Select != 0)
 			{
 				if (Menu[i+FirstItem].Select>=100)
 				{
@@ -1149,7 +1149,7 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
       case BUP: 
       	if (MenuCurPos==0)
         {
-          for (i=0; Menu[i].ICON[0][0]!='\0'; i++);
+          for (i=0; Menu[i].ICON[0][0] != '\0'; i++);
   	      DisplayMenu(Menu, MenuCurPos, i-1, 0);
           MenuCurPos=i-1;
         }else{
@@ -1173,7 +1173,7 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
         }
 				else
         {
-          if (Menu[MenuCurPos].fun!=0) 
+          if (Menu[MenuCurPos].fun != 0) 
           {  
   	        if ((*Menu[MenuCurPos].fun)()==100) return 0; 
             ScanKeyboard();  
@@ -1209,9 +1209,9 @@ void DisplayStringList(unsigned char List[20][50], unsigned char OldMenuItem, un
 	else
 		FirstItem=MenuItem-6;
   Loc=0;
-  for (i=0; (i<7) && (List[i+FirstItem][0]!='\0'); i++) {
+  for (i=0; (i<7) && (List[i+FirstItem][0] != '\0'); i++) {
     Loc += 34;
-    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem)) {
+    if ((RefreshAllItems != 0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem)) {
       if (FirstItem+i==MenuItem) {
     		GUI_DrawGradientRoundedV(0, Loc+2, 479, Loc+33,6,GUI_MAKE_ALPHA(0, RGB(220,220,0)),GUI_MAKE_ALPHA(0, RGB(40,40,0)));
       	//GUI_DrawGradientV(0, Loc, 479, Loc+35, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
@@ -1245,10 +1245,10 @@ unsigned short x;
 	else
 		FirstItem=MenuItem-3;
   Loc=0;
-  for (i=0; (i<4) && (List[i+FirstItem][0]!='\0'); i++)
+  for (i=0; (i<4) && (List[i+FirstItem][0] != '\0'); i++)
   {
     Loc += 35;
-    if ((RefreshAllItems!=0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
+    if ((RefreshAllItems != 0) || (FirstItem+i==MenuItem) || (FirstItem+i==OldMenuItem))
 		{
       if (FirstItem+i==MenuItem)
       	GUI_DrawGradientV(0, Loc, 219, Loc+36, GUI_MAKE_ALPHA(0x00, RGB(247,96,1)), GUI_MAKE_ALPHA(0x00, RGB(255,172,65)));
@@ -1304,7 +1304,7 @@ unsigned char ExecStringList(unsigned char List[20][50]) {
       case BDOWN: 
       	if (MenuCurPos==0)
         {
-          for (i=0; List[i][0]!='\0'; i++);
+          for (i=0; List[i][0] != '\0'; i++);
   	      DisplayStringList(List, MenuCurPos, i-1, 0);
           MenuCurPos=i-1;
         }else{
@@ -1862,7 +1862,7 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
        case BCANCEL:
          return DefValue;
      }
-     if (n!=n1)
+     if (n != n1)
      {
        cnt=0;
      	 #ifdef Torgheh
@@ -1896,7 +1896,7 @@ unsigned char SetDeviceID(void) {
   Config.DeviceID=GetNumber("کد دستگاه را وارد نماييد .", Config.DeviceID, 0);
 	
 	#if (DeviceType == BUSDOOR)
-	if ((Config.DeviceID!=1) && (Config.DeviceID!=2)) Config.DeviceID=1;
+	if ((Config.DeviceID != 1) && (Config.DeviceID != 2)) Config.DeviceID=1;
 	#endif
 }
 
@@ -2513,7 +2513,7 @@ unsigned char SetLocalIP(void) {
 //==============================================================================
 unsigned char DoClockCalibration(void) {
 	FLASH_UNLOCK
-  if (GetNumber("!!!حافظه پاک مي شود!!!", 0, 1)!=57)
+  if (GetNumber("!!!حافظه پاک مي شود!!!", 0, 1) != 57)
 		return 0;
   ShowMessageDlg(mtError, "آماده سازي حافظه",0,0,0,0);  
 

@@ -1118,10 +1118,10 @@ local uInt longest_match(s, cur_match)
 
 #else /* UNALIGNED_OK */
 
-        if (match[best_len]   != scan_end  ||
+        if (match[best_len] != scan_end  ||
             match[best_len-1] != scan_end1 ||
-            *match            != *scan     ||
-            *++match          != scan[1])      continue;
+            *match != *scan     ||
+            *++match != scan[1])      continue;
 
         /* The check at best_len-1 can be removed because it will be made
          * again later. (This heuristic is not always a win.)

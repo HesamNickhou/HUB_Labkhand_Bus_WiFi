@@ -59,7 +59,7 @@ unsigned char CheckNewFirmware(void) {
 
  // if (CheckFirmware==0) return 0;
   //............................................................................
-  if (Firmware.HaveData!=0xAA)                      return 1;
+  if (Firmware.HaveData != 0xAA)                      return 1;
   if ((Firmware.Length==0) || (Firmware.Length==-1))  return 1;
   //............................................................................  
 
@@ -76,7 +76,7 @@ unsigned char CheckNewFirmware(void) {
 
   ShowMessageDlg(mtInformation, "بررسي نسخه جديد",1,0,0,0);  
 
-  if (Downloaded_FirmwareLength!=Firmware.Length)
+  if (Downloaded_FirmwareLength != Firmware.Length)
   {
     ShowMessageDlg(mtError, "خطا در حجم اطلاعات",1,0,0,0);  
     Firmware.CheckSum=0;
@@ -106,7 +106,7 @@ unsigned char CheckNewFirmware(void) {
 
  //.....................................................................................................    
 
- if (Calculated_CheckSum!=Firmware.CheckSum) {
+ if (Calculated_CheckSum != Firmware.CheckSum) {
     ShowMessageDlg(mtError, "خطا صحت اطلاعات",1,0,0,0);  
     Firmware.CheckSum = 0;
     Downloaded_FirmwareLength = 0;
@@ -395,7 +395,7 @@ unsigned char Check_AndSaveDownloadedFirmware(void) {
         {
          if (UpdateFile[0].FirmwareName[i-2] ==0) break;
         }      
-     if (Downloaded_FirmwareLength!= UpdateFile[0].SpecifiedLength) Error=1;
+     if (Downloaded_FirmwareLength != UpdateFile[0].SpecifiedLength) Error=1;
     }
   
   
@@ -406,7 +406,7 @@ unsigned char Check_AndSaveDownloadedFirmware(void) {
         {
          if (UpdateFile[1].FirmwareName[i-2] ==0) break;
         }       
-     if (Downloaded_FirmwareLength!= UpdateFile[1].SpecifiedLength) Error=1;
+     if (Downloaded_FirmwareLength != UpdateFile[1].SpecifiedLength) Error=1;
     }
   
   if (Which_DeviceFirmware==ALEF)
@@ -415,7 +415,7 @@ unsigned char Check_AndSaveDownloadedFirmware(void) {
         {
          if (UpdateFile[2].FirmwareName[i-2] ==0) break;
         }       
-     if (Downloaded_FirmwareLength!= UpdateFile[2].SpecifiedLength) Error=1;
+     if (Downloaded_FirmwareLength != UpdateFile[2].SpecifiedLength) Error=1;
     }  
   
 
@@ -488,15 +488,15 @@ unsigned char Check_AndSaveDownloadedFirmware(void) {
   Error=0;
 	if (Which_DeviceFirmware==BCU)
     {
-     if (Calculated_CheckSum!= UpdateFile[0].SpecifiedCheckSum) Error=1;
+     if (Calculated_CheckSum != UpdateFile[0].SpecifiedCheckSum) Error=1;
     }
   if (Which_DeviceFirmware==BD90)
     {
-     if (Calculated_CheckSum!= UpdateFile[1].SpecifiedCheckSum) Error=1;
+     if (Calculated_CheckSum != UpdateFile[1].SpecifiedCheckSum) Error=1;
     }
   if (Which_DeviceFirmware==ALEF)
     {
-     if (Calculated_CheckSum!= UpdateFile[2].SpecifiedCheckSum) Error=1;
+     if (Calculated_CheckSum != UpdateFile[2].SpecifiedCheckSum) Error=1;
     }
  
  if (Error==1)
@@ -608,7 +608,7 @@ unsigned short New_Release;
 
  #if (DeviceType==BCU)
  //............................................................................................................
- //if (GlobalBuffer[6]!=BCU) return 0;
+ //if (GlobalBuffer[6] != BCU) return 0;
  
  WDTR;
 
@@ -661,7 +661,7 @@ unsigned short New_Release;
                
                
               
-               if (((GlobalBuffer[Counter+i] ==BD90) && (New_Ver!=0)) || ((GlobalBuffer[Counter+i] ==ALEF) && (New_Ver!=0)) || (New_Ver>Ver) || ((New_Release>Release) && (New_Ver==Ver)))
+               if (((GlobalBuffer[Counter+i] ==BD90) && (New_Ver != 0)) || ((GlobalBuffer[Counter+i] ==ALEF) && (New_Ver != 0)) || (New_Ver>Ver) || ((New_Release>Release) && (New_Ver==Ver)))
                  {
                   IsFileForGprsDownload++;
                   UpdateFile[k].ReadyForDownload=1;
@@ -735,9 +735,9 @@ unsigned short New_Release;
               else if (UpdateFile[1].ReadyForDownload==1)   KK=1;
               else if (UpdateFile[0].ReadyForDownload==1)   KK=0;  
               /*
-              if ((Indicators.LastFirmwareWhichDeviceFirmware!=255) && (KK<3))
+              if ((Indicators.LastFirmwareWhichDeviceFirmware != 255) && (KK<3))
                 {
-                 if (((Indicators.LastFirmwareWhichDeviceFirmware==BD90) && (KK==1)) || ((Indicators.LastFirmwareWhichDeviceFirmware==ALEF) && (KK==2)) || ((Indicators.LastFirmwareWhichDeviceFirmware!=BD90) && (Indicators.LastFirmwareWhichDeviceFirmware!=ALEF)))
+                 if (((Indicators.LastFirmwareWhichDeviceFirmware==BD90) && (KK==1)) || ((Indicators.LastFirmwareWhichDeviceFirmware==ALEF) && (KK==2)) || ((Indicators.LastFirmwareWhichDeviceFirmware != BD90) && (Indicators.LastFirmwareWhichDeviceFirmware != ALEF)))
                  {
                   if ((Indicators.LastFirmwareSpecifiedLength==UpdateFile[KK].SpecifiedLength) && (Indicators.LastFirmwareSpecifiedCheckSum==UpdateFile[KK].SpecifiedCheckSum)&&
                     (Indicators.LastFirmwareSpecifiedVer==UpdateFile[KK].NewVer) && (Indicators.LastFirmwareSpecifiedRelease==UpdateFile[KK].NewRelease))
@@ -754,8 +754,8 @@ unsigned short New_Release;
          else if (FirmwarePacketIndex)
 				 {
 									
-                 if ((Which_DeviceFirmware!=BCU) && (Which_DeviceFirmware!=BD90) && (Which_DeviceFirmware!=ALEF))  return;
-                 if ((GlobalBuffer[6]!=BCU) && (GlobalBuffer[6]!=BD90) && (GlobalBuffer[6]!=ALEF))  return;
+                 if ((Which_DeviceFirmware != BCU) && (Which_DeviceFirmware != BD90) && (Which_DeviceFirmware != ALEF))  return;
+                 if ((GlobalBuffer[6] != BCU) && (GlobalBuffer[6] != BD90) && (GlobalBuffer[6] != ALEF))  return;
 
                 
                  if (FirmwarePacketIndex==1)

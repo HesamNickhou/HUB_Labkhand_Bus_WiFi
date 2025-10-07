@@ -262,7 +262,7 @@ u8 Num=0;
 //          G E N E R I C    R E A D
 ///////////////////////////////////////////////////////////////////////////////
 
-#if (ReaderType!=NewRoutine)
+#if (ReaderType != NewRoutine)
 void WriteRC(unsigned char Address, unsigned char value)
 {
 unsigned char Byte;
@@ -2263,7 +2263,7 @@ signed char PcdSetTmo(unsigned long tmoLength)
 //      M I F A R E   M O D U L E   R E S E T 
 ///////////////////////////////////////////////////////////////////////
 
-#if (ReaderType!=NewRoutine)
+#if (ReaderType != NewRoutine)
 
 signed char PcdReset(void)
 {
@@ -3598,7 +3598,7 @@ void CalulateCRC(uchar *pIndata, uchar len, uchar *pOutData)
     n = Read_MFRC522(DivIrqReg);
     i--;
   }
-  while ((i!=0) && !(n&0x04));			//CRCIrq = 1
+  while ((i != 0) && !(n&0x04));			//CRCIrq = 1
 
   //read CRC caculation result
   pOutData[0] = Read_MFRC522(CRCResultRegL);

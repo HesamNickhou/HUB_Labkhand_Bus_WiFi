@@ -56,7 +56,7 @@ unsigned int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=500) //5 Sec
 			return 0;
-    if (rxd_counter!=0) 
+    if (rxd_counter != 0) 
       break;
 		GUI_Delay(1);
 		WDTR;
@@ -75,7 +75,7 @@ unsigned int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=5000) //5 Sec
 			return 0;
-    if (rxd_counter!=0) 
+    if (rxd_counter != 0) 
       break;
   	WDTR;
 }		
@@ -96,7 +96,7 @@ unsigned int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=2000) //2 sec
 			return 0;
-    if (rxd_counter!=0) 
+    if (rxd_counter != 0) 
       break;
 		WDTR;
 	}		
@@ -117,7 +117,7 @@ unsigned int i;
   	if (i>OS_TimeMS) return 0;
 	  if (OS_TimeMS-i>=100) //100 msec
 			return 0;
-    if (rxd_counter!=0) 
+    if (rxd_counter != 0) 
       break;
 		WDTR;
 	}		

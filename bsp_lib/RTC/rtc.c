@@ -281,7 +281,7 @@ void RTC_IRQHandler(void)
 {		 
 	if (RTC_GetITStatus(RTC_IT_SEC) != RESET)
 		RTC_Get();
-	if (RTC_GetITStatus(RTC_IT_ALR)!= RESET)
+	if (RTC_GetITStatus(RTC_IT_ALR) != RESET)
 		RTC_ClearITPendingBit(RTC_IT_ALR);		
 	RTC_ClearITPendingBit(RTC_IT_SEC|RTC_IT_OW);	
 	RTC_WaitForLastTask();	  	    						 	   	 
@@ -354,7 +354,7 @@ u16 temp1=0;
 	timecount|=RTC->CNTL;	
 
  	temp=timecount/86400;
-	if (daycnt!=temp)
+	if (daycnt != temp)
 	{	  
 		daycnt=temp;
 		temp1=MinYear; //1970;	

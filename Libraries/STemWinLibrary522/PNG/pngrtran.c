@@ -950,7 +950,7 @@ png_init_read_transformations(png_structp png_ptr)
                }
             }
          }
-         /* if (png_ptr->background_gamma_type!=PNG_BACKGROUND_GAMMA_UNKNOWN) */
+         /* if (png_ptr->background_gamma_type != PNG_BACKGROUND_GAMMA_UNKNOWN) */
          else
          /* color_type != PNG_COLOR_TYPE_PALETTE */
          {

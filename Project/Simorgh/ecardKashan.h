@@ -96,9 +96,9 @@ unsigned char ResBuff[256];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x9000)
+  if (i != 0x9000)
     return i;		
 }
 
@@ -186,9 +186,9 @@ uint8_t bFsci;
     printf("%X ",ResBuff[i]);
   #endif
 	
-  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 32) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[30]; i<<=8; i += ResBuff[31];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      if (i==0) i=20;
      return i;		
@@ -308,9 +308,9 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
   #endif
 	
-  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 32) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[30]; i<<=8; i += ResBuff[31];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      if (i==0) i=20;
      return i;		
@@ -383,17 +383,17 @@ unsigned int Price=Payment/10;
 	
   if (RxLength==4)
     {
-     if ((ResBuff[0]!=1) || (ResBuff[2]!=0x90) || (ResBuff[3]!=0))	return 33;
+     if ((ResBuff[0] != 1) || (ResBuff[2] != 0x90) || (ResBuff[3] != 0))	return 33;
     }
   else if (RxLength==6)
     {
-     if ((ResBuff[2]!=0) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))      return 34;
-     if (ResBuff[0]!=1)	return 33;
+     if ((ResBuff[2] != 0) || (ResBuff[4] != 0x90) || (ResBuff[5] != 0))      return 34;
+     if (ResBuff[0] != 1)	return 33;
     }
   else if (RxLength==8)
     {
-     if ((ResBuff[2]!=0) || (ResBuff[6]!=0x90) || (ResBuff[7]!=0))      return 34;
-     if (ResBuff[0]!=1)	return 33;
+     if ((ResBuff[2] != 0) || (ResBuff[6] != 0x90) || (ResBuff[7] != 0))      return 34;
+     if (ResBuff[0] != 1)	return 33;
     }  
   else                   return 33;
   
@@ -419,7 +419,7 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
 	#endif	
 	
-  if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  if ((RxLength < 6) || (ResBuff[4] != 0x90) || (ResBuff[5] != 0))
   {
     i=ResBuff[0]; i<<=8;
     i += ResBuff[1];
@@ -456,7 +456,7 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
 	#endif	
 	
-  if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  if ((RxLength < 6) || (ResBuff[4] != 0x90) || (ResBuff[5] != 0))
   {
     i=ResBuff[0]; i<<=8;
     i += ResBuff[1];
@@ -501,11 +501,11 @@ unsigned int Price=Payment/10;
       printf("%X ",ResBuff[i]);
 	  #endif	
 	
-    if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+    if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	  i=ResBuff[0]; i<<=8; i += ResBuff[1];
 		
 
-    if (i!=0x9714)
+    if (i != 0x9714)
 	  {
       if (i==0) i=46;
       return i;		
@@ -551,12 +551,12 @@ unsigned int Price=Payment/10;
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
   i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
      i=ResBuff[0]; i<<=8; i += ResBuff[1];
-     if (i!=0x9000)
+     if (i != 0x9000)
        {
         ResBuff[0] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
@@ -574,7 +574,7 @@ unsigned int Price=Payment/10;
     {
      // printf("\n\rRESET"); 
      // ISO7816_warm_reset(); 
-      if (RxLength!=2) return 19; 
+      if (RxLength != 2) return 19; 
       else 
         {
          i=ResBuff[0]; 
@@ -587,7 +587,7 @@ unsigned int Price=Payment/10;
 
   i=ResBuff[0]; i<<=8; i += ResBuff[1];
   
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      //printf("\n\rRESET");
      //ISO7816_warm_reset();
@@ -625,13 +625,13 @@ unsigned int Price=Payment/10;
 	
 	//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
 	
-  if (i!=0x6108)//6108
+  if (i != 0x6108)//6108
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
 			//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
      i=ResBuff[0]; i<<=8; i += ResBuff[1];
-     if (i!=0x6108)
+     if (i != 0x6108)
        {
         ResBuff[0] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
@@ -647,13 +647,13 @@ unsigned int Price=Payment/10;
 		
 
 
-  if (RxLength < 2) {			if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {			if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	
 	//SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);SendByte(0x20);
 	
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
 	//SendByte(ResBuff[0]);SendByte(ResBuff[1]);
-  if (i!=0x6108)
+  if (i != 0x6108)
 	{	
 
     if (i==0) i=21;
@@ -681,12 +681,12 @@ unsigned int Price=Payment/10;
 
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
   i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
      i=ResBuff[8]; i<<=8; i += ResBuff[9];
-     if (i!=0x9000)
+     if (i != 0x9000)
        {
         ResBuff[8] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
@@ -698,9 +698,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {			 	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 10) {			 	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=22;
     return i;		
@@ -751,9 +751,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
   #endif		
-  if (RxLength < 18) {		 	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 18) {		 	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[16]; i<<=8; i += ResBuff[17];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
 
     if (i==0) i=43;
@@ -788,7 +788,7 @@ unsigned int Price=Payment/10;
 
   i=ResBuff[0]; 
 
-  if ((i!=0x61) && (i!=0x63) && (i!=0x99))
+  if ((i != 0x61) && (i != 0x63) && (i != 0x99))
     {
      ResBuff[0] =0xff;
      //delay_ms(10);
@@ -796,7 +796,7 @@ unsigned int Price=Payment/10;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
 
      i=ResBuff[0]; 
-     if ((i!=0x61) && (i!=0x63) && (i!=0x99))
+     if ((i != 0x61) && (i != 0x63) && (i != 0x99))
        {
         ResBuff[0] =0xff;         
         //delay_ms(10);        
@@ -814,9 +814,9 @@ unsigned int Price=Payment/10;
 		
 		
   if (RxLength < 2) { 
-			if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+			if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x6108)
+  if (i != 0x6108)
 	{
 
     if (i==0) i=24;
@@ -844,12 +844,12 @@ unsigned int Price=Payment/10;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
 /*
   i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
      i=ResBuff[8]; i<<=8; i += ResBuff[9];
-     if (i!=0x9000)
+     if (i != 0x9000)
        {
         ResBuff[8] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
@@ -861,9 +861,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 10) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=25;
     return i;		
@@ -899,11 +899,11 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
 		
 
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=46;
     return i;		
@@ -917,7 +917,7 @@ unsigned int Price=Payment/10;
 
 	
   //MM
-	if (LastTransactionKashan.CardID!=0)
+	if (LastTransactionKashan.CardID != 0)
 		if (LastTransactionKashan.Payment==Price)
 		{
 			if ((LastTransactionKashan.Etebar1==CardEtebarKashan) && (LastTransactionKashan.Etebar2==CardEtebarKashan2+Price))
@@ -1143,10 +1143,10 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
   #endif
 	
-  if (RxLength < 32) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 32) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[30]; i<<=8; i += ResBuff[31];
 		
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      if (i==0) i=20;
      return i;		
@@ -1208,17 +1208,17 @@ unsigned int Price=Payment/10;
 	
   if (RxLength==4)
     {
-     if ((ResBuff[0]!=1) || (ResBuff[2]!=0x90) || (ResBuff[3]!=0))	return 33;
+     if ((ResBuff[0] != 1) || (ResBuff[2] != 0x90) || (ResBuff[3] != 0))	return 33;
     }
  else if (RxLength==6)
     {
-     if ((ResBuff[2]!=0) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))      return 34;
-     if (ResBuff[0]!=1)	return 33;
+     if ((ResBuff[2] != 0) || (ResBuff[4] != 0x90) || (ResBuff[5] != 0))      return 34;
+     if (ResBuff[0] != 1)	return 33;
     }
  else if (RxLength==8)
     {
-     if ((ResBuff[2]!=0) || (ResBuff[6]!=0x90) || (ResBuff[7]!=0))      return 34;
-     if (ResBuff[0]!=1)	return 33;
+     if ((ResBuff[2] != 0) || (ResBuff[6] != 0x90) || (ResBuff[7] != 0))      return 34;
+     if (ResBuff[0] != 1)	return 33;
     }  
  else                   return 33;
   
@@ -1246,7 +1246,7 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
 	#endif	
 	
-  if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  if ((RxLength < 6) || (ResBuff[4] != 0x90) || (ResBuff[5] != 0))
   {
     i=ResBuff[0]; i<<=8;
     i += ResBuff[1];
@@ -1285,7 +1285,7 @@ unsigned int Price=Payment/10;
     printf("%X ",ResBuff[i]);
 	#endif	
 	
-  if ((RxLength < 6) || (ResBuff[4]!=0x90) || (ResBuff[5]!=0))
+  if ((RxLength < 6) || (ResBuff[4] != 0x90) || (ResBuff[5] != 0))
   {
     i=ResBuff[0]; i<<=8;
     i += ResBuff[1];
@@ -1333,12 +1333,12 @@ unsigned int Price=Payment/10;
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
   i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
      i=ResBuff[0]; i<<=8; i += ResBuff[1];
-     if (i!=0x9000)
+     if (i != 0x9000)
        {
         ResBuff[0] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,12,2);
@@ -1357,7 +1357,7 @@ unsigned int Price=Payment/10;
     {
       //printf("\n\rRESET"); 
     //  ISO7816_warm_reset(); 
-      if (RxLength!=2) return 19; 
+      if (RxLength != 2) return 19; 
       else 
         {
          i=ResBuff[0]; 
@@ -1370,7 +1370,7 @@ unsigned int Price=Payment/10;
 
   i=ResBuff[0]; i<<=8; i += ResBuff[1];
   
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      //printf("\n\rRESET");
 //     ISO7816_warm_reset();
@@ -1401,12 +1401,12 @@ unsigned int Price=Payment/10;
   ResBuff[0] =0xff;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
   i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x6108)
+  if (i != 0x6108)
     {
      ResBuff[0] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
      i=ResBuff[0]; i<<=8; i += ResBuff[1];
-     if (i!=0x6108)
+     if (i != 0x6108)
        {
         ResBuff[0] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,21,2);
@@ -1419,9 +1419,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x6108)
+  if (i != 0x6108)
 	{	
     if (i==0) i=21;
 		return i;		
@@ -1447,12 +1447,12 @@ unsigned int Price=Payment/10;
 
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
   i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
      i=ResBuff[8]; i<<=8; i += ResBuff[9];
-     if (i!=0x9000)
+     if (i != 0x9000)
        {
         ResBuff[8] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
@@ -1465,9 +1465,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 10) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=22;
     return i;		
@@ -1525,9 +1525,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
   #endif		
-  if (RxLength < 18) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 18) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[16]; i<<=8; i += ResBuff[17];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=43;
     return i;		
@@ -1559,7 +1559,7 @@ unsigned int Price=Payment/10;
 
   i=ResBuff[0]; 
 
-    if ((i!=0x61) && (i!=0x63) && (i!=0x99))
+    if ((i != 0x61) && (i != 0x63) && (i != 0x99))
     {
      ResBuff[0] =0xff;
      //delay_ms(10);
@@ -1567,7 +1567,7 @@ unsigned int Price=Payment/10;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,idx,2);
 
      i=ResBuff[0]; 
-     if ((i!=0x61) && (i!=0x63) && (i!=0x99))
+     if ((i != 0x61) && (i != 0x63) && (i != 0x99))
        {
         ResBuff[0] =0xff;         
         //delay_ms(10);        
@@ -1583,9 +1583,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x6108)
+  if (i != 0x6108)
 	{
     if (i==0) i=24;
     return i;		
@@ -1611,12 +1611,12 @@ unsigned int Price=Payment/10;
   RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
 /*
   i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
     {
      ResBuff[8] =0xff;
      RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
      i=ResBuff[8]; i<<=8; i += ResBuff[9];
-     if (i!=0x9000)
+     if (i != 0x9000)
        {
         ResBuff[8] =0xff;         
         RxLength=SAM_SendAPDU_T0(ApduCmd,ResBuff,5,10);
@@ -1629,9 +1629,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 10) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 10) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[8]; i<<=8; i += ResBuff[9];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=25;
     return i;		
@@ -1667,9 +1667,9 @@ unsigned int Price=Payment/10;
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=46;
     return i;		
@@ -1682,7 +1682,7 @@ unsigned int Price=Payment/10;
 	
 	/*
   //MM
-	if (LastTransactionKashan.CardID!=0)
+	if (LastTransactionKashan.CardID != 0)
 		if (LastTransactionKashan.Payment==Price)
 		{
 			if ((LastTransactionKashan.Etebar1==CardEtebarKashan) && (LastTransactionKashan.Etebar2==CardEtebarKashan2+Price))
@@ -1975,9 +1975,9 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) { SAM_RST=0; GUI_Delay(100);	SAM_RST=1; if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) { SAM_RST=0; GUI_Delay(100);	SAM_RST=1; if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
 		SAM_RST=0; GUI_Delay(100);	SAM_RST=1;
 		if (i==0) i=30;
@@ -2008,9 +2008,9 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{	
     if (i==0) i=21;
 		return i;		
@@ -2039,9 +2039,9 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 2) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 2) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[0]; i<<=8; i += ResBuff[1];
-  if (i!=0x6110)
+  if (i != 0x6110)
 	{
     if (i==0) i=22;
     return i;		
@@ -2067,9 +2067,9 @@ unsigned char keyCoded[12];
   for (i=0; i<RxLength; i++)
     printf("%X ",ResBuff[i]);
 	#endif	
-  if (RxLength < 18) {	if (RxLength!=2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
+  if (RxLength < 18) {	if (RxLength != 2) return 19; else {i=ResBuff[0]; i<<=8; i += ResBuff[1]; if (i==0) i=19; return i; } }
 	i=ResBuff[16]; i<<=8; i += ResBuff[17];
-  if (i!=0x9000)
+  if (i != 0x9000)
 	{
     if (i==0) i=22;
     return i;		
@@ -2148,7 +2148,7 @@ unsigned char keyCoded[12];
   if (ISO14443_ReadBlock(DebitSector*4,Log)) return 11;
 	
 	
-	if ((Log[14]&0x80)!=0x80)
+	if ((Log[14]&0x80) != 0x80)
 		return 33;
 	
 	if ((Log[15]&0x80)==0x80)

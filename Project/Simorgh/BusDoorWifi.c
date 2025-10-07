@@ -368,7 +368,7 @@ unsigned char LoadRecordsInfo(void) {
 	i += buf[3]; 
 	BlackList_LastIdx=i;
 	bcc=0xBC^buf[0]^buf[1]^buf[2]^buf[3]^buf[4]^buf[5]^buf[6];
-	if (bcc!=buf[7])
+	if (bcc != buf[7])
 	{
 		BlackList_Count=0;
 		BlackList_LastIdx=0;
@@ -442,7 +442,7 @@ unsigned char SendPacket(unsigned int Len) {
 		return 1;
 	
   if (i>1) GUI_Delay(Config.DeviceID*5);  //Wait to ensure to line is free
-  if (USART_GCF(&Byte)!=0) 
+  if (USART_GCF(&Byte) != 0) 
 		return 2; //Line locked for other device communication
            
   SetTX485();
@@ -629,7 +629,7 @@ void ShowPaymentBox(void) {
  
  /*
  LoadFont(FontTahoma20);
-	if (LastCardingDateTime[0]!=0)
+	if (LastCardingDateTime[0] != 0)
 	{
     GUI_SetColor(GUI_DARKRED); 
    sprintf(str,"%d/%d/%d  %d:%d:%02d",LastCardingDateTime[0],LastCardingDateTime[1],LastCardingDateTime[2],LastCardingDateTime[3],LastCardingDateTime[4],LastCardingDateTime[5]);
@@ -1195,7 +1195,7 @@ void ShowPageAlef(void) {
 	/*
 	  LoadFont(FontTahoma20);
 		 GUI_SetColor(GUI_DARKRED); 
-	if (LastCardingDateTime[0]!=0)
+	if (LastCardingDateTime[0] != 0)
 	{
 	sprintf(str,"%d/%d/%d  %d:%d:%02d",LastCardingDateTime[0],LastCardingDateTime[1],LastCardingDateTime[2],LastCardingDateTime[3],LastCardingDateTime[4],LastCardingDateTime[5]);
 	//PutText(5, 275+30+10, 272-38+SCREENRESIZE, 275+30+30+10, str, GUI_TA_CENTER);
@@ -1368,7 +1368,7 @@ unsigned char CheckNewFirmware2(void) {
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
 	FLASH_LOCK
 
-  if (FirmwareLength!=Firmware.Length)
+  if (FirmwareLength != Firmware.Length)
   {
     ShowMessageDlg(mtError, "خطا در حجم اطلاعات",1,0,0,0);   
     InfoCounter=3;
@@ -1389,7 +1389,7 @@ unsigned char CheckNewFirmware2(void) {
 		Loc++;
 	}
 	
-  if (crc!=Firmware.CheckSum)
+  if (crc != Firmware.CheckSum)
   {
     ShowMessageDlg(mtError, "خطا صحت اطلاعات",1,0,0,0); 
     InfoCounter=3;
@@ -1928,7 +1928,7 @@ void ProcessData(void) {
 		return;
 	}
 
-	if (GlobalBuffer[6]!=DeviceType) return;
+	if (GlobalBuffer[6] != DeviceType) return;
  	 	
  WDTR;
 
@@ -2004,7 +2004,7 @@ void ProcessData(void) {
                 {
 								//	GUI_SetColor(GUI_GRAY);       		 GUI_FillCircle(15,15,5);GUI_Delay(250);
                  if (BufferLen<8) return; 
-                 if (GlobalBuffer[6]!=DeviceType)  return;  
+                 if (GlobalBuffer[6] != DeviceType)  return;  
                    
                  
                  Data_Length=(GlobalBuffer[4]+GlobalBuffer[5]*256)-3;
@@ -2369,7 +2369,7 @@ unsigned int SearchForCard(unsigned long int CardID, unsigned int *LastTime){
 		WDTR;
 		//printf("\n\rSU:%d %d/%d/%d", SendUsers,MEMBuffer[5],MEMBuffer[6],MEMBuffer[7]);
 
-		if ((MEMBuffer[4]!=YY) || (MEMBuffer[5]!=Month) || (MEMBuffer[6]!=Day))
+		if ((MEMBuffer[4] != YY) || (MEMBuffer[5] != Month) || (MEMBuffer[6] != Day))
 		{
       //if (InvalidDateRecord>=20) 
 			//	break;
@@ -2378,7 +2378,7 @@ unsigned int SearchForCard(unsigned long int CardID, unsigned int *LastTime){
      
 		//printf(" CardID: %2X%2X%2X%2X",MEMBuffer[1],MEMBuffer[2],MEMBuffer[3],MEMBuffer[30]);
 
-    if ((MEMBuffer[0]!=bufCardID[0]) || (MEMBuffer[1]!=bufCardID[1]) || (MEMBuffer[2]!=bufCardID[2]) || (MEMBuffer[30]!=bufCardID[3]))
+    if ((MEMBuffer[0] != bufCardID[0]) || (MEMBuffer[1] != bufCardID[1]) || (MEMBuffer[2] != bufCardID[2]) || (MEMBuffer[30] != bufCardID[3]))
 			continue;
 		
 		
@@ -2414,7 +2414,7 @@ unsigned char buf[8];
 	Last=BlackList_Count-1;
 	if (BlackList_Count==1)
 		Last=1;
-	while (First!=Last)
+	while (First != Last)
 	{
 	  Address=(First+Last)/2;
   	//printf("\n\rFirst: %d Last: %d Address: %d Old: %d>> ", First, Last, Address, OldAddress);
@@ -2642,7 +2642,7 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
 			}
 			else
 			{
-				if ((Status!=0) && (Status!=0x9714))
+				if ((Status != 0) && (Status != 0x9714))
 					Status=ShowErrorKashan(Status);
 			}}
 		#else
@@ -3292,7 +3292,7 @@ void ProcessPeriodicTasks(void) {
 				DeviceInfoSendInterval = 0;
 				SendOfflines();
 			}
-			else if (!Check_ServerForUpdateFile) {//&&((ActivePort!=0)))
+			else if (!Check_ServerForUpdateFile) {//&&((ActivePort != 0)))
 				DataSendInterval 			 = 0;
 				DeviceInfoSendInterval = 0;
 				CheckUpdateTry++;
@@ -3349,7 +3349,7 @@ void InitializeAlef(void) {
     FirmwareLength += GlobalBuffer[3];
     _FirmwareVer=GlobalBuffer[9]+(GlobalBuffer[10]*256);
     _FirmwareRelease=GlobalBuffer[11]+(GlobalBuffer[12]*256);
-    if ((FirmwareLength>512*1024) || (_FirmwareVer!=Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
+    if ((FirmwareLength>512*1024) || (_FirmwareVer != Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
     {
       FirmwareRequestNo=0; 
       FirmwareLength=0;
@@ -3671,7 +3671,7 @@ void MainAlef(void) {
 			Byte=0;
 		#endif	
     if (Byte) {
-      if ((lastsnr[0]!=snr[0]) || (lastsnr[1]!=snr[1]) || (lastsnr[2]!=snr[2]) || (lastsnr[3]!=snr[3]))
+      if ((lastsnr[0] != snr[0]) || (lastsnr[1] != snr[1]) || (lastsnr[2] != snr[2]) || (lastsnr[3] != snr[3]))
         if (ProcessCard(Byte,snr)) {
 					lastsnr[0] = snr[0]; 
 					lastsnr[1] = snr[1];

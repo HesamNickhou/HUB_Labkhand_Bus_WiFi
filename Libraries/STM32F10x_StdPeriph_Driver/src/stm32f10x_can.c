@@ -813,7 +813,7 @@ uint8_t CAN_OperatingModeRequest(CAN_TypeDef* CANx, uint8_t CAN_OperatingMode)
     CANx->MCR &= (uint32_t)(~(CAN_MCR_SLEEP|CAN_MCR_INRQ));
 
     /* Wait the acknowledge */
-    while (((CANx->MSR & CAN_MODE_MASK) != 0) && (timeout!=0))
+    while (((CANx->MSR & CAN_MODE_MASK) != 0) && (timeout != 0))
     {
       timeout--;
     }
@@ -832,7 +832,7 @@ uint8_t CAN_OperatingModeRequest(CAN_TypeDef* CANx, uint8_t CAN_OperatingMode)
     CANx->MCR = (uint32_t)((CANx->MCR & (uint32_t)(~(uint32_t)CAN_MCR_INRQ)) | CAN_MCR_SLEEP);
 
     /* Wait the acknowledge */
-    while (((CANx->MSR & CAN_MODE_MASK) != CAN_MSR_SLAK) && (timeout!=0))
+    while (((CANx->MSR & CAN_MODE_MASK) != CAN_MSR_SLAK) && (timeout != 0))
     {
       timeout--;
     }
@@ -897,7 +897,7 @@ uint8_t CAN_WakeUp(CAN_TypeDef* CANx)
   CANx->MCR &= ~(uint32_t)CAN_MCR_SLEEP;
     
   /* Sleep mode status */
-  while (((CANx->MSR & CAN_MSR_SLAK) == CAN_MSR_SLAK) && (wait_slak!=0x00))
+  while (((CANx->MSR & CAN_MSR_SLAK) == CAN_MSR_SLAK) && (wait_slak != 0x00))
   {
    wait_slak--;
   }
@@ -1162,22 +1162,22 @@ void CAN_ClearFlag(CAN_TypeDef* CANx, uint32_t CAN_FLAG)
   {
     flagtmp = CAN_FLAG & 0x000FFFFF;
 
-    if ((CAN_FLAG & CAN_FLAGS_RF0R)!=(uint32_t)RESET)
+    if ((CAN_FLAG & CAN_FLAGS_RF0R) != (uint32_t)RESET)
     {
       /* Receive Flags */
       CANx->RF0R = (uint32_t)(flagtmp);
     }
-    else if ((CAN_FLAG & CAN_FLAGS_RF1R)!=(uint32_t)RESET)
+    else if ((CAN_FLAG & CAN_FLAGS_RF1R) != (uint32_t)RESET)
     {
       /* Receive Flags */
       CANx->RF1R = (uint32_t)(flagtmp);
     }
-    else if ((CAN_FLAG & CAN_FLAGS_TSR)!=(uint32_t)RESET)
+    else if ((CAN_FLAG & CAN_FLAGS_TSR) != (uint32_t)RESET)
     {
       /* Transmit Flags */
       CANx->TSR = (uint32_t)(flagtmp);
     }
-    else /* if ((CAN_FLAG & CAN_FLAGS_MSR)!=(uint32_t)RESET) */
+    else /* if ((CAN_FLAG & CAN_FLAGS_MSR) != (uint32_t)RESET) */
     {
       /* Operating mode Flags */
       CANx->MSR = (uint32_t)(flagtmp);

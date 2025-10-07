@@ -33,9 +33,9 @@ unsigned char MFRC531_Reset(void)
 		
 		//SendByte('B');
     OpenRC();
-    if (Mf500PcdConfig()!=MI_OK)
+    if (Mf500PcdConfig() != MI_OK)
       return 1;//SendStrLn("Init Error Level 1");
-    if (PcdRfReset(1)!=MI_OK)   
+    if (PcdRfReset(1) != MI_OK)   
       return 2;  //SendStrLn("Init Error Level 2");
 		#endif
 
@@ -85,7 +85,7 @@ uint16_t wKeyVersion;
 	*/
 
 	OpenRC();
-    if (Mf500PcdLoadKeyE2(PICC_AUTHENT1A,Block,data)!=MI_OK)
+    if (Mf500PcdLoadKeyE2(PICC_AUTHENT1A,Block,data) != MI_OK)
     {
       //printf("\n\rF");
     }
@@ -110,17 +110,17 @@ unsigned char ISO14443_SingleTagSelect(unsigned char *snr) {
 	unsigned char i;
     #if (ReaderType==NewRoutine)
 
-    if (MFReaderStatus!=MI_OK)
+    if (MFReaderStatus != MI_OK)
       return 'F';
 
 
     OpenRC();
     for (size=0; size<10; size++) current_card_snr[size] =0; 
-    if (Mf500PiccRequest(PICC_REQALL, tt)!=MI_OK) return 'N';
+    if (Mf500PiccRequest(PICC_REQALL, tt) != MI_OK) return 'N';
 	
-    if (Mf500PiccAnticoll(0, current_card_snr)!=MI_OK) return 'N';  
+    if (Mf500PiccAnticoll(0, current_card_snr) != MI_OK) return 'N';  
 
-    if (Mf500PiccSelect(current_card_snr, &size)!=MI_OK) return 'N'; 
+    if (Mf500PiccSelect(current_card_snr, &size) != MI_OK) return 'N'; 
 	
   
     for (i=0; i<4; i++)
@@ -131,17 +131,17 @@ unsigned char ISO14443_SingleTagSelect(unsigned char *snr) {
 
     #ifdef CLRC_CHIP
 
-    if (MFReaderStatus!=MI_OK)
+    if (MFReaderStatus != MI_OK)
       return 'F';
 
 
     OpenRC();
     for (size=0; size<10; size++) current_card_snr[size] =0; 
-    if (Mf500PiccRequest(PICC_REQALL, tt)!=MI_OK) return 'N';
+    if (Mf500PiccRequest(PICC_REQALL, tt) != MI_OK) return 'N';
 	
-    if (Mf500PiccAnticoll(0, current_card_snr)!=MI_OK) return 'N';  
+    if (Mf500PiccAnticoll(0, current_card_snr) != MI_OK) return 'N';  
 
-    if (Mf500PiccSelect(current_card_snr, &size)!=MI_OK) return 'N'; 
+    if (Mf500PiccSelect(current_card_snr, &size) != MI_OK) return 'N'; 
 	
   
     for (i=0; i<4; i++)
@@ -206,8 +206,8 @@ unsigned char Keys[7][16] ={{0x89,0x51,0x71,0xf2,0x1d,0xcb},
     }  
     
     OpenRC();
-    if (Mf500PiccAuthE2(Auth,current_card_snr,Key,(Sector*4))!=MI_OK)
-      if (Mf500PiccAuthE2(Auth,current_card_snr,Key,(Sector*4))!=MI_OK)
+    if (Mf500PiccAuthE2(Auth,current_card_snr,Key,(Sector*4)) != MI_OK)
+      if (Mf500PiccAuthE2(Auth,current_card_snr,Key,(Sector*4)) != MI_OK)
       {
         //printf("\n\rF");
         return 1;
@@ -267,7 +267,7 @@ unsigned char Auth=0;
     };
     
     OpenRC();
-    if (Mf500PiccAuthKey(Auth,current_card_snr,Key,(Sector*4))!=MI_OK)
+    if (Mf500PiccAuthKey(Auth,current_card_snr,Key,(Sector*4)) != MI_OK)
       return 2;
     else  
       return 0;
@@ -297,7 +297,7 @@ unsigned char ISO14443_ReadBlock(unsigned char Block, unsigned char *buf)
 
 		#ifdef CLRC_CHIP
     OpenRC();
-    if (Mf500PiccRead(Block, buf)!=MI_OK)
+    if (Mf500PiccRead(Block, buf) != MI_OK)
       return 1;
 		#endif
 
@@ -315,7 +315,7 @@ unsigned char ISO14443_WriteBlock(unsigned char Block, unsigned char* data)
 
 		#ifdef CLRC_CHIP
     OpenRC();
-    if (Mf500PiccWrite(Block, data)!=MI_OK)
+    if (Mf500PiccWrite(Block, data) != MI_OK)
       return 1;
   
     //for (i=0; i<16; i++)
@@ -363,18 +363,18 @@ unsigned char d[16];
     FormattedData[15] =0xFF;
 
     OpenRC();
-    if (Mf500PiccWrite(Block, FormattedData)!=MI_OK)
+    if (Mf500PiccWrite(Block, FormattedData) != MI_OK)
     {
       //printf("\n\rF1");
       return 1;
     }
-    if (Mf500PiccRead(Block, d)!=MI_OK)
+    if (Mf500PiccRead(Block, d) != MI_OK)
     {
       //printf("\n\rF2");
       return 1;
     }
     for (i=0; i<16; i++)
-      if (d[i]!=FormattedData[i]) break;
+      if (d[i] != FormattedData[i]) break;
     if (i<16)
     {
       //printf("\n\rF3");
@@ -430,15 +430,15 @@ unsigned char i, data[16];
 		#ifdef CLRC_CHIP
     OpenRC();
 
-    if (Mf500PiccRead(Block, data)!=MI_OK)
+    if (Mf500PiccRead(Block, data) != MI_OK)
     {
       //printf("\n\rF");
       return 1;
     } 
   
-    for (i=0; i<4; i++) if (data[i]!=data[i+8]) { return 2; }  
-    for (i=0; i<4; i++) if (data[i+4]!=(data[i]^0xFF)) { return 2; }  
-    //if ((data[12]!=0) || (data[13]!=0xFF) || (data[14]!=0) || (data[15]!=0xFF)) { return 2; }  
+    for (i=0; i<4; i++) if (data[i] != data[i+8]) { return 2; }  
+    for (i=0; i<4; i++) if (data[i+4] != (data[i]^0xFF)) { return 2; }  
+    //if ((data[12] != 0) || (data[13] != 0xFF) || (data[14] != 0) || (data[15] != 0xFF)) { return 2; }  
   
     Transfer.buf[0] =data[0];
     Transfer.buf[1] =data[1];
@@ -448,11 +448,11 @@ unsigned char i, data[16];
 		#endif
 	
     #ifndef CLRC_CHIP
-    if (MFRC522_Read(Block, data)!=0) return 1;
+    if (MFRC522_Read(Block, data) != 0) return 1;
 
-    for (i=0; i<4; i++) if (data[i]!=data[i+8]) { return 1; }  
-    for (i=0; i<4; i++) if (data[i+4]!=(data[i]^0xFF)) { return 1; }  
-    //if ((data[12]!=0) || (data[13]!=0xFF) || (data[14]!=0) || (data[15]!=0xFF)) { return 1; }  
+    for (i=0; i<4; i++) if (data[i] != data[i+8]) { return 1; }  
+    for (i=0; i<4; i++) if (data[i+4] != (data[i]^0xFF)) { return 1; }  
+    //if ((data[12] != 0) || (data[13] != 0xFF) || (data[14] != 0) || (data[15] != 0xFF)) { return 1; }  
   
     *Val=data[3]; *Val<<=8;
   	*Val += data[2]; *Val<<=8;
@@ -472,15 +472,15 @@ unsigned char i, data[16];
 
 		#ifdef CLRC_CHIP
     OpenRC();
-    if (Mf500PiccRead(Block, data)!=MI_OK)
+    if (Mf500PiccRead(Block, data) != MI_OK)
     {
       //printf("\n\rF");
       return 1;
     }
 
-    for (i=0; i<4; i++) if (data[i]!=data[i+8]) { return 1; }  
-    for (i=0; i<4; i++) if (data[i+4]!=(data[i]^0xFF)) { return 1; }  
-    if ((data[12]!=0) || (data[13]!=0xFF) || (data[14]!=0) || (data[15]!=0xFF)) { return 1; }  
+    for (i=0; i<4; i++) if (data[i] != data[i+8]) { return 1; }  
+    for (i=0; i<4; i++) if (data[i+4] != (data[i]^0xFF)) { return 1; }  
+    if ((data[12] != 0) || (data[13] != 0xFF) || (data[14] != 0) || (data[15] != 0xFF)) { return 1; }  
   
     value[0] =data[3];
     value[1] =data[2];
@@ -499,7 +499,7 @@ unsigned char Value[5];
 
 		#ifdef CLRC_CHIP
     OpenRC();
-    if (Mf500PiccValue(PICC_INCREMENT, Block, data, Block)!=MI_OK)
+    if (Mf500PiccValue(PICC_INCREMENT, Block, data, Block) != MI_OK)
     {
       //printf("\n\rF");
       return 1;
@@ -512,7 +512,7 @@ unsigned char Value[5];
 
     /*
     for (i=0; i<4; i++)
-      if (data[i]!=Value[i])
+      if (data[i] != Value[i])
       {
         printf("\n\rI");
         return 1;
@@ -548,7 +548,7 @@ unsigned char data[4] ={0,0,0,0};
     //Transfer.Li=Val;
     //printf("\n\r- %ld  %X %X %X %X", Transfer.Li,Transfer.buf[0],Transfer.buf[1],Transfer.buf[2],Transfer.buf[3]);
     i=Mf500PiccValue(PICC_DECREMENT, Block, data, Block);
-    if (i!=MI_OK)
+    if (i != MI_OK)
     {
       //printf("\n\rF1 %d\n",i);
       return 1;
@@ -561,7 +561,7 @@ unsigned char data[4] ={0,0,0,0};
   
     /*
     for (i=0; i<4; i++)
-      if (data[i]!=Value[i])
+      if (data[i] != Value[i])
       {
         printf("\n\rI");
         return 1;
@@ -571,7 +571,7 @@ unsigned char data[4] ={0,0,0,0};
     //*Val=Transfer.Li;
 		#else
 		i=MFRC522_Decrement(Block,data); 
-    if (i!=MI_OK)
+    if (i != MI_OK)
     {
       //printf("\n\rF1 %d",i);
       return 1;
@@ -587,23 +587,23 @@ unsigned char ISO14443_CopyValueBlock(unsigned char Source, unsigned char Destin
 
 		#ifdef CLRC_CHIP
     OpenRC();
-    if (Mf500PiccValue(PICC_RESTORE, Source, data, Destination)!=MI_OK)
+    if (Mf500PiccValue(PICC_RESTORE, Source, data, Destination) != MI_OK)
     {
       //printf("\n\rF");
       return 1;
     }
-    if (Mf500PiccRead(Source, d1)!=MI_OK)
+    if (Mf500PiccRead(Source, d1) != MI_OK)
     {
       //printf("\n\rF");
       return 1;
     }
-    if (Mf500PiccRead(Destination, d2)!=MI_OK)
+    if (Mf500PiccRead(Destination, d2) != MI_OK)
     {
       //printf("\n\rF");
       return 1;
     }
     for (i=0; i<16; i++)
-      if (d1[i]!=d2[i])
+      if (d1[i] != d2[i])
       {
         //printf("\n\rF");
         return 1;

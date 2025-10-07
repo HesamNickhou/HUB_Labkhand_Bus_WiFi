@@ -421,7 +421,7 @@ unsigned char LoadConfiguration(void) {
 	#if (DeviceType==BUSDOOR)
   LoadFromDFToRam(addConfig2, 4*512, ConfigTransfer.Buf);
   Config=ConfigTransfer.Cfg;
-	if (Config.Type!=DeviceType+0xCA)
+	if (Config.Type != DeviceType+0xCA)
 	{
 		LoadFromDFToRam(addConfig, 4*512, ConfigTransfer.Buf);
 		Config=ConfigTransfer.Cfg;
@@ -432,7 +432,7 @@ unsigned char LoadConfiguration(void) {
   Config=ConfigTransfer.Cfg;
 	#endif
 
-  if (Config.Type!=DeviceType+0xCA)
+  if (Config.Type != DeviceType+0xCA)
   {
     Indicators.Transactions=0;
     Indicators.Locations=0;
@@ -526,7 +526,7 @@ unsigned int StartAddress, Len;
   }
   SPI_FLASH_CS=1;      
 
-	if ((fontBuffer[0]!='G') || (fontBuffer[1]!='U') || (fontBuffer[2]!='I') || (fontBuffer[3]!='P'))
+	if ((fontBuffer[0] != 'G') || (fontBuffer[1] != 'U') || (fontBuffer[2] != 'I') || (fontBuffer[3] != 'P'))
 		return;
 	
   GUI_SIF_CreateFont(fontBuffer, &ExtFont, GUI_SIF_TYPE_PROP);
@@ -537,7 +537,7 @@ unsigned int StartAddress, Len;
 //==============================================================================
 void LoadFont(const unsigned char* Data)
 {
-	if ((Data[0]!='G') || (Data[1]!='U') || (Data[2]!='I') || (Data[3]!='P'))
+	if ((Data[0] != 'G') || (Data[1] != 'U') || (Data[2] != 'I') || (Data[3] != 'P'))
 	{
 		if (Data==FontBNazanin140)
 			Data=FontBKoodak40;
@@ -632,7 +632,7 @@ s8 ConvertUTF8TOWin1256(u8 *StringUTF8, u8 *BuffStrWin1256) {
 	u16 CountLen=0;
 	u16 CStrUtf8=0;
 
-	for (i=0; (StringUTF8[i]!=0) && (i<100); )
+	for (i=0; (StringUTF8[i] != 0) && (i<100); )
 	{
 		if (StringUTF8[i]<=122)
 		{

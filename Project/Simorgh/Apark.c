@@ -1087,7 +1087,7 @@ unsigned char buf[LEN_TRANSACTIONS];
 	crc=0;
   for (i=0; i<16; i++)
     crc += buf[i];
-  if ((buf[16]+(buf[17]*256))!=crc)
+  if ((buf[16]+(buf[17]*256)) != crc)
   {
     trHead=0;
     trTail=0;
@@ -1133,13 +1133,13 @@ unsigned char buf[LEN_TRANSACTIONS];
   }
   
   //-----------------------------
-  if (trHead!=trTail)
+  if (trHead != trTail)
   {
     Idx=trHead;
     OfflineStart=trTail;
     if (Idx>0)
       Idx--;
-    else if (trTail!=0)
+    else if (trTail != 0)
       Idx=MAX_TRANSACTIONS-1;
     
     printf("\n\rCheck Offline ");
@@ -1423,7 +1423,7 @@ static const GUI_POINT _aPolig3[] = {
 
   LoadFont(FontTahoma20);
   GUI_SetColor(GUI_DARKRED); 
-	if (LastCardingDateTime[0]!=0)
+	if (LastCardingDateTime[0] != 0)
 	{
 	//sprintf(str,"%d/%d/%d  %d:%d:%02d",LastCardingDateTime[0],LastCardingDateTime[1],LastCardingDateTime[2],LastCardingDateTime[3],LastCardingDateTime[4],LastCardingDateTime[5]);
 	//PutText(5, 275+30+10, 272-38, 275+30+30+10, str, GUI_TA_CENTER);
@@ -1795,7 +1795,7 @@ void ShowPageAlef(void) {
 
   LoadFont(FontTahoma20);
   GUI_SetColor(GUI_YELLOW); 
-	if (LastCardingDateTime[0]!=0)	{
+	if (LastCardingDateTime[0] != 0)	{
 		sprintf(str,"%d/%d/%d  %d:%d:%02d",
 			LastCardingDateTime[0],
 			LastCardingDateTime[1],
@@ -1964,7 +1964,7 @@ unsigned int pageSize;
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
 	FLASH_LOCK
 
-  if (FirmwareLength!=Firmware.Length)
+  if (FirmwareLength != Firmware.Length)
   {
     ShowMessageDlg(mtError, "ط®ط·ط§ ط¯ط± ط­ط¬ظ… ط§ط·ظ„ط§ط¹ط§طھ",1,0,0,0);  
     InfoCounter=3;
@@ -1985,7 +1985,7 @@ unsigned int pageSize;
 		Loc++;
 	}
 	
-  if (crc!=Firmware.CheckSum)
+  if (crc != Firmware.CheckSum)
   {
     ShowMessageDlg(mtError, "ط®ط·ط§ طµط­طھ ط§ط·ظ„ط§ط¹ط§طھ",1,0,0,0);  
     InfoCounter=3;
@@ -2461,7 +2461,7 @@ unsigned short New_Release;
  //............................................................................................................
 
 						
- if (GlobalBuffer[6]!=DeviceType) return;
+ if (GlobalBuffer[6] != DeviceType) return;
  
  WDTR;
  
@@ -2554,7 +2554,7 @@ unsigned short New_Release;
 
                  
                  if (BufferLen<8) return; 
-                 if (GlobalBuffer[6]!=DeviceType)  return;  
+                 if (GlobalBuffer[6] != DeviceType)  return;  
                    
                  
                  Data_Length=(GlobalBuffer[4]+GlobalBuffer[5]*256)-3;
@@ -2786,7 +2786,7 @@ unsigned char  ProcessPacket(unsigned char Port) {
   if (BufferLen < (GlobalBuffer[4]+(GlobalBuffer[5]*256)))
     return 2;   
     
-  if ((GlobalBuffer[0]!=STX) || (GlobalBuffer[BufferLen-1]!=ETX))
+  if ((GlobalBuffer[0] != STX) || (GlobalBuffer[BufferLen-1] != ETX))
     return 3;   
 
   crc = crc16(0, GlobalBuffer + 1, BufferLen - 4);
@@ -2796,7 +2796,7 @@ unsigned char  ProcessPacket(unsigned char Port) {
     
   DID=GlobalBuffer[3]; DID<<=8;
   DID=DID+GlobalBuffer[2];  
-  if ((DID!=Config.DeviceID) && (DID!=0xFFFF) && (GlobalBuffer[1]>=10) && (GlobalBuffer[1]!=12))
+  if ((DID != Config.DeviceID) && (DID != 0xFFFF) && (GlobalBuffer[1]>=10) && (GlobalBuffer[1] != 12))
     return 5;
 
 
@@ -2818,9 +2818,9 @@ unsigned char  ProcessPacket(unsigned char Port) {
       if ((GlobalBuffer[4]+(GlobalBuffer[5]*256))==6)
         SetDateAndTime(GlobalBuffer[6],GlobalBuffer[7],GlobalBuffer[8],GlobalBuffer[9],GlobalBuffer[10],GlobalBuffer[11],0);
 
- 			 if (Config.WiFi!=103)
+ 			 if (Config.WiFi != 103)
 			   {
-			    if (WiFiStep!=10) {WiFiStep=9;  CheckWiFi();}
+			    if (WiFiStep != 10) {WiFiStep=9;  CheckWiFi();}
 		     }
 				
       ConnectedToServer=1;				 
@@ -2980,7 +2980,7 @@ unsigned char CheckCard(unsigned int UC, unsigned long int CardID)
 	 }
 	 */
 		 
-   if (UC!=Config.UC)
+   if (UC != Config.UC)
    {
 		 CardID=CardID&0x7FFFF;
   	 ShowCardingResult(2,0,UC,CardID,S_InvalidCardUC,"");
@@ -3309,7 +3309,7 @@ Grouh=0;
       UC=Config.UC; 
       
 			Price2=Price;
-			if (Grouh!=22)
+			if (Grouh != 22)
 			  if (CardEtebar<Price)
 				  if (HNPayment+CardEtebar>=Price)
 				  {
@@ -3366,7 +3366,7 @@ Grouh=0;
       }
       
 
-		 if ((HEtebar!=HNPayment) && (Status==S_Success))
+		 if ((HEtebar != HNPayment) && (Status==S_Success))
 		 {
 		     HediyeBuf[0] =HNPayment&0xFF;
          HediyeBuf[1] =(HNPayment>>8)&0xFF;
@@ -3496,7 +3496,7 @@ Grouh=0;
 
 	
 	
-		 if ((HEtebar!=0xFFFFFF) && (Status==S_OutOfRange))
+		 if ((HEtebar != 0xFFFFFF) && (Status==S_OutOfRange))
 		 {
 			 if (HEtebar>=Price)
 			 {
@@ -3843,7 +3843,7 @@ void ProcessPeriodicTasks(void)
 
   //..........................................................................................................
   Last_WifiConnectionStep=WiFiStep;
-  if (Config.WiFi!=103)
+  if (Config.WiFi != 103)
 	  {
 	   LWiFiStep=WiFiStep;
 	   CheckWiFi();
@@ -3889,7 +3889,7 @@ void ProcessPeriodicTasks(void)
 
   //.......................................................................................
 	
-  if (Min!=OldMin)
+  if (Min != OldMin)
   {
    RTC_Get();
 	 if (CardingBetweenTimeout)
@@ -3911,7 +3911,7 @@ void ProcessPeriodicTasks(void)
    //GUI_FillCircle(PointLocation, 40+370, 5);		
 		
    OldMin=Min;
-   if (Hour!=OldHour)
+   if (Hour != OldHour)
 		{
 			RTC_Get();
 			OldHour=Hour;
@@ -4012,7 +4012,7 @@ void ProcessPeriodicTasks(void)
         DeviceInfoSendInterval=0; 
         SendOfflines(); 
       } 
-    else if (!Check_ServerForUpdateFile)//&&((ActivePort!=0)))
+    else if (!Check_ServerForUpdateFile)//&&((ActivePort != 0)))
         {
 				 DataSendInterval=0;
          DeviceInfoSendInterval=0;
@@ -4075,7 +4075,7 @@ void InitializeAlef(void) {
     FirmwareLength += GlobalBuffer[3];
     _FirmwareVer=GlobalBuffer[9]+(GlobalBuffer[10]*256);
     _FirmwareRelease=GlobalBuffer[11]+(GlobalBuffer[12]*256);
-    if ((FirmwareLength>512*1024) || (_FirmwareVer!=Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
+    if ((FirmwareLength>512*1024) || (_FirmwareVer != Ver) || ((_FirmwareVer==Ver) && (_FirmwareRelease<=Release)))
     {
       FirmwareRequestNo=0; 
       FirmwareLength=0;

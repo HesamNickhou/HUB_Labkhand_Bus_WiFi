@@ -84,7 +84,7 @@ char str[40];
 	{
 		if (Series[i].ID==0)
 			break;
-		if (Series[i].KalaCode!=Kalas[KalaIndex].ID)
+		if (Series[i].KalaCode != Kalas[KalaIndex].ID)
 			continue;
     LISTVIEW_AddRow(hItem, NULL);
 		S[Idx] =i;

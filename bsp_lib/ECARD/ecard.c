@@ -186,9 +186,9 @@ unsigned char GetCardEtebar(signed int *Etebar) {
   DecryptBlock(CurECardInfo.CardSerialNumber, CurECardInfo.EtebarBlock);
     
   IsOldFormat=1;  
-  for (i=0; i<4; i++) if (buf[i]!=buf[i+8]) IsOldFormat=0;  
-  for (i=0; i<4; i++) if (buf[i+4]!=(buf[i]^0xFF)) IsOldFormat=0;  
-  if ((buf[12]!=0) || (buf[13]!=0xFF) || (buf[14]!=0) || (buf[15]!=0xFF)) IsOldFormat=0;
+  for (i=0; i<4; i++) if (buf[i] != buf[i+8]) IsOldFormat=0;  
+  for (i=0; i<4; i++) if (buf[i+4] != (buf[i]^0xFF)) IsOldFormat=0;  
+  if ((buf[12] != 0) || (buf[13] != 0xFF) || (buf[14] != 0) || (buf[15] != 0xFF)) IsOldFormat=0;
 	
   if (IsOldFormat)
   {                                      
@@ -210,7 +210,7 @@ unsigned char GetCardEtebar(signed int *Etebar) {
   BCC=0x4B;
   for (i=0; i<15; i++)
     BCC^=CurECardInfo.EtebarBlock[i];
-  if (BCC!=CurECardInfo.EtebarBlock[15])
+  if (BCC != CurECardInfo.EtebarBlock[15])
   {       
     return 3;
   }
@@ -234,12 +234,12 @@ unsigned char GetCardEtebar(signed int *Etebar) {
   {
     case Increment:
       TempEtebar=PreEtebar+Payment;
-      if (TempEtebar!=CurECardInfo.Etebar)
+      if (TempEtebar != CurECardInfo.Etebar)
         return 5;     
       break;
     case Decrement:
       TempEtebar=PreEtebar-Payment;
-      if (TempEtebar!=CurECardInfo.Etebar)
+      if (TempEtebar != CurECardInfo.Etebar)
         return 6;     
       break;
     default:
@@ -299,7 +299,7 @@ unsigned char ReadCardOPs(void) {
       {
         if (ISO14443_SingleTagSelect(snr)) continue;                
         for (BCC=0; BCC<4; BCC++)
-          if (CurECardInfo.CardSerialNumber[BCC]!=snr[BCC])
+          if (CurECardInfo.CardSerialNumber[BCC] != snr[BCC])
             return 2;
       }
       if (ISO14443_LoginE2(Block/4,0x35)) continue;                
@@ -312,7 +312,7 @@ unsigned char ReadCardOPs(void) {
     BCC=0x8A; 
     for (i=0; i<15; i++)
       BCC^=buf[i];
-    if (BCC!=buf[15])
+    if (BCC != buf[15])
     {
       //printf(" BCC Error");
       continue;
@@ -1005,7 +1005,7 @@ TCardOP CardOP;
       {
         if (ISO14443_SingleTagSelect(snr)) continue;                
         for (BCC=0; BCC<4; BCC++)
-          if (CurECardInfo.CardSerialNumber[BCC]!=snr[BCC])
+          if (CurECardInfo.CardSerialNumber[BCC] != snr[BCC])
             return 2;
       }
       if (ISO14443_LoginE2(Block/4,0x35)) continue;                
@@ -1017,7 +1017,7 @@ TCardOP CardOP;
     BCC=0x8A; 
     for (i=0; i<15; i++)
       BCC^=buf[i];
-    if (BCC!=buf[15])
+    if (BCC != buf[15])
     {
       //SendStrLn(" BCC Error");
       continue;
@@ -1151,7 +1151,7 @@ unsigned char Old_RestoreEtebar(void) {
     BCC^=buf[i]; 
   //SendStr("BCC="); SendNum(ReaderReceiveBuf[18]); SendStrLn("");
   //SendStr("CalcBCC="); SendNum(BCC); SendStrLn("");
-  if (buf[15]!=BCC)
+  if (buf[15] != BCC)
     {
      Old_RestoreIndex();
      return 10;
@@ -1402,7 +1402,7 @@ unsigned char snr[10];
                 if (ISO14443_WriteValue(CreditBlock, CurECardInfo.Etebar)) return 6;
                 LastStep=3;
                 if (ISO14443_ReadValueBlock(CreditBlock, &Etebar)) return 7;
-                if (Etebar!=CurECardInfo.Etebar)
+                if (Etebar != CurECardInfo.Etebar)
                   return 8; 
                 LastStep=0;
             
@@ -1430,7 +1430,7 @@ unsigned char snr[10];
                 if (ISO14443_WriteValue(CreditBlock, CurECardInfo.Etebar)) return 6;
                 LastStep=3;
                 if (ISO14443_ReadValueBlock(CreditBlock, &Etebar)) return 7;
-                if (Etebar!=CurECardInfo.Etebar)
+                if (Etebar != CurECardInfo.Etebar)
                   return 8;  
                 LastStep=0;
                              
@@ -1443,7 +1443,7 @@ unsigned char snr[10];
                 if (ISO14443_WriteValue(CreditBlock, CurECardInfo.Etebar)) return 6;
                 LastStep=3;
                 if (ISO14443_ReadValueBlock(CreditBlock, &Etebar)) return 7;
-                if (Etebar!=CurECardInfo.Etebar)
+                if (Etebar != CurECardInfo.Etebar)
                  return 8;  
 
                 LastStep=0;
@@ -1454,7 +1454,7 @@ unsigned char snr[10];
                 LastStep=3;
                 if (ISO14443_LoginE2(CreditSector,CreditLogin)) return 5;                
                 if (ISO14443_ReadValueBlock(CreditBlock, &Etebar)) return 7;
-                if (Etebar!=CurECardInfo.Etebar)
+                if (Etebar != CurECardInfo.Etebar)
                   return 8;
                 LastStep=0;
            

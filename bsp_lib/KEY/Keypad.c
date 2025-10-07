@@ -73,7 +73,7 @@ u8 tick=0;
   		  return OldKey_Pressed;
 			}
 		}else{
-			if ((Key_Pressed==0) && (OldKey_Pressed!=0))
+			if ((Key_Pressed==0) && (OldKey_Pressed != 0))
 			{
  			  //printf("\n\Released: %d", OldKey_Pressed);
 				ReleasedTime=OS_TimeMS;
@@ -172,7 +172,7 @@ u8 tick=0;
   		  return OldKey_Pressed;
 			}
 		}else{
-			if ((Key_Pressed==0) && (OldKey_Pressed!=0))
+			if ((Key_Pressed==0) && (OldKey_Pressed != 0))
 			{
  			  //printf("\n\Released: %d", OldKey_Pressed);
 				ReleasedTime=OS_TimeMS;
@@ -230,7 +230,7 @@ unsigned char  AppTaskKbdVII (void) {
   		  return OldKey_Pressed;
 			}
 		}else{
-			if ((Key_Pressed==0) && (OldKey_Pressed!=0))
+			if ((Key_Pressed==0) && (OldKey_Pressed != 0))
 			{
  			  //printf("\n\Released: %d", OldKey_Pressed);
 				ReleasedTime=OS_TimeMS;
@@ -244,7 +244,7 @@ unsigned char  AppTaskKbdVII (void) {
 		}
 		else {
 			/*
-			if ((Key_Pressed!=0) && (OldKey_Pressed==Key_Pressed))
+			if ((Key_Pressed != 0) && (OldKey_Pressed==Key_Pressed))
 			{
 				if (OS_TimeMS-ReleasedTime>1000)
 				{
@@ -286,7 +286,7 @@ unsigned char  AppTaskKbdVII (void) {
 unsigned char ScanKeyboard(void) {
 	unsigned char temp;
   /*
-  if (Volume!=' ')
+  if (Volume != ' ')
   {
     keyboard_Beep();
     VolumeTurned=VT;

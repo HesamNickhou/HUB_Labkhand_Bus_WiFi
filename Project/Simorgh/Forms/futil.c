@@ -48,7 +48,7 @@ unsigned long int Timeout;
 		 }
 		
 		 Key=ScanKeyboard();
-		 if ((Key) && (func!=0))
+		 if ((Key) && (func != 0))
          if ((*func)(Key)==0xAA)
            Key=0;					 
      switch (Key) 

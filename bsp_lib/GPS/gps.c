@@ -172,20 +172,20 @@ unsigned char PacketCheckSum=0;
 
 	if (GPSValidData) return; //Last Data not processed yet
   GPSValidData=0;
-  for (i=0; (GPRMCMessage[i]!=0) && (i<150); i++)
+  for (i=0; (GPRMCMessage[i] != 0) && (i<150); i++)
 	  Buffer[i] =GPRMCMessage[i];
   Buffer[i] =0;
     
 	//printf("\n\rData: ");
-	for (i=6; (Buffer[i]!=0) && (i<150); i++)
+	for (i=6; (Buffer[i] != 0) && (i<150); i++)
   {
     //printf("%c", Buffer[i]);
     if (Buffer[i] =='*')
     {
       PacketCheckSum=Hex2Byte(Buffer[i+1],Buffer[i+2]);
-      if ((Buffer[i+3]!=13) || (Buffer[i+4]!=10))
+      if ((Buffer[i+3] != 13) || (Buffer[i+4] != 10))
         return;
-      if (PacketCheckSum!=CheckSum)
+      if (PacketCheckSum != CheckSum)
         return;
     }
     CheckSum^=Buffer[i];
@@ -372,7 +372,7 @@ unsigned short i;
     Gps_Hour%=24;
   
   GPSTimeAcquired=10;
-  if ((Hour!=Gps_Hour) || (GPSTimeChecked==0))
+  if ((Hour != Gps_Hour) || (GPSTimeChecked==0))
   {
     GPS_CheckSystemTime();
   }else
@@ -394,22 +394,22 @@ char s2[20];
 unsigned char CheckSum='G'^'P'^'G'^'G'^'A'^',';
 unsigned char PacketCheckSum=0;
 
-  for (i=0; (GGAMessage[i]!=0) && (i<150); i++)
+  for (i=0; (GGAMessage[i] != 0) && (i<150); i++)
 	  Buffer[i] =GGAMessage[i];
 	Buffer[i] =0;
 
   s[0] =0;
   s1[0] =0;
   s2[0] =0;
-  for (i=6; (Buffer[i]!=0) && (i<150); i++)
+  for (i=6; (Buffer[i] != 0) && (i<150); i++)
   {
     //printf("%c", Buffer[i]);
     if (Buffer[i] =='*')
     {
       PacketCheckSum=Hex2Byte(Buffer[i+1],Buffer[i+2]);
-      if ((Buffer[i+3]!=13) || (Buffer[i+4]!=10))
+      if ((Buffer[i+3] != 13) || (Buffer[i+4] != 10))
         return;
-      if (PacketCheckSum!=CheckSum)
+      if (PacketCheckSum != CheckSum)
         return;
     }
     CheckSum^=Buffer[i];
@@ -450,7 +450,7 @@ void DisplayLocation(unsigned char ForceShow)
 static unsigned char LastGPSState='Z';
 	
 	#ifdef Simorgh50N
-  if ((LastGPSState!=GPSData.Status[0]) || (ForceShow))
+  if ((LastGPSState != GPSData.Status[0]) || (ForceShow))
   {
     LastGPSState=GPSData.Status[0];
     switch (GPSData.Status[0])

@@ -115,7 +115,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
         EDIT_GetText(hItem, str, 15);
 			  defValue=0;
-			  for (i=0; (i<15) && (str[i]!=0); i++)
+			  for (i=0; (i<15) && (str[i] != 0); i++)
 			  {
 			    defValue*=10;
 					defValue += (str[i]-48);
@@ -146,7 +146,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
         EDIT_GetText(hItem, str, 15);
 			  defValue=0;
-			  for (i=0; (i<15) && (str[i]!=0); i++)
+			  for (i=0; (i<15) && (str[i] != 0); i++)
 			  {
 			    defValue*=10;
 					defValue += (str[i]-48);

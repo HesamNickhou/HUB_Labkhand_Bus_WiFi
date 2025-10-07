@@ -3326,7 +3326,7 @@ png_read_filter_row_mmx_avg(png_row_infop row_info, png_bytep row,
       }
       break;  // end 8 bpp
 
-      default:                  // bpp greater than 8 (!= 1,2,3,4,[5],6,[7],8)
+      default:                  // bpp greater than 8 ( != 1,2,3,4,[5],6,[7],8)
       {
 
 #ifdef PNG_DEBUG
