@@ -267,9 +267,9 @@ unsigned short b=0;
         if (FirstSector)
         {
           FirstSector=0;
-          biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth += _acBuffer[20]; biWidth<<=8;
-          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth=_acBuffer[21]; biWidth <<= 8;
+          biWidth += _acBuffer[20]; biWidth <<= 8;
+          biWidth += _acBuffer[19]; biWidth <<= 8;
           biWidth += _acBuffer[18];
           yPos=y2-y1+Y;
 					#ifdef Simorgh50N
@@ -401,13 +401,13 @@ unsigned int StartAddress, Len;
 					if ((_acBuffer[0] != 'B') || (_acBuffer[1] != 'M'))
 						return 1;
           FirstSector=0;
-          biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth += _acBuffer[20]; biWidth<<=8;
-          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth=_acBuffer[21]; biWidth <<= 8;
+          biWidth += _acBuffer[20]; biWidth <<= 8;
+          biWidth += _acBuffer[19]; biWidth <<= 8;
           biWidth += _acBuffer[18];
-          biHeight=_acBuffer[25]; biHeight<<=8;
-          biHeight += _acBuffer[24]; biHeight<<=8;
-          biHeight += _acBuffer[23]; biHeight<<=8;
+          biHeight=_acBuffer[25]; biHeight <<= 8;
+          biHeight += _acBuffer[24]; biHeight <<= 8;
+          biHeight += _acBuffer[23]; biHeight <<= 8;
           biHeight += _acBuffer[22];
 					if ((biHeight>480) || (biWidth>800))
 						return 3;
@@ -573,9 +573,9 @@ unsigned short b=0;
         if (FirstSector)
         {
           FirstSector=0;
-          biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth += _acBuffer[20]; biWidth<<=8;
-          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth=_acBuffer[21]; biWidth <<= 8;
+          biWidth += _acBuffer[20]; biWidth <<= 8;
+          biWidth += _acBuffer[19]; biWidth <<= 8;
           biWidth += _acBuffer[18];
           yPos=y2-y1+Y;
 					/*
@@ -715,13 +715,13 @@ unsigned short b=0;
         if (FirstSector)
         {
           FirstSector=0;
-          biWidth=_acBuffer[21]; biWidth<<=8;
-          biWidth += _acBuffer[20]; biWidth<<=8;
-          biWidth += _acBuffer[19]; biWidth<<=8;
+          biWidth=_acBuffer[21]; biWidth <<= 8;
+          biWidth += _acBuffer[20]; biWidth <<= 8;
+          biWidth += _acBuffer[19]; biWidth <<= 8;
           biWidth += _acBuffer[18];
-          biHeight=_acBuffer[25]; biHeight<<=8;
-          biHeight += _acBuffer[24]; biHeight<<=8;
-          biHeight += _acBuffer[23]; biHeight<<=8;
+          biHeight=_acBuffer[25]; biHeight <<= 8;
+          biHeight += _acBuffer[24]; biHeight <<= 8;
+          biHeight += _acBuffer[23]; biHeight <<= 8;
           biHeight += _acBuffer[22];
           yPos=Y+biHeight;
           LCD_REG_ADDRESS=0x002b;	

@@ -350,7 +350,7 @@ u32 temp=0;
 u16 temp1=0;
   
 	timecount=RTC->CNTH;
-  timecount<<=16;
+  timecount <<= 16;
 	timecount|=RTC->CNTL;	
 
  	temp=timecount/86400;

@@ -181,8 +181,8 @@ unsigned char Month, Day, Hour, Min;
 	{
   	printf("\n\rRecords %d:", i);
 		j=i;
-      CardID=SPI_FLASH_BUF[j+3]; CardID<<=8;
-      CardID += SPI_FLASH_BUF[j+2]; CardID<<=8;
+      CardID=SPI_FLASH_BUF[j+3]; CardID <<= 8;
+      CardID += SPI_FLASH_BUF[j+2]; CardID <<= 8;
       CardID += SPI_FLASH_BUF[j+1];
       Year=(SPI_FLASH_BUF[j+5]>>4)+1390;
       Month=SPI_FLASH_BUF[j+5]&0x0F;
@@ -200,7 +200,7 @@ unsigned char Month, Day, Hour, Min;
 	{
  		//printf("\n\rCheck %d",i);
     crc=crc16(0, SPI_FLASH_BUF+i, 256-6);
-		j=SPI_FLASH_BUF[i+251]; j<<=8;
+		j=SPI_FLASH_BUF[i+251]; j <<= 8;
 		j += SPI_FLASH_BUF[i+250];
 		if (j != crc)
 		{
@@ -296,7 +296,7 @@ unsigned short i, crc;
 	SPI_Flash_Read(pBuffer,ReadAddr,256);
 	
   crc=crc16(0, pBuffer, 256-6);
-  i=pBuffer[251]; i<<=8;
+  i=pBuffer[251]; i <<= 8;
 	i += pBuffer[250];
 	if (i != crc)
 	{

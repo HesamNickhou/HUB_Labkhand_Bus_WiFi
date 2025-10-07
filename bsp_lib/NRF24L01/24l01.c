@@ -24,13 +24,13 @@ unsigned char Num=0;
 		if (data&0x80)  {NRF24L01_MOSI=1;  }
 		else           {NRF24L01_MOSI=0;  }
 		
-		data<<=1;    
+		data <<= 1;    
 		NRF24L01_SCK=1; 	 
-		Num<<=1; 	 
+		Num <<= 1; 	 
 		if (NRF24L01_MISO) Num++; 		 
 		NRF24L01_SCK=0;		       
 	}		 			    
-	//Num>>=4;
+	//Num >>= 4;
 	return Num; 
 }
 

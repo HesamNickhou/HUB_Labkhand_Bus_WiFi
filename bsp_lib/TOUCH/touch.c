@@ -36,7 +36,7 @@ void TP_Write_Byte(u8 num)
 	{ 	  
 		if (num&0x80)TDIN=1;  
 		else TDIN=0;   
-		num<<=1;    
+		num <<= 1;    
 		TCLK=0; 	 
 		__nop();__nop();
 		__nop();__nop();
@@ -63,7 +63,7 @@ uint16_t ADS_Read_AD(uint8_t CMD)
 	TCLK=0; 	     	    
 	for (count=0;count<16;count++) 
 	{ 				  
-		Num<<=1; 	 
+		Num <<= 1; 	 
 		TCLK=0;	  	   
 		__nop();__nop();
 		__nop();__nop();
@@ -71,7 +71,7 @@ uint16_t ADS_Read_AD(uint8_t CMD)
   	__nop();__nop();
 		if (DOUT)Num++; 		 
 	}  	
-	Num>>=4;   	 
+	Num >>= 4;   	 
 	TCS=1;		  
 	return Num;    
 }

@@ -270,19 +270,19 @@ unsigned char LoadRecordsInfo(void) {
 
 
 	BytesToInt(&trHead, &buf[0]);
-  //trHead=buf[3]; trHead<<=8;
-  //trHead += buf[2]; trHead<<=8;
-  //trHead += buf[1]; trHead<<=8;
+  //trHead=buf[3]; trHead <<= 8;
+  //trHead += buf[2]; trHead <<= 8;
+  //trHead += buf[1]; trHead <<= 8;
   //trHead += buf[0];
 	BytesToInt(&trTail, &buf[4]);
-  //trTail=buf[7]; trTail<<=8;
-  //trTail += buf[6]; trTail<<=8;
-  //trTail += buf[5]; trTail<<=8;
+  //trTail=buf[7]; trTail <<= 8;
+  //trTail += buf[6]; trTail <<= 8;
+  //trTail += buf[5]; trTail <<= 8;
   //trTail += buf[4];
 	//BytesToInt(&prHead, &buf[8]);
-  //prHead=buf[11]; prHead<<=8;
-  //prHead += buf[10]; prHead<<=8;
-  //prHead += buf[9]; prHead<<=8;
+  //prHead=buf[11]; prHead <<= 8;
+  //prHead += buf[10]; prHead <<= 8;
+  //prHead += buf[9]; prHead <<= 8;
   //prHead += buf[8];
 	
 	crc = 0;
@@ -358,13 +358,13 @@ unsigned char LoadRecordsInfo(void) {
 	
   //printf("\n\rIndicators.OffTransactions=%d ",Indicators.OffTransactions);
   LoadFromDFToRam(addBlackListInfo, 8, buf);
-	i=buf[2]; i<<=8;
-	i += buf[1]; i<<=8;
+	i=buf[2]; i <<= 8;
+	i += buf[1]; i <<= 8;
 	i += buf[0]; 
 	BlackList_Count=i;
-	i=buf[6]; i<<=8;
-	i += buf[5]; i<<=8;
-	i += buf[4]; i<<=8;
+	i=buf[6]; i <<= 8;
+	i += buf[5]; i <<= 8;
+	i += buf[4]; i <<= 8;
 	i += buf[3]; 
 	BlackList_LastIdx=i;
 	bcc=0xBC^buf[0]^buf[1]^buf[2]^buf[3]^buf[4]^buf[5]^buf[6];
@@ -1963,16 +1963,16 @@ void ProcessData(void) {
            if ((New_Ver>Ver) || ((New_Release>Release) && (New_Ver==Ver)))
              {
               Firmware.HaveData=0xAA;
-              Firmware.Length=GlobalBuffer[16]; Firmware.Length<<=8;
-              Firmware.Length += GlobalBuffer[15]; Firmware.Length<<=8;
-              Firmware.Length += GlobalBuffer[14]; Firmware.Length<<=8;
+              Firmware.Length=GlobalBuffer[16]; Firmware.Length <<= 8;
+              Firmware.Length += GlobalBuffer[15]; Firmware.Length <<= 8;
+              Firmware.Length += GlobalBuffer[14]; Firmware.Length <<= 8;
               Firmware.Length += GlobalBuffer[13];
 
 					  	if (Firmware.Length==0) return;
 								
-              Firmware.CheckSum=GlobalBuffer[20]; Firmware.CheckSum<<=8;
-              Firmware.CheckSum += GlobalBuffer[19]; Firmware.CheckSum<<=8;
-              Firmware.CheckSum += GlobalBuffer[18]; Firmware.CheckSum<<=8;
+              Firmware.CheckSum=GlobalBuffer[20]; Firmware.CheckSum <<= 8;
+              Firmware.CheckSum += GlobalBuffer[19]; Firmware.CheckSum <<= 8;
+              Firmware.CheckSum += GlobalBuffer[18]; Firmware.CheckSum <<= 8;
               Firmware.CheckSum += GlobalBuffer[17];
          
               Firmware.SavedVer=New_Ver;
@@ -3341,11 +3341,11 @@ void InitializeAlef(void) {
   LoadFromDFToRam(addFirmwareInfo, 32, GlobalBuffer);
   if ((GlobalBuffer[0] ==0xE2) && (GlobalBuffer[7] ==0xE9))
   {
-    FirmwareRequestNo=GlobalBuffer[2]; FirmwareRequestNo<<=8;
+    FirmwareRequestNo=GlobalBuffer[2]; FirmwareRequestNo <<= 8;
     FirmwareRequestNo += GlobalBuffer[1];
-    FirmwareLength=GlobalBuffer[6]; FirmwareLength<<=8;
-    FirmwareLength += GlobalBuffer[5]; FirmwareLength<<=8;
-    FirmwareLength += GlobalBuffer[4]; FirmwareLength<<=8;
+    FirmwareLength=GlobalBuffer[6]; FirmwareLength <<= 8;
+    FirmwareLength += GlobalBuffer[5]; FirmwareLength <<= 8;
+    FirmwareLength += GlobalBuffer[4]; FirmwareLength <<= 8;
     FirmwareLength += GlobalBuffer[3];
     _FirmwareVer=GlobalBuffer[9]+(GlobalBuffer[10]*256);
     _FirmwareRelease=GlobalBuffer[11]+(GlobalBuffer[12]*256);
@@ -3359,13 +3359,13 @@ void InitializeAlef(void) {
       SaveFromRamToDF(addFirmwareInfo, 32, &GlobalBuffer[0]);
      	FLASH_LOCK
     }else{  
-      Firmware.Length=GlobalBuffer[16]; Firmware.Length<<=8;
-      Firmware.Length += GlobalBuffer[15]; Firmware.Length<<=8;
-      Firmware.Length += GlobalBuffer[14]; Firmware.Length<<=8;
+      Firmware.Length=GlobalBuffer[16]; Firmware.Length <<= 8;
+      Firmware.Length += GlobalBuffer[15]; Firmware.Length <<= 8;
+      Firmware.Length += GlobalBuffer[14]; Firmware.Length <<= 8;
       Firmware.Length += GlobalBuffer[13];
-      Firmware.CheckSum=GlobalBuffer[20]; Firmware.CheckSum<<=8;
-      Firmware.CheckSum += GlobalBuffer[19]; Firmware.CheckSum<<=8;
-      Firmware.CheckSum += GlobalBuffer[18]; Firmware.CheckSum<<=8;
+      Firmware.CheckSum=GlobalBuffer[20]; Firmware.CheckSum <<= 8;
+      Firmware.CheckSum += GlobalBuffer[19]; Firmware.CheckSum <<= 8;
+      Firmware.CheckSum += GlobalBuffer[18]; Firmware.CheckSum <<= 8;
       Firmware.CheckSum += GlobalBuffer[17];  
       for (i=0; i<15; i++)
         Firmware.FirmwareFileName[i] =GlobalBuffer[i+21];
@@ -3576,9 +3576,9 @@ unsigned int DumpMem(void) {
 
 		WDTR;
 		printf("\n\rid: %d",SendUsers);
-		Li  = MEMBuffer[30]; Li<<=8;
-		Li += MEMBuffer[2]; Li<<=8;
-		Li += MEMBuffer[1]; Li<<=8;
+		Li  = MEMBuffer[30]; Li <<= 8;
+		Li += MEMBuffer[2]; Li <<= 8;
+		Li += MEMBuffer[1]; Li <<= 8;
 		Li += MEMBuffer[0]; 
 		printf(" ID: %ld", Li);
 		printf(" %d/%d/%d %d:%d:%d", MEMBuffer[4]+1300,MEMBuffer[5],MEMBuffer[6],MEMBuffer[7],MEMBuffer[8],MEMBuffer[9]);

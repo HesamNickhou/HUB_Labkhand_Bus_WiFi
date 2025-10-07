@@ -878,7 +878,7 @@ u16 TPReadY(void) {
 	SPI_WriteByte(0xD0);
 	SpiDelay(10);
 	y=SPI_WriteByte(0x00);
-	y<<=8;
+	y <<= 8;
 	y += SPI_WriteByte(0x00);
 	SpiDelay(10);
 	TP_DCS();

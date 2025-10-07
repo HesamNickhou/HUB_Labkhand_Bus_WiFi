@@ -454,9 +454,9 @@ unsigned char i, data[16];
     for (i=0; i<4; i++) if (data[i+4] != (data[i]^0xFF)) { return 1; }  
     //if ((data[12] != 0) || (data[13] != 0xFF) || (data[14] != 0) || (data[15] != 0xFF)) { return 1; }  
   
-    *Val=data[3]; *Val<<=8;
-  	*Val += data[2]; *Val<<=8;
-	  *Val += data[1]; *Val<<=8;
+    *Val=data[3]; *Val <<= 8;
+  	*Val += data[2]; *Val <<= 8;
+	  *Val += data[1]; *Val <<= 8;
 	  *Val += data[0];
 		#endif
 	

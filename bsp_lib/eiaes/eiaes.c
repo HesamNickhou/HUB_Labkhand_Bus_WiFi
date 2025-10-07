@@ -156,24 +156,24 @@ int  I, J;
 unsigned long int T;
 unsigned long int W0, W1, W2, W3;
 
-  ExpandedKey[0] =Key[3]; ExpandedKey[0]<<=8;
-  ExpandedKey[0] += Key[2]; ExpandedKey[0]<<=8;
-  ExpandedKey[0] += Key[1]; ExpandedKey[0]<<=8;
+  ExpandedKey[0] =Key[3]; ExpandedKey[0] <<= 8;
+  ExpandedKey[0] += Key[2]; ExpandedKey[0] <<= 8;
+  ExpandedKey[0] += Key[1]; ExpandedKey[0] <<= 8;
   ExpandedKey[0] += Key[0];
   
-  ExpandedKey[1] =Key[7]; ExpandedKey[1]<<=8;
-  ExpandedKey[1] += Key[6]; ExpandedKey[1]<<=8;
-  ExpandedKey[1] += Key[5]; ExpandedKey[1]<<=8;
+  ExpandedKey[1] =Key[7]; ExpandedKey[1] <<= 8;
+  ExpandedKey[1] += Key[6]; ExpandedKey[1] <<= 8;
+  ExpandedKey[1] += Key[5]; ExpandedKey[1] <<= 8;
   ExpandedKey[1] += Key[4];
 
-  ExpandedKey[2] =Key[11]; ExpandedKey[2]<<=8;
-  ExpandedKey[2] += Key[10]; ExpandedKey[2]<<=8;
-  ExpandedKey[2] += Key[9]; ExpandedKey[2]<<=8;
+  ExpandedKey[2] =Key[11]; ExpandedKey[2] <<= 8;
+  ExpandedKey[2] += Key[10]; ExpandedKey[2] <<= 8;
+  ExpandedKey[2] += Key[9]; ExpandedKey[2] <<= 8;
   ExpandedKey[2] += Key[8];
 
-  ExpandedKey[3] =Key[15]; ExpandedKey[3]<<=8;
-  ExpandedKey[3] += Key[14]; ExpandedKey[3]<<=8;
-  ExpandedKey[3] += Key[13]; ExpandedKey[3]<<=8;
+  ExpandedKey[3] =Key[15]; ExpandedKey[3] <<= 8;
+  ExpandedKey[3] += Key[14]; ExpandedKey[3] <<= 8;
+  ExpandedKey[3] += Key[13]; ExpandedKey[3] <<= 8;
   ExpandedKey[3] += Key[12];
 
   I = 0; J = 1;
@@ -203,27 +203,27 @@ unsigned long int T1[4];
 unsigned long int W0, W1, W2, W3;
 
   // initializing
-  T0[0] =InBuf[3]; T0[0]<<=8;
-  T0[0] += InBuf[2]; T0[0]<<=8;
-  T0[0] += InBuf[1]; T0[0]<<=8;
+  T0[0] =InBuf[3]; T0[0] <<= 8;
+  T0[0] += InBuf[2]; T0[0] <<= 8;
+  T0[0] += InBuf[1]; T0[0] <<= 8;
   T0[0] += InBuf[0];
   T0[0]^=Key[0];
   
-  T0[1] =InBuf[7]; T0[1]<<=8;
-  T0[1] += InBuf[6]; T0[1]<<=8;
-  T0[1] += InBuf[5]; T0[1]<<=8;
+  T0[1] =InBuf[7]; T0[1] <<= 8;
+  T0[1] += InBuf[6]; T0[1] <<= 8;
+  T0[1] += InBuf[5]; T0[1] <<= 8;
   T0[1] += InBuf[4];
   T0[1]^=Key[1];
 
-  T0[2] =InBuf[11]; T0[2]<<=8;
-  T0[2] += InBuf[10]; T0[2]<<=8;
-  T0[2] += InBuf[9]; T0[2]<<=8;
+  T0[2] =InBuf[11]; T0[2] <<= 8;
+  T0[2] += InBuf[10]; T0[2] <<= 8;
+  T0[2] += InBuf[9]; T0[2] <<= 8;
   T0[2] += InBuf[8];
   T0[2]^=Key[2];
 
-  T0[3] =InBuf[15]; T0[3]<<=8;
-  T0[3] += InBuf[14]; T0[3]<<=8;
-  T0[3] += InBuf[13]; T0[3]<<=8;
+  T0[3] =InBuf[15]; T0[3] <<= 8;
+  T0[3] += InBuf[14]; T0[3] <<= 8;
+  T0[3] += InBuf[13]; T0[3] <<= 8;
   T0[3] += InBuf[12];
   T0[3]^=Key[3];
 
@@ -491,27 +491,27 @@ unsigned long int T1[4];
 unsigned long int W0, W1, W2, W3;
  
   // initializing
-  T0[0] =InBuf[3]; T0[0]<<=8;
-  T0[0] += InBuf[2]; T0[0]<<=8;
-  T0[0] += InBuf[1]; T0[0]<<=8;
+  T0[0] =InBuf[3]; T0[0] <<= 8;
+  T0[0] += InBuf[2]; T0[0] <<= 8;
+  T0[0] += InBuf[1]; T0[0] <<= 8;
   T0[0] += InBuf[0];
   T0[0]^=Key[40];
   
-  T0[1] =InBuf[7]; T0[1]<<=8;
-  T0[1] += InBuf[6]; T0[1]<<=8;
-  T0[1] += InBuf[5]; T0[1]<<=8;
+  T0[1] =InBuf[7]; T0[1] <<= 8;
+  T0[1] += InBuf[6]; T0[1] <<= 8;
+  T0[1] += InBuf[5]; T0[1] <<= 8;
   T0[1] += InBuf[4];
   T0[1]^=Key[41];
 
-  T0[2] =InBuf[11]; T0[2]<<=8;
-  T0[2] += InBuf[10]; T0[2]<<=8;
-  T0[2] += InBuf[9]; T0[2]<<=8;
+  T0[2] =InBuf[11]; T0[2] <<= 8;
+  T0[2] += InBuf[10]; T0[2] <<= 8;
+  T0[2] += InBuf[9]; T0[2] <<= 8;
   T0[2] += InBuf[8];
   T0[2]^=Key[42];
 
-  T0[3] =InBuf[15]; T0[3]<<=8;
-  T0[3] += InBuf[14]; T0[3]<<=8;
-  T0[3] += InBuf[13]; T0[3]<<=8;
+  T0[3] =InBuf[15]; T0[3] <<= 8;
+  T0[3] += InBuf[14]; T0[3] <<= 8;
+  T0[3] += InBuf[13]; T0[3] <<= 8;
   T0[3] += InBuf[12];
   T0[3]^=Key[43];
 

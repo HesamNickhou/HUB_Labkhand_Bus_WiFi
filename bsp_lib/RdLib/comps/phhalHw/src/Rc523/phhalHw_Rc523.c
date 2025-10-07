@@ -125,13 +125,13 @@ u8 i=0;
 	{ 	  
 		if (data&0x80)MOSI=1;  
 		else MOSI=0;   
-		data<<=1;    
+		data <<= 1;    
 		SCK=1; 	 
-		Num<<=1; 	 
+		Num <<= 1; 	 
 		if (MISO) Num++; 		 
 		SCK=0;		       
 	}		 			    
-	//Num>>=4;
+	//Num >>= 4;
 	return Num;   
 }
 

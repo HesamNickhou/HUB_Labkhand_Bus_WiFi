@@ -119,9 +119,9 @@ unsigned int TIM6ARRValue = 1088,ReadedSector=0;
 				
 				
 				StartAddress += 44;
-				i=_acBuffer[24]; i<<=8;
-				i += _acBuffer[25]; i<<=8;
-				i += _acBuffer[26]; i<<=8;
+				i=_acBuffer[24]; i <<= 8;
+				i += _acBuffer[25]; i <<= 8;
+				i += _acBuffer[26]; i <<= 8;
 				i += _acBuffer[27];
         switch (i)
         {
