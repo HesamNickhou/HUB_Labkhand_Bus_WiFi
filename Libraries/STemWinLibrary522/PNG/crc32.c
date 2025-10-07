@@ -53,7 +53,7 @@
 
 /* Definitions for doing the crc four data bytes at a time. */
 #ifdef BYFOUR
-#  define REV(w) (((w)>>24)+(((w)>>8)&0xff00)+ \
+#  define REV(w) (((w) >> 24)+(((w) >> 8)&0xff00)+ \
                 (((w)&0xff00)<<8)+(((w)&0xff)<<24))
    local unsigned long crc32_little OF((unsigned long,
                         const unsigned char FAR *, unsigned));

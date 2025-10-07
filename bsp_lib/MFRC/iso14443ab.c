@@ -338,9 +338,9 @@ unsigned char d[16];
 		#ifdef CLRC_CHIP
 		
     data[0] =Val&0xFF;
-    data[1] =(Val>>8)&0xFF;
-    data[2] =(Val>>16)&0xFF;
-    data[3] =(Val>>24)&0xFF;
+    data[1] =(Val >> 8)&0xFF;
+    data[2] =(Val >> 16)&0xFF;
+    data[3] =(Val >> 24)&0xFF;
   
     FormattedData[0] =data[0];
     FormattedData[1] =data[1];
@@ -387,9 +387,9 @@ unsigned char d[16];
     #ifndef CLRC_CHIP
 		
     data[0] =Val&0xFF;
-    data[1] =(Val>>8)&0xFF;
-    data[2] =(Val>>16)&0xFF;
-    data[3] =(Val>>24)&0xFF;
+    data[1] =(Val >> 8)&0xFF;
+    data[2] =(Val >> 16)&0xFF;
+    data[3] =(Val >> 24)&0xFF;
   
     FormattedData[0] =data[0];
     FormattedData[1] =data[1];
@@ -539,9 +539,9 @@ signed int i;
 unsigned char data[4] ={0,0,0,0};
 
     data[0] =Val&0xFF;
-    data[1] =(Val>>8)&0xFF;
-    data[2] =(Val>>16)&0xFF;
-    data[3] =(Val>>24)&0xFF;
+    data[1] =(Val >> 8)&0xFF;
+    data[2] =(Val >> 16)&0xFF;
+    data[3] =(Val >> 24)&0xFF;
 
 		#ifdef CLRC_CHIP
     OpenRC();

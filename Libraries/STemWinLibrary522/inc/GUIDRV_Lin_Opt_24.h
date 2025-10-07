@@ -244,7 +244,7 @@ static void _FillRectOpt24(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1)
         RemItems = RemPixels;
         Off      = Off0 + OffLine * (RemLines - 1);
         Data0 = (ColorIndex      ) | (ColorIndex << 24);
-        Data1 = (ColorIndex >>  8) | (ColorIndex << 16);
+        Data1 = (ColorIndex >> 8) | (ColorIndex << 16);
         Data2 = (ColorIndex >> 16) | (ColorIndex <<  8);
         do {
           WRITE_MEM32(pContext->VRAMAddr, Off + 0, Data0);

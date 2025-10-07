@@ -100,7 +100,7 @@ static void LcdWriteReg(U16 Data) {
 	
 	TFTRSPort->BRR = TFTRSPin;
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=(Data&0xFF);
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
@@ -128,17 +128,17 @@ static void LcdWriteData(U16 Data) {
 #endif
 	#ifdef Torgheh
 	u32 mask;
-	u8 data8 = (Data>>8);
+	u8 data8 = (Data >> 8);
 	
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
 	TFTWRPort->BSRR = TFTWRPin;
 		
 	//data8 = Data;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=(Data&0xFF);
 	GPIOC->ODR=mask;
 	

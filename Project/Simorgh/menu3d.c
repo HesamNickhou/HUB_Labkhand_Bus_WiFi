@@ -223,10 +223,10 @@ FIL File;
 //==============================================================================
 #define RGB2(r,g,b)	((unsigned int)( (( r >> 3 ) << 11 ) | \
 								(( g >> 2 ) << 5  ) | \
-								( b  >> 3 )))
+								( b >> 3 )))
 #define RGB3(r,g,b)	((unsigned int)( (( b >> 3 ) << 11 ) | \
 								(( g >> 2 ) << 5  ) | \
-								( r  >> 3 )))
+								( r >> 3 )))
 
 //==============================================================================
 unsigned char G_LoadBMPPart(unsigned int X,unsigned int Y, unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2, const char* FileName)
@@ -274,14 +274,14 @@ unsigned short b=0;
           yPos=y2-y1+Y;
 					#ifdef Simorgh50N
           LCD_REG_ADDRESS=0x002b;	
-          LCD_DATA_ADDRESS=yPos>>8;	    
+          LCD_DATA_ADDRESS=yPos >> 8;	    
           LCD_DATA_ADDRESS=yPos&0x00ff;
-      	  LCD_DATA_ADDRESS=271>>8;	    
+      	  LCD_DATA_ADDRESS=271 >> 8;	    
       	  LCD_DATA_ADDRESS=271&0x00ff;
           LCD_REG_ADDRESS=0x002A;	
-	        LCD_DATA_ADDRESS=X>>8;	    
+	        LCD_DATA_ADDRESS=X >> 8;	    
 	        LCD_DATA_ADDRESS=X&0x00ff;
-	        LCD_DATA_ADDRESS=(X+biWidth)>>8;	    
+	        LCD_DATA_ADDRESS=(X+biWidth) >> 8;	    
 	        LCD_DATA_ADDRESS=(X+biWidth)&0x00ff;
           LCD_REG_ADDRESS = 0x002C;
 					#endif
@@ -321,9 +321,9 @@ unsigned short b=0;
             {
 							#ifdef Simorgh50N
               LCD_REG_ADDRESS=0x002b;	
-	            LCD_DATA_ADDRESS=yPos>>8;	    
+	            LCD_DATA_ADDRESS=yPos >> 8;	    
 	            LCD_DATA_ADDRESS=yPos&0x00ff;
-	            LCD_DATA_ADDRESS=271>>8;	    
+	            LCD_DATA_ADDRESS=271 >> 8;	    
 	            LCD_DATA_ADDRESS=271&0x00ff;
   	          LCD_REG_ADDRESS = 0x002C;
 							#endif
@@ -414,14 +414,14 @@ unsigned int StartAddress, Len;
           yPos=Y+biHeight;
  					#ifdef Simorgh50N
           LCD_REG_ADDRESS=0x002b;	
-          LCD_DATA_ADDRESS=yPos>>8;	    
+          LCD_DATA_ADDRESS=yPos >> 8;	    
           LCD_DATA_ADDRESS=yPos&0x00ff;
-      	  LCD_DATA_ADDRESS=271>>8;	    
+      	  LCD_DATA_ADDRESS=271 >> 8;	    
       	  LCD_DATA_ADDRESS=271&0x00ff;
           LCD_REG_ADDRESS=0x002A;	
-	        LCD_DATA_ADDRESS=X>>8;	    
+	        LCD_DATA_ADDRESS=X >> 8;	    
 	        LCD_DATA_ADDRESS=X&0x00ff;
-	        LCD_DATA_ADDRESS=479>>8;	    
+	        LCD_DATA_ADDRESS=479 >> 8;	    
 	        LCD_DATA_ADDRESS=479&0x00ff;
           LCD_REG_ADDRESS = 0x002C;
 					#endif
@@ -462,14 +462,14 @@ unsigned int StartAddress, Len;
           {
   					#ifdef Simorgh50N
             LCD_REG_ADDRESS=0x002b;	
-	          LCD_DATA_ADDRESS=yPos>>8;	    
+	          LCD_DATA_ADDRESS=yPos >> 8;	    
 	          LCD_DATA_ADDRESS=yPos&0x00ff;
-	          LCD_DATA_ADDRESS=271>>8;	    
+	          LCD_DATA_ADDRESS=271 >> 8;	    
 	          LCD_DATA_ADDRESS=271&0x00ff;
          	  LCD_REG_ADDRESS=0x002A;	
-	          LCD_DATA_ADDRESS=X>>8;	    
+	          LCD_DATA_ADDRESS=X >> 8;	    
 	          LCD_DATA_ADDRESS=X&0x00ff;
-	          LCD_DATA_ADDRESS=479>>8;	    
+	          LCD_DATA_ADDRESS=479 >> 8;	    
 	          LCD_DATA_ADDRESS=479&0x00ff;							
             LCD_REG_ADDRESS = 0x002C;
 						#endif
@@ -489,9 +489,9 @@ unsigned int StartAddress, Len;
           {
   					#ifdef Simorgh50N
          	  LCD_REG_ADDRESS=0x002A;	
-	          LCD_DATA_ADDRESS=(X+CurCol)>>8;	    
+	          LCD_DATA_ADDRESS=(X+CurCol) >> 8;	    
 	          LCD_DATA_ADDRESS=(X+CurCol)&0x00ff;
-	          LCD_DATA_ADDRESS=479>>8;	    
+	          LCD_DATA_ADDRESS=479 >> 8;	    
 	          LCD_DATA_ADDRESS=479&0x00ff;							
             LCD_REG_ADDRESS = 0x002C;
 						#endif
@@ -580,26 +580,26 @@ unsigned short b=0;
           yPos=y2-y1+Y;
 					/*
           LCD_REG_ADDRESS=0x002b;	
-          LCD_DATA_ADDRESS=yPos>>8;	    
+          LCD_DATA_ADDRESS=yPos >> 8;	    
           LCD_DATA_ADDRESS=yPos&0x00ff;
-      	  LCD_DATA_ADDRESS=271>>8;	    
+      	  LCD_DATA_ADDRESS=271 >> 8;	    
       	  LCD_DATA_ADDRESS=271&0x00ff;
           LCD_REG_ADDRESS=0x002A;	
-	        LCD_DATA_ADDRESS=X>>8;	    
+	        LCD_DATA_ADDRESS=X >> 8;	    
 	        LCD_DATA_ADDRESS=X&0x00ff;
-	        LCD_DATA_ADDRESS=479>>8;	    
+	        LCD_DATA_ADDRESS=479 >> 8;	    
 	        LCD_DATA_ADDRESS=479&0x00ff;
           LCD_REG_ADDRESS = 0x002C;
 					*/
           LCD_REG_ADDRESS=0x002b;	
-          LCD_DATA_ADDRESS=yPos>>8;	    
+          LCD_DATA_ADDRESS=yPos >> 8;	    
           LCD_DATA_ADDRESS=yPos&0x00ff;
-      	  LCD_DATA_ADDRESS=271>>8;	    
+      	  LCD_DATA_ADDRESS=271 >> 8;	    
       	  LCD_DATA_ADDRESS=271&0x00ff;
           LCD_REG_ADDRESS=0x002A;	
-	        LCD_DATA_ADDRESS=X>>8;	    
+	        LCD_DATA_ADDRESS=X >> 8;	    
 	        LCD_DATA_ADDRESS=X&0x00ff;
-	        LCD_DATA_ADDRESS=(X+biWidth)>>8;	    
+	        LCD_DATA_ADDRESS=(X+biWidth) >> 8;	    
 	        LCD_DATA_ADDRESS=(X+biWidth)&0x00ff;
           LCD_REG_ADDRESS = 0x002C;
           Loc=54;
@@ -631,21 +631,21 @@ unsigned short b=0;
             {
 							/*
               LCD_REG_ADDRESS=0x002b;	
-	            LCD_DATA_ADDRESS=yPos>>8;	    
+	            LCD_DATA_ADDRESS=yPos >> 8;	    
 	            LCD_DATA_ADDRESS=yPos&0x00ff;
-	            LCD_DATA_ADDRESS=271>>8;	    
+	            LCD_DATA_ADDRESS=271 >> 8;	    
 	            LCD_DATA_ADDRESS=271&0x00ff;
            	  LCD_REG_ADDRESS=0x002A;	
-	            LCD_DATA_ADDRESS=X>>8;	    
+	            LCD_DATA_ADDRESS=X >> 8;	    
 	            LCD_DATA_ADDRESS=X&0x00ff;
-	            LCD_DATA_ADDRESS=479>>8;	          
+	            LCD_DATA_ADDRESS=479 >> 8;	          
 	            LCD_DATA_ADDRESS=479&0x00ff;							
   	          LCD_REG_ADDRESS = 0x002C;
 							*/
               LCD_REG_ADDRESS=0x002b;	
-	            LCD_DATA_ADDRESS=yPos>>8;	    
+	            LCD_DATA_ADDRESS=yPos >> 8;	    
 	            LCD_DATA_ADDRESS=yPos&0x00ff;
-	            LCD_DATA_ADDRESS=271>>8;	    
+	            LCD_DATA_ADDRESS=271 >> 8;	    
 	            LCD_DATA_ADDRESS=271&0x00ff;
   	          LCD_REG_ADDRESS = 0x002C;
               NeedRelocate=0;
@@ -725,14 +725,14 @@ unsigned short b=0;
           biHeight += _acBuffer[22];
           yPos=Y+biHeight;
           LCD_REG_ADDRESS=0x002b;	
-          LCD_DATA_ADDRESS=yPos>>8;	    
+          LCD_DATA_ADDRESS=yPos >> 8;	    
           LCD_DATA_ADDRESS=yPos&0x00ff;
-      	  LCD_DATA_ADDRESS=271>>8;	    
+      	  LCD_DATA_ADDRESS=271 >> 8;	    
       	  LCD_DATA_ADDRESS=271&0x00ff;
           LCD_REG_ADDRESS=0x002A;	
-	        LCD_DATA_ADDRESS=X>>8;	    
+	        LCD_DATA_ADDRESS=X >> 8;	    
 	        LCD_DATA_ADDRESS=X&0x00ff;
-	        LCD_DATA_ADDRESS=479>>8;	    
+	        LCD_DATA_ADDRESS=479 >> 8;	    
 	        LCD_DATA_ADDRESS=479&0x00ff;
           LCD_REG_ADDRESS = 0x002C;
           Loc=54;
@@ -759,14 +759,14 @@ unsigned short b=0;
           if (NeedRelocate)
           {
             LCD_REG_ADDRESS=0x002b;	
-	          LCD_DATA_ADDRESS=yPos>>8;	    
+	          LCD_DATA_ADDRESS=yPos >> 8;	    
 	          LCD_DATA_ADDRESS=yPos&0x00ff;
-	          LCD_DATA_ADDRESS=271>>8;	    
+	          LCD_DATA_ADDRESS=271 >> 8;	    
 	          LCD_DATA_ADDRESS=271&0x00ff;
          	  LCD_REG_ADDRESS=0x002A;	
-	          LCD_DATA_ADDRESS=X>>8;	    
+	          LCD_DATA_ADDRESS=X >> 8;	    
 	          LCD_DATA_ADDRESS=X&0x00ff;
-	          LCD_DATA_ADDRESS=479>>8;	    
+	          LCD_DATA_ADDRESS=479 >> 8;	    
 	          LCD_DATA_ADDRESS=479&0x00ff;							
             LCD_REG_ADDRESS = 0x002C;
             NeedRelocate=0;
@@ -777,9 +777,9 @@ unsigned short b=0;
           if ((LoadTransparent) && ((R==255) && (G==0) && (B==0)))
           {
          	  LCD_REG_ADDRESS=0x002A;	
-	          LCD_DATA_ADDRESS=(X+CurCol)>>8;	    
+	          LCD_DATA_ADDRESS=(X+CurCol) >> 8;	    
 	          LCD_DATA_ADDRESS=(X+CurCol)&0x00ff;
-	          LCD_DATA_ADDRESS=479>>8;	    
+	          LCD_DATA_ADDRESS=479 >> 8;	    
 	          LCD_DATA_ADDRESS=479&0x00ff;							
             LCD_REG_ADDRESS = 0x002C;
           }else{  
@@ -1165,7 +1165,7 @@ unsigned char ExecMenu(MenuStruct const *Menu) {
 					{
 						i=1<<(Menu[MenuCurPos].Select-100);
 						if ((Option&i)==i)
-						  Option&=(i^0xFFFF);
+						  Option &= (i^0xFFFF);
 						else
 						  Option|=i;
 					}else
@@ -1621,14 +1621,14 @@ unsigned char buf[32];
            previousTime = RTT_GetTime(AT91C_BASE_RTTC);
            while (previousTime == RTT_GetTime(AT91C_BASE_RTTC));           
            buf[0] =Config.StartYear & 0xFF;
-           buf[1] =(Config.StartYear>>8) & 0xFF;
+           buf[1] =(Config.StartYear >> 8) & 0xFF;
            buf[2] =Config.StartMonth;
            buf[3] =Config.StartDay;
            buf[4] =Config.StartHour;
            buf[5] =Config.StartMin;
            buf[6] =Config.StartSec;
            buf[7] =RTTPrescaler & 0xFF;
-           buf[8] =(RTTPrescaler>>8) & 0xFF;
+           buf[8] =(RTTPrescaler >> 8) & 0xFF;
            for (time=7; time<16; time++)
              buf[time] =0;
            OkBip(1);

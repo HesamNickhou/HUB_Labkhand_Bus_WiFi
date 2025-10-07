@@ -204,26 +204,26 @@ void SaveRingDetail(void){
 	unsigned char buf[20];
 	
   buf[0] =trHead & 0xFF;
-  buf[1] =(trHead>>8) & 0xFF;
-  buf[2] =(trHead>>16) & 0xFF;
-  buf[3] =(trHead>>24) & 0xFF;
+  buf[1] =(trHead >> 8) & 0xFF;
+  buf[2] =(trHead >> 16) & 0xFF;
+  buf[3] =(trHead >> 24) & 0xFF;
   buf[4] =trTail & 0xFF;
-  buf[5] =(trTail>>8) & 0xFF;
-  buf[6] =(trTail>>16) & 0xFF;
-  buf[7] =(trTail>>24) & 0xFF;
+  buf[5] =(trTail >> 8) & 0xFF;
+  buf[6] =(trTail >> 16) & 0xFF;
+  buf[7] =(trTail >> 24) & 0xFF;
   buf[8] =loHead & 0xFF;
-  buf[9] =(loHead>>8) & 0xFF;
-  buf[10] =(loHead>>16) & 0xFF;
-  buf[11] =(loHead>>24) & 0xFF;
+  buf[9] =(loHead >> 8) & 0xFF;
+  buf[10] =(loHead >> 16) & 0xFF;
+  buf[11] =(loHead >> 24) & 0xFF;
   buf[12] =loTail & 0xFF;
-  buf[13] =(loTail>>8) & 0xFF;
-  buf[14] =(loTail>>16) & 0xFF;
-  buf[15] =(loTail>>24) & 0xFF;
+  buf[13] =(loTail >> 8) & 0xFF;
+  buf[14] =(loTail >> 16) & 0xFF;
+  buf[15] =(loTail >> 24) & 0xFF;
   crc=0;
   for (i=0; i<16; i++)
     crc += buf[i];
   buf[16] =crc & 0xFF;
-  buf[17] =(crc>>8) & 0xFF;
+  buf[17] =(crc >> 8) & 0xFF;
   buf[18] ='N';
   buf[19] ='W';
  	FLASH_UNLOCK
@@ -1408,11 +1408,11 @@ unsigned char CheckNewFirmware2(void) {
   
   GlobalBuffer[0] =0xC2;
   GlobalBuffer[1] =(crc2)&0xFF;
-  GlobalBuffer[2] =(crc2>>8)&0xFF;
+  GlobalBuffer[2] =(crc2 >> 8)&0xFF;
   GlobalBuffer[3] =(FirmwareLength)&0xFF;
-  GlobalBuffer[4] =(FirmwareLength>>8)&0xFF;
-  GlobalBuffer[5] =(FirmwareLength>>16)&0xFF;
-  GlobalBuffer[6] =(FirmwareLength>>24)&0xFF;
+  GlobalBuffer[4] =(FirmwareLength >> 8)&0xFF;
+  GlobalBuffer[5] =(FirmwareLength >> 16)&0xFF;
+  GlobalBuffer[6] =(FirmwareLength >> 24)&0xFF;
   GlobalBuffer[7] =0x55;
 	FLASH_UNLOCK
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
@@ -1438,12 +1438,12 @@ unsigned char SendDataRequest(unsigned char Type, unsigned int Index) {
    SendBuf[5] =0;
    SendBuf[6] =Type;
    SendBuf[7] =Index&0xFF;
-   SendBuf[8] =(Index>>8)&0xFF;
-   SendBuf[9] =(Index>>16)&0xFF;
-   SendBuf[10] =(Index>>24)&0xFF;
+   SendBuf[8] =(Index >> 8)&0xFF;
+   SendBuf[9] =(Index >> 16)&0xFF;
+   SendBuf[10] =(Index >> 24)&0xFF;
    crc=crc16(0, SendBuf+1, 10);
    SendBuf[11] =crc&0xFF;
-   SendBuf[12] =crc>>8;
+   SendBuf[12] =crc >> 8;
    SendBuf[13] =ETX;
    
 	SetTX485();GUI_Delay(1);
@@ -1471,7 +1471,7 @@ unsigned char SendCommandResult(unsigned char Type, unsigned int Status) {
    GlobalBuffer[7] =Status;
    crc=crc16(0, GlobalBuffer+1, 7);
    GlobalBuffer[8] =crc&0xFF;
-   GlobalBuffer[9] =crc>>8;
+   GlobalBuffer[9] =crc >> 8;
    GlobalBuffer[10] =ETX;
    
    switch (ActivePort)
@@ -1520,7 +1520,7 @@ unsigned int SendDeviceConfiguration(void) {
   GlobalBuffer[Idx++] =Config.TransactionsSendInterval%256;
   GlobalBuffer[Idx++] =Config.TransactionsSendInterval/256;
   GlobalBuffer[Idx++] =Config.TrackingInterval&0xFF;
-  GlobalBuffer[Idx++] =(Config.TrackingInterval>>8)&0xFF;
+  GlobalBuffer[Idx++] =(Config.TrackingInterval >> 8)&0xFF;
   GlobalBuffer[Idx++] =Year%256;
   GlobalBuffer[Idx++] =Year/256;
   GlobalBuffer[Idx++] =Month;
@@ -1537,7 +1537,7 @@ unsigned int SendDeviceConfiguration(void) {
   GlobalBuffer[Idx++] =(Config.Password >> 16) & 0xFF;
   GlobalBuffer[Idx++] =(Config.Password >> 24) & 0xFF;
   GlobalBuffer[Idx++] =Config.DriverID&0xFF;
-  GlobalBuffer[Idx++] =(Config.DriverID>>8)&0xFF;
+  GlobalBuffer[Idx++] =(Config.DriverID >> 8)&0xFF;
   GlobalBuffer[4] =(Idx-6)%256;
   GlobalBuffer[5] =(Idx-6)/256;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
@@ -1846,12 +1846,12 @@ void ProcessData(void) {
 			
 			if (Len < 64 * 8) {
 				GlobalBuffer[0] = BlackList_Count & 0xFF;
-				GlobalBuffer[1] = (BlackList_Count>>8) & 0xFF;
-				GlobalBuffer[2] = (BlackList_Count>>16) & 0xFF;
+				GlobalBuffer[1] = (BlackList_Count >> 8) & 0xFF;
+				GlobalBuffer[2] = (BlackList_Count >> 16) & 0xFF;
 				GlobalBuffer[3] = BlackList_LastIdx & 0xFF;
-				GlobalBuffer[4] = (BlackList_LastIdx>>8) & 0xFF;
-				GlobalBuffer[5] = (BlackList_LastIdx>>16) & 0xFF;
-				GlobalBuffer[6] = (BlackList_LastIdx>>24) & 0xFF;
+				GlobalBuffer[4] = (BlackList_LastIdx >> 8) & 0xFF;
+				GlobalBuffer[5] = (BlackList_LastIdx >> 16) & 0xFF;
+				GlobalBuffer[6] = (BlackList_LastIdx >> 24) & 0xFF;
 				GlobalBuffer[7] = 0xBC^GlobalBuffer[0]^GlobalBuffer[1]^GlobalBuffer[2]^GlobalBuffer[3]^GlobalBuffer[4]^GlobalBuffer[5]^GlobalBuffer[6];
         SaveFromRamToDF(addBlackListInfo, 8, GlobalBuffer);
 			  BlackList_Index=0;
@@ -2034,13 +2034,13 @@ char SendDeviceInfo(void) {
   GlobalBuffer[Idx++] =Min;  
   GlobalBuffer[Idx++] =Sec;  
   GlobalBuffer[Idx++] =Indicators.Transactions&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.Transactions>>8)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.Transactions>>16)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.Transactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions >> 8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions >> 16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions >> 24)&0xFF;  
   GlobalBuffer[Idx++] =Indicators.OffTransactions&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>8)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>16)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions >> 8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions >> 16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions >> 24)&0xFF;  
 
   GlobalBuffer[Idx++] =DeviceType;    
 
@@ -2057,7 +2057,7 @@ char SendDeviceInfo(void) {
   GlobalBuffer[5] =(Idx-6)/256; //Len;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
   GlobalBuffer[Idx++] =crc&0xFF;
-  GlobalBuffer[Idx++] =crc>>8;
+  GlobalBuffer[Idx++] =crc >> 8;
   GlobalBuffer[Idx++] =ETX;
   
 	return SendPacket(Idx);
@@ -2069,10 +2069,10 @@ unsigned char SendALive(unsigned char SpecialIndex) {
 	static unsigned char Idx=9;
 	unsigned char Byte,Index=0;
   /*
-	if (MemoryStatus==MEMERROR)     STATUSES&=~(0x40);
+	if (MemoryStatus==MEMERROR)     STATUSES &= ~(0x40);
   else                           STATUSES|=0x40; 
   if (RTCStatus==RTCOK) STATUSES|=0x20;
-  else                 STATUSES&=0xDF;
+  else                 STATUSES &= 0xDF;
 	*/
 	
 	GlobalBuffer[0] =STX;
@@ -2108,14 +2108,14 @@ unsigned char SendALive(unsigned char SpecialIndex) {
 
   crc=crc16(0, GlobalBuffer+1, 23);
   GlobalBuffer[24] =crc&0xFF;
-  GlobalBuffer[25] =crc>>8;
+  GlobalBuffer[25] =crc >> 8;
   GlobalBuffer[26] =ETX;
 	
 	return SendPacket(27);
 	#else
   crc=crc16(0, GlobalBuffer+1, 15);
   GlobalBuffer[16] =crc&0xFF;
-  GlobalBuffer[17] =crc>>8;
+  GlobalBuffer[17] =crc >> 8;
   GlobalBuffer[18] =ETX;
 	
 	return SendPacket(19);
@@ -2525,9 +2525,9 @@ unsigned int SearchForCard(unsigned long int CardID, unsigned int *LastTime){
 	unsigned char bufCardID[4];
 
   bufCardID[0] =CardID & 0xFF;	
-  bufCardID[1] =CardID>>8 & 0xFF;	
-  bufCardID[2] =CardID>>16 & 0xFF;	
-  bufCardID[3] =CardID>>24 & 0xFF;	
+  bufCardID[1] =CardID >> 8 & 0xFF;	
+  bufCardID[2] =CardID >> 16 & 0xFF;	
+  bufCardID[3] =CardID >> 24 & 0xFF;	
 	
   //printf("\n\rCardID: %X %X %X %X",bufCardID[0],bufCardID[1],bufCardID[2],bufCardID[3]);
 
@@ -2598,7 +2598,7 @@ unsigned char buf[8];
 	while (First != Last)
 	{
 	  Address=(First+Last)/2;
-  	//printf("\n\rFirst: %d Last: %d Address: %d Old: %d>> ", First, Last, Address, OldAddress);
+  	//printf("\n\rFirst: %d Last: %d Address: %d Old: %d >> ", First, Last, Address, OldAddress);
 		if (OldAddress==Address)
 		{
 			Address++;
@@ -2865,8 +2865,8 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
       return 1;
 
   TicketBuffer[0] =ID&0xFF;
-  TicketBuffer[1] =(ID>>8)&0xFF;
-  TicketBuffer[2] =(ID>>16)&0xFF;
+  TicketBuffer[1] =(ID >> 8)&0xFF;
+  TicketBuffer[2] =(ID >> 16)&0xFF;
 			
   TicketBuffer[3] =GetUCMap(UC);
 			
@@ -2881,10 +2881,10 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
  	  Grouh=200;
 				
   TicketBuffer[10] =Grouh&0xFF;
-  TicketBuffer[11] =(Grouh>>8)&0xFF;
+  TicketBuffer[11] =(Grouh >> 8)&0xFF;
       
   TicketBuffer[12] =Price&0xFF;
-  TicketBuffer[13] =(Price>>8)&0xFF;
+  TicketBuffer[13] =(Price >> 8)&0xFF;
       
   if (PreEtebar<0)
   {
@@ -2895,9 +2895,9 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
     TempInt=PreEtebar;
       
   TicketBuffer[14] =TempInt&0xFF;
-  TicketBuffer[15] =(TempInt>>8)&0xFF;
-  TicketBuffer[16] =(TempInt>>16)&0xFF;
-  TicketBuffer[17] =(TempInt>>24)&0xFF;
+  TicketBuffer[15] =(TempInt >> 8)&0xFF;
+  TicketBuffer[16] =(TempInt >> 16)&0xFF;
+  TicketBuffer[17] =(TempInt >> 24)&0xFF;
       
   if (Etebar<0)
   {
@@ -2908,15 +2908,15 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
     TempInt=Etebar;     
       
   TicketBuffer[18] =TempInt&0xFF;
-  TicketBuffer[19] =(TempInt>>8)&0xFF;
-  TicketBuffer[20] =(TempInt>>16)&0xFF;
+  TicketBuffer[19] =(TempInt >> 8)&0xFF;
+  TicketBuffer[20] =(TempInt >> 16)&0xFF;
       
   TicketBuffer[22] =0xE9;
   TicketBuffer[23] =Config.BusID%256;
   TicketBuffer[24] =Config.BusID/256; 
   TicketBuffer[25] =Indicators.OperatorID&0xFF;
-  TicketBuffer[26] =(Indicators.OperatorID>>8)&0xFF;
-  TicketBuffer[27] =(Indicators.OperatorID>>16)&0xFF;
+  TicketBuffer[26] =(Indicators.OperatorID >> 8)&0xFF;
+  TicketBuffer[27] =(Indicators.OperatorID >> 16)&0xFF;
   TicketBuffer[21] =LastOP;
   TicketBuffer[28] =LastDevice%256;
   TicketBuffer[29] =LastDevice/256;
@@ -2926,7 +2926,7 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
   TicketBuffer[28] =Indicators.TransactionUID%256;
   TicketBuffer[29] =Indicators.TransactionUID/256;
       
-  TicketBuffer[30] =(ID>>24)&0xFF;
+  TicketBuffer[30] =(ID >> 24)&0xFF;
   for (i=0;i<30;i++) TicketBuffer[31+i] =PayInfo[i];
   #endif
  
@@ -2935,7 +2935,7 @@ char ProcessCard(unsigned char MifareType,unsigned char *snr) {
 		case 0x9714:
       Grouh=250;
 		  TicketBuffer[10] =Grouh&0xFF;
-      TicketBuffer[11] =(Grouh>>8)&0xFF;
+      TicketBuffer[11] =(Grouh >> 8)&0xFF;
       SaveTransaction(TicketBuffer);
       Indicators.OffTransactions++; 
     	if (Indicators.OffTransactions>=MAX_TRANSACTIONS) Indicators.OffTransactions=MAX_TRANSACTIONS;
@@ -3064,7 +3064,7 @@ void SendOfflines(void) {
     }
       
     #ifdef WithSAMCARD
-    GlobalBuffer[Idx++] =Byte;//30 ID>>4
+    GlobalBuffer[Idx++] =Byte;//30 ID >> 4
     for (i=0; i<30; i++)
       GlobalBuffer[Idx++] =MEMBuffer[31+i];//PayInfo
     #endif		
@@ -3094,9 +3094,9 @@ void SendOfflines(void) {
   GlobalBuffer[6] =6;  //BD90 New Transactions  31 Byte
   #endif
   GlobalBuffer[7] =Temp&0xFF;
-  GlobalBuffer[8] =(Temp>>8)&0xFF;
-  GlobalBuffer[9] =(Temp>>16)&0xFF;
-  GlobalBuffer[10] =(Temp>>24)&0xFF; 
+  GlobalBuffer[8] =(Temp >> 8)&0xFF;
+  GlobalBuffer[9] =(Temp >> 16)&0xFF;
+  GlobalBuffer[10] =(Temp >> 24)&0xFF; 
   WaitForAddress=Temp;
   GlobalBuffer[4] =(Idx-6)%256;
   GlobalBuffer[5] =(Idx-6)/256;

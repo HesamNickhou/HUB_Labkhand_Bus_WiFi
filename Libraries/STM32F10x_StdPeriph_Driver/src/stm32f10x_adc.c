@@ -976,7 +976,7 @@ void ADC_InjectedChannelConfig(ADC_TypeDef* ADCx, uint8_t ADC_Channel, uint8_t R
   /* Get the old register value */
   tmpreg1 = ADCx->JSQR;
   /* Get JL value: Number = JL+1 */
-  tmpreg3 =  (tmpreg1 & JSQR_JL_Set)>> 20;
+  tmpreg3 =  (tmpreg1 & JSQR_JL_Set) >> 20;
   /* Calculate the mask to clear: ((Rank-1)+(4-JL-1)) */
   tmpreg2 = JSQR_JSQ_Set << (5 * (uint8_t)((Rank + 3) - (tmpreg3 + 1)));
   /* Clear the old JSQx bits for the selected rank */

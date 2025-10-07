@@ -957,7 +957,7 @@ uint8_t CAN_GetReceiveErrorCounter(CAN_TypeDef* CANx)
   assert_param(IS_CAN_ALL_PERIPH(CANx));
   
   /* Get the Receive Error Counter*/
-  counter = (uint8_t)((CANx->ESR & CAN_ESR_REC)>> 24);
+  counter = (uint8_t)((CANx->ESR & CAN_ESR_REC) >> 24);
   
   /* Return the Receive Error Counter*/
   return counter;
@@ -977,7 +977,7 @@ uint8_t CAN_GetLSBTransmitErrorCounter(CAN_TypeDef* CANx)
   assert_param(IS_CAN_ALL_PERIPH(CANx));
   
   /* Get the LSB of the 9-bit CANx Transmit Error Counter(TEC) */
-  counter = (uint8_t)((CANx->ESR & CAN_ESR_TEC)>> 16);
+  counter = (uint8_t)((CANx->ESR & CAN_ESR_TEC) >> 16);
   
   /* Return the LSB of the 9-bit CANx Transmit Error Counter(TEC) */
   return counter;

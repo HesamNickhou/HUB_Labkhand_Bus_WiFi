@@ -165,7 +165,7 @@ u8 data8;
   //pContext->pfWriteReg(0x0021);	
 	TFTRSPort->BRR = TFTRSPin;
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=0x21;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
@@ -173,17 +173,17 @@ u8 data8;
 	TFTRSPort->BSRR = TFTRSPin;
 
 	//pContext->pfWriteData((YSIZE_PHYS-1)-x);
-	data8 = (((YSIZE_PHYS-1)-x)>>8);
+	data8 = (((YSIZE_PHYS-1)-x) >> 8);
 	
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
 	TFTWRPort->BSRR = TFTWRPin;
 		
 	data8 = ((YSIZE_PHYS-1)-x);
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	
@@ -194,7 +194,7 @@ u8 data8;
 	//pContext->pfWriteReg(0x0020);	
 	TFTRSPort->BRR = TFTRSPin;
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=0x20;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
@@ -203,17 +203,17 @@ u8 data8;
 
 	
 	//pContext->pfWriteData(y);
-	data8 = (y>>8);
+	data8 = (y >> 8);
 	
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
 	TFTWRPort->BSRR = TFTWRPin;
 		
 	data8 = y;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	
@@ -224,7 +224,7 @@ u8 data8;
 	//pContext->pfWriteReg(0x0022);
 	TFTRSPort->BRR = TFTRSPin;
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=0x22;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
@@ -232,17 +232,17 @@ u8 data8;
 	TFTRSPort->BSRR = TFTRSPin;
 
 	//pContext->pfWriteData(color);
-	data8 = (color>>8);
+	data8 = (color >> 8);
 	
 	mask=GPIOC->ODR;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	TFTWRPort->BRR = TFTWRPin;
 	TFTWRPort->BSRR = TFTWRPin;
 		
 	data8 = color;
-	mask&=0xff00;
+	mask &= 0xff00;
 	mask|=data8;
 	GPIOC->ODR=mask;
 	

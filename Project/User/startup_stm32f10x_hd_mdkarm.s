@@ -16,7 +16,7 @@
 ;*                        calls main()).
 ;*                      After Reset the CortexM3 processor is in Thread mode,
 ;*                      priority is Privileged, and the Stack is set to Main.
-;* <<< Use Configuration Wizard in Context Menu >>>   
+;* <<< Use Configuration Wizard in Context Menu >> >   
 ;*******************************************************************************
 ; 
 ; Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");

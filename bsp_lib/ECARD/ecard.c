@@ -319,10 +319,10 @@ unsigned char ReadCardOPs(void) {
     }         
       
     //SendStrLn(" OK");
-    CardOPs[NumOPs].Date[0] =(buf[0]>>4)+90;
+    CardOPs[NumOPs].Date[0] =(buf[0] >> 4)+90;
     CardOPs[NumOPs].Date[1] =buf[0] & 0x0F;
     CardOPs[NumOPs].Date[2] =buf[2] & 0x1F;
-    CardOPs[NumOPs].Time[0] =buf[1]>>3;
+    CardOPs[NumOPs].Time[0] =buf[1] >> 3;
     CardOPs[NumOPs].Time[1] =((buf[1]&0x07)<<3)+(buf[2] & 0x07);
     CardOPs[NumOPs].OP=buf[3];
     CardOPs[NumOPs].PreEtebar=buf[6]; CardOPs[NumOPs].PreEtebar <<= 8;
@@ -392,15 +392,15 @@ unsigned char EtebarBlock[16];
   }
   
   EtebarBlock[0] =(CardOPs[0].Etebar&0xFF);
-  EtebarBlock[1] =((CardOPs[0].Etebar>>8)&0xFF);
-  EtebarBlock[2] =((CardOPs[0].Etebar>>16)&0xFF);
-  EtebarBlock[3] =((CardOPs[0].Etebar>>24)&0xFF);
+  EtebarBlock[1] =((CardOPs[0].Etebar >> 8)&0xFF);
+  EtebarBlock[2] =((CardOPs[0].Etebar >> 16)&0xFF);
+  EtebarBlock[3] =((CardOPs[0].Etebar >> 24)&0xFF);
   EtebarBlock[4] =(CardOPs[0].PreEtebar&0xFF);
-  EtebarBlock[5] =((CardOPs[0].PreEtebar>>8)&0xFF);
-  EtebarBlock[6] =((CardOPs[0].PreEtebar>>16)&0xFF);
-  EtebarBlock[7] =((CardOPs[0].PreEtebar>>24)&0xFF);
+  EtebarBlock[5] =((CardOPs[0].PreEtebar >> 8)&0xFF);
+  EtebarBlock[6] =((CardOPs[0].PreEtebar >> 16)&0xFF);
+  EtebarBlock[7] =((CardOPs[0].PreEtebar >> 24)&0xFF);
   EtebarBlock[8] =(CardOPs[0].Payment&0xFF);
-  EtebarBlock[9] =((CardOPs[0].Payment>>8)&0xFF);
+  EtebarBlock[9] =((CardOPs[0].Payment >> 8)&0xFF);
   EtebarBlock[10] =CardOPs[0].OP;
   EtebarBlock[11] =CardOPs[0].OPIndex;
   EtebarBlock[12] =0;
@@ -612,45 +612,45 @@ unsigned char PrepairECardBuffer(void) {
 	unsigned char i, BCC = 0x4B;
   
   CurECardInfo.EtebarBlock[0] =(CurECardInfo.Etebar&0xFF);
-  CurECardInfo.EtebarBlock[1] =((CurECardInfo.Etebar>>8)&0xFF);
-  CurECardInfo.EtebarBlock[2] =((CurECardInfo.Etebar>>16)&0xFF);
-  CurECardInfo.EtebarBlock[3] =((CurECardInfo.Etebar>>24)&0xFF);
+  CurECardInfo.EtebarBlock[1] =((CurECardInfo.Etebar >> 8)&0xFF);
+  CurECardInfo.EtebarBlock[2] =((CurECardInfo.Etebar >> 16)&0xFF);
+  CurECardInfo.EtebarBlock[3] =((CurECardInfo.Etebar >> 24)&0xFF);
   CurECardInfo.EtebarBlock[4] =(CurECardInfo.PreEtebar&0xFF);
-  CurECardInfo.EtebarBlock[5] =((CurECardInfo.PreEtebar>>8)&0xFF);
-  CurECardInfo.EtebarBlock[6] =((CurECardInfo.PreEtebar>>16)&0xFF);
-  CurECardInfo.EtebarBlock[7] =((CurECardInfo.PreEtebar>>24)&0xFF);
+  CurECardInfo.EtebarBlock[5] =((CurECardInfo.PreEtebar >> 8)&0xFF);
+  CurECardInfo.EtebarBlock[6] =((CurECardInfo.PreEtebar >> 16)&0xFF);
+  CurECardInfo.EtebarBlock[7] =((CurECardInfo.PreEtebar >> 24)&0xFF);
   CurECardInfo.EtebarBlock[8] =(CurECardInfo.Payment&0xFF);
-  CurECardInfo.EtebarBlock[9] =((CurECardInfo.Payment>>8)&0xFF);
+  CurECardInfo.EtebarBlock[9] =((CurECardInfo.Payment >> 8)&0xFF);
   CurECardInfo.EtebarBlock[10] =CurECardInfo.OP;
   CurECardInfo.EtebarBlock[11] =CurECardInfo.OPIndex;
   CurECardInfo.EtebarBlock[12] =rand();
   CurECardInfo.EtebarBlock[13] =CurECardInfo.DeviceID&0xFF;      
-  CurECardInfo.EtebarBlock[14] =(CurECardInfo.DeviceID>>8)&0xFF;
+  CurECardInfo.EtebarBlock[14] =(CurECardInfo.DeviceID >> 8)&0xFF;
   for (i=0; i<15; i++)
     BCC^=CurECardInfo.EtebarBlock[i];
   CurECardInfo.EtebarBlock[15] =BCC;  
   EncryptBlock(CurECardInfo.CardSerialNumber, CurECardInfo.EtebarBlock);   
   
   CurECardInfo.OPBlock[0] =((Year-1390)<<4)+(Month&0x0F);
-  CurECardInfo.OPBlock[1] =(Min>>3);
+  CurECardInfo.OPBlock[1] =(Min >> 3);
   CurECardInfo.OPBlock[1]|=(Hour<<3);
   CurECardInfo.OPBlock[2] =Min&0x07;
   CurECardInfo.OPBlock[2] <<= 5;
   CurECardInfo.OPBlock[2]|=Day;
   CurECardInfo.OPBlock[3] =CurECardInfo.OP;
   CurECardInfo.OPBlock[4] =(CurECardInfo.PreEtebar&0xFF);
-  CurECardInfo.OPBlock[5] =((CurECardInfo.PreEtebar>>8)&0xFF);
-  CurECardInfo.OPBlock[6] =((CurECardInfo.PreEtebar>>16)&0xFF);
+  CurECardInfo.OPBlock[5] =((CurECardInfo.PreEtebar >> 8)&0xFF);
+  CurECardInfo.OPBlock[6] =((CurECardInfo.PreEtebar >> 16)&0xFF);
   CurECardInfo.OPBlock[7] =(CurECardInfo.Payment&0xFF);
-  CurECardInfo.OPBlock[8] =((CurECardInfo.Payment>>8)&0xFF);
+  CurECardInfo.OPBlock[8] =((CurECardInfo.Payment >> 8)&0xFF);
   CurECardInfo.OPBlock[9] =(CurECardInfo.Etebar&0xFF);
-  CurECardInfo.OPBlock[10] =((CurECardInfo.Etebar>>8)&0xFF);
-  CurECardInfo.OPBlock[11] =((CurECardInfo.Etebar>>16)&0xFF);
+  CurECardInfo.OPBlock[10] =((CurECardInfo.Etebar >> 8)&0xFF);
+  CurECardInfo.OPBlock[11] =((CurECardInfo.Etebar >> 16)&0xFF);
   CurECardInfo.OPBlock[12] =SOLUTION;
-  CurECardInfo.OPBlock[12]&=0xE0;
+  CurECardInfo.OPBlock[12] &= 0xE0;
   CurECardInfo.OPBlock[12]|=CurECardInfo.OPIndex;
   CurECardInfo.OPBlock[13] =CurECardInfo.DeviceID&0xFF;      
-  CurECardInfo.OPBlock[14] =(CurECardInfo.DeviceID>>8)&0xFF;  
+  CurECardInfo.OPBlock[14] =(CurECardInfo.DeviceID >> 8)&0xFF;  
   BCC=0x8A;   
   for (i=0; i<15; i++)
     BCC^=CurECardInfo.OPBlock[i];
@@ -1023,10 +1023,10 @@ TCardOP CardOP;
       continue;
     }         
     //SendStrLn(" OK");
-    CardOPs[idx].Date[0] =(buf[0]>>4)+90;
+    CardOPs[idx].Date[0] =(buf[0] >> 4)+90;
     CardOPs[idx].Date[1] =buf[0] & 0x0F;
     CardOPs[idx].Date[2] =buf[2] & 0x1F;
-    CardOPs[idx].Time[0] =buf[1]>>3;
+    CardOPs[idx].Time[0] =buf[1] >> 3;
     CardOPs[idx].Time[1] =((buf[1]&0x07)<<3)+(buf[2] & 0x07);
     CardOPs[idx].OP=buf[3];
     CardOPs[idx].PreEtebar=buf[6]; CardOPs[idx].PreEtebar <<= 8;
@@ -1190,7 +1190,7 @@ unsigned long int CurEtebar, OldRemEtebar=0;
     if ((buf[15] =BCC) || (BCC==0) || (BCC==0xFF)) //Invalid OP 
       continue;
 
-    CurYear=(buf[6]>>4)+86;
+    CurYear=(buf[6] >> 4)+86;
     CurMonth=buf[6] & 0x0F;
     CurDay=buf[7];
     CurHour=buf[13];
@@ -1334,18 +1334,18 @@ unsigned char Old_PrepairECardBuffer(void)
 unsigned char i, BCC;
 
   CurECardInfo.OPBlock[0] =CurECardInfo.Payment&0x00FF;
-  CurECardInfo.OPBlock[1] =(CurECardInfo.Payment>>8);
+  CurECardInfo.OPBlock[1] =(CurECardInfo.Payment >> 8);
   CurECardInfo.OPBlock[2] =CurECardInfo.PreEtebar&0x000000FF;
-  CurECardInfo.OPBlock[3] =(CurECardInfo.PreEtebar>>8)&0x000000FF;
-  CurECardInfo.OPBlock[4] =(CurECardInfo.PreEtebar>>16)&0x000000FF;
+  CurECardInfo.OPBlock[3] =(CurECardInfo.PreEtebar >> 8)&0x000000FF;
+  CurECardInfo.OPBlock[4] =(CurECardInfo.PreEtebar >> 16)&0x000000FF;
   CurECardInfo.OPBlock[5] =CurECardInfo.OP;
   CurECardInfo.OPBlock[6] =((Year-1386)<<4)+(Month&0x0F);
   CurECardInfo.OPBlock[7] =Day;
   CurECardInfo.OPBlock[8] =CurECardInfo.Etebar&0x000000FF;
-  CurECardInfo.OPBlock[9] =(CurECardInfo.Etebar>>8)&0x000000FF;
-  CurECardInfo.OPBlock[10] =(CurECardInfo.Etebar>>16)&0x000000FF;
+  CurECardInfo.OPBlock[9] =(CurECardInfo.Etebar >> 8)&0x000000FF;
+  CurECardInfo.OPBlock[10] =(CurECardInfo.Etebar >> 16)&0x000000FF;
   CurECardInfo.OPBlock[11] =CurECardInfo.DeviceID&0xFF;      
-  CurECardInfo.OPBlock[12] =(CurECardInfo.DeviceID>>8)&0xFF;  
+  CurECardInfo.OPBlock[12] =(CurECardInfo.DeviceID >> 8)&0xFF;  
   CurECardInfo.OPBlock[13] =Hour;  
   CurECardInfo.OPBlock[14] =Min;  
   BCC=0;   

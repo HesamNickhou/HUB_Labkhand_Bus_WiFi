@@ -29,7 +29,7 @@
 //                          Statics
 //=====================================================================
 // disable reader interrupt
-//#define READER_INT_DISABLE    EIMSK&=0xDF; 
+//#define READER_INT_DISABLE    EIMSK &= 0xDF; 
 // enable reader interrupt
 //#define READER_INT_ENABLE     EIMSK|=0x20;
 // initialize reset pin and change port direction
@@ -2896,7 +2896,7 @@ unsigned long int Li=0;
       status = MpIsrInfo->status;          // set status
       if (MpIsrInfo->irqSource & 0x20) // if timeout expired - look at old error state
          MpIsrInfo->errFlags |= MpIsrInfo->saveErrorState;
-      MpIsrInfo->errFlags &=  validErrorFlags;
+      MpIsrInfo->errFlags &= validErrorFlags;
       if (MpIsrInfo->errFlags) // error occured
       {
          if (MpIsrInfo->errFlags & 0x01)   // collision detected
@@ -3150,7 +3150,7 @@ unsigned long int Li=0;
     status = MpIsrInfo->status;          // set status
     if (MpIsrInfo->irqSource & 0x20) // if timeout expired - look at old error state
        MpIsrInfo->errFlags |= MpIsrInfo->saveErrorState;
-    MpIsrInfo->errFlags &=  validErrorFlags;
+    MpIsrInfo->errFlags &= validErrorFlags;
   }//if (Status==MI_OK)
 
   MpIsrInfo = 0;         // reset interface variables for ISR

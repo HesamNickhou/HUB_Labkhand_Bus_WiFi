@@ -1029,26 +1029,26 @@ unsigned short crc=0;
 unsigned char buf[20];
 	
   buf[0] =trHead & 0xFF;
-  buf[1] =(trHead>>8) & 0xFF;
-  buf[2] =(trHead>>16) & 0xFF;
-  buf[3] =(trHead>>24) & 0xFF;
+  buf[1] =(trHead >> 8) & 0xFF;
+  buf[2] =(trHead >> 16) & 0xFF;
+  buf[3] =(trHead >> 24) & 0xFF;
   buf[4] =trTail & 0xFF;
-  buf[5] =(trTail>>8) & 0xFF;
-  buf[6] =(trTail>>16) & 0xFF;
-  buf[7] =(trTail>>24) & 0xFF;
+  buf[5] =(trTail >> 8) & 0xFF;
+  buf[6] =(trTail >> 16) & 0xFF;
+  buf[7] =(trTail >> 24) & 0xFF;
   buf[8] =loHead & 0xFF;
-  buf[9] =(loHead>>8) & 0xFF;
-  buf[10] =(loHead>>16) & 0xFF;
-  buf[11] =(loHead>>24) & 0xFF;
+  buf[9] =(loHead >> 8) & 0xFF;
+  buf[10] =(loHead >> 16) & 0xFF;
+  buf[11] =(loHead >> 24) & 0xFF;
   buf[12] =loTail & 0xFF;
-  buf[13] =(loTail>>8) & 0xFF;
-  buf[14] =(loTail>>16) & 0xFF;
-  buf[15] =(loTail>>24) & 0xFF;
+  buf[13] =(loTail >> 8) & 0xFF;
+  buf[14] =(loTail >> 16) & 0xFF;
+  buf[15] =(loTail >> 24) & 0xFF;
   crc=0;
   for (i=0; i<16; i++)
     crc += buf[i];
   buf[16] =crc & 0xFF;
-  buf[17] =(crc>>8) & 0xFF;
+  buf[17] =(crc >> 8) & 0xFF;
   buf[18] ='N';
   buf[19] ='W';
  	FLASH_UNLOCK
@@ -1240,9 +1240,9 @@ unsigned short BCC, i, Idx=0,len=0;
 void IntToBytes(unsigned int i, unsigned char *buf)
 {
   buf[0] =i & 0xFF;
-  buf[1] =(i>>8) & 0xFF;
-  buf[2] =(i>>16) & 0xFF;
-  buf[3] =(i>>24) & 0xFF;
+  buf[1] =(i >> 8) & 0xFF;
+  buf[2] =(i >> 16) & 0xFF;
+  buf[3] =(i >> 24) & 0xFF;
 }
 
 //==============================================================================
@@ -1994,11 +1994,11 @@ unsigned int pageSize;
   
   GlobalBuffer[0] =0xC2;
   GlobalBuffer[1] =(crc2)&0xFF;
-  GlobalBuffer[2] =(crc2>>8)&0xFF;
+  GlobalBuffer[2] =(crc2 >> 8)&0xFF;
   GlobalBuffer[3] =(FirmwareLength)&0xFF;
-  GlobalBuffer[4] =(FirmwareLength>>8)&0xFF;
-  GlobalBuffer[5] =(FirmwareLength>>16)&0xFF;
-  GlobalBuffer[6] =(FirmwareLength>>24)&0xFF;
+  GlobalBuffer[4] =(FirmwareLength >> 8)&0xFF;
+  GlobalBuffer[5] =(FirmwareLength >> 16)&0xFF;
+  GlobalBuffer[6] =(FirmwareLength >> 24)&0xFF;
   GlobalBuffer[7] =0x55;
 	FLASH_UNLOCK
   SaveFromRamToDF(addFirmwareInfo, 32, GlobalBuffer);
@@ -2026,12 +2026,12 @@ unsigned char SendBuf[20];
    SendBuf[5] =0;
    SendBuf[6] =Type;
    SendBuf[7] =Index&0xFF;
-   SendBuf[8] =(Index>>8)&0xFF;
-   SendBuf[9] =(Index>>16)&0xFF;
-   SendBuf[10] =(Index>>24)&0xFF;
+   SendBuf[8] =(Index >> 8)&0xFF;
+   SendBuf[9] =(Index >> 16)&0xFF;
+   SendBuf[10] =(Index >> 24)&0xFF;
    crc=crc16(0, SendBuf+1, 10);
    SendBuf[11] =crc&0xFF;
-   SendBuf[12] =crc>>8;
+   SendBuf[12] =crc >> 8;
    SendBuf[13] =ETX;
    
  
@@ -2071,7 +2071,7 @@ unsigned short crc=0;
    GlobalBuffer[7] =Status;
    crc=crc16(0, GlobalBuffer+1, 7);
    GlobalBuffer[8] =crc&0xFF;
-   GlobalBuffer[9] =crc>>8;
+   GlobalBuffer[9] =crc >> 8;
    GlobalBuffer[10] =ETX;
    
    switch (ActivePort)
@@ -2125,7 +2125,7 @@ unsigned short Idx, i, crc;
   GlobalBuffer[Idx++] =Config.TransactionsSendInterval%256;
   GlobalBuffer[Idx++] =Config.TransactionsSendInterval/256;
   GlobalBuffer[Idx++] =Config.TrackingInterval&0xFF;
-  GlobalBuffer[Idx++] =(Config.TrackingInterval>>8)&0xFF;
+  GlobalBuffer[Idx++] =(Config.TrackingInterval >> 8)&0xFF;
   GlobalBuffer[Idx++] =Year%256;
   GlobalBuffer[Idx++] =Year/256;
   GlobalBuffer[Idx++] =Month;
@@ -2142,7 +2142,7 @@ unsigned short Idx, i, crc;
   GlobalBuffer[Idx++] =(Config.Password >> 16) & 0xFF;
   GlobalBuffer[Idx++] =(Config.Password >> 24) & 0xFF;
   GlobalBuffer[Idx++] =Config.DriverID&0xFF;
-  GlobalBuffer[Idx++] =(Config.DriverID>>8)&0xFF;
+  GlobalBuffer[Idx++] =(Config.DriverID >> 8)&0xFF;
   GlobalBuffer[4] =(Idx-6)%256;
   GlobalBuffer[5] =(Idx-6)/256;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
@@ -2644,13 +2644,13 @@ unsigned char Byte,str[100];
   GlobalBuffer[Idx++] =Min;  
   GlobalBuffer[Idx++] =Sec;  
   GlobalBuffer[Idx++] =Indicators.Transactions&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.Transactions>>8)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.Transactions>>16)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.Transactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions >> 8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions >> 16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.Transactions >> 24)&0xFF;  
   GlobalBuffer[Idx++] =Indicators.OffTransactions&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>8)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>16)&0xFF;  
-  GlobalBuffer[Idx++] =(Indicators.OffTransactions>>24)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions >> 8)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions >> 16)&0xFF;  
+  GlobalBuffer[Idx++] =(Indicators.OffTransactions >> 24)&0xFF;  
 
   GlobalBuffer[Idx++] =DeviceType;    
 
@@ -2658,7 +2658,7 @@ unsigned char Byte,str[100];
   GlobalBuffer[5] =(Idx-6)/256; //Len;
   crc=crc16(0, GlobalBuffer+1, Idx-1);
   GlobalBuffer[Idx++] =crc&0xFF;
-  GlobalBuffer[Idx++] =crc>>8;
+  GlobalBuffer[Idx++] =crc >> 8;
   GlobalBuffer[Idx++] =ETX;
   
   SetRX485();
@@ -2692,10 +2692,10 @@ unsigned int crc=0, i;
 static unsigned char Idx=9;
 unsigned char Index=0;
 /*
-	if (MemoryStatus==MEMERROR)     STATUSES&=~(0x40);
+	if (MemoryStatus==MEMERROR)     STATUSES &= ~(0x40);
   else                           STATUSES|=0x40; 
   if (RTCStatus==RTCOK) STATUSES|=0x20;
-  else                 STATUSES&=0xDF;
+  else                 STATUSES &= 0xDF;
 	*/
 	
 	GlobalBuffer[0] =STX;
@@ -2715,7 +2715,7 @@ unsigned char Index=0;
 
   crc=crc16(0, GlobalBuffer+1, 13);
   GlobalBuffer[14] =crc&0xFF;
-  GlobalBuffer[15] =crc>>8;
+  GlobalBuffer[15] =crc >> 8;
   GlobalBuffer[16] =ETX;
 	
 	/*
@@ -3284,9 +3284,9 @@ Grouh=0;
 		  HNPayment=HEtebar;
 		
 		  HediyeBuf[0] =HNPayment&0xFF;
-      HediyeBuf[1] =(HNPayment>>8)&0xFF;
-      HediyeBuf[2] =(HNPayment>>16)&0xFF;	
-      HediyeBuf[3] =(HNPayment>>24)&0xFF;	
+      HediyeBuf[1] =(HNPayment >> 8)&0xFF;
+      HediyeBuf[2] =(HNPayment >> 16)&0xFF;	
+      HediyeBuf[3] =(HNPayment >> 24)&0xFF;	
       HediyeBuf[4] =0xAB;	
       HediyeBuf[5] =0xCD;		
 		
@@ -3369,9 +3369,9 @@ Grouh=0;
 		 if ((HEtebar != HNPayment) && (Status==S_Success))
 		 {
 		     HediyeBuf[0] =HNPayment&0xFF;
-         HediyeBuf[1] =(HNPayment>>8)&0xFF;
-         HediyeBuf[2] =(HNPayment>>16)&0xFF;	
-         HediyeBuf[3] =(HNPayment>>24)&0xFF;	
+         HediyeBuf[1] =(HNPayment >> 8)&0xFF;
+         HediyeBuf[2] =(HNPayment >> 16)&0xFF;	
+         HediyeBuf[3] =(HNPayment >> 24)&0xFF;	
          HediyeBuf[4] =0xAB;	
          HediyeBuf[5] =0xCD;	 	
 				
@@ -3396,9 +3396,9 @@ Grouh=0;
 					 i=HEtebar-HNPayment;
            
 					 TicketBuffer[1] =ID&0xFF;
-           TicketBuffer[2] =(ID>>8)&0xFF;
-           TicketBuffer[3] =(ID>>16)&0xFF;
-           TicketBuffer[4] =(ID>>24)&0xFF;
+           TicketBuffer[2] =(ID >> 8)&0xFF;
+           TicketBuffer[3] =(ID >> 16)&0xFF;
+           TicketBuffer[4] =(ID >> 24)&0xFF;
            TicketBuffer[5] =Year-1300;
            TicketBuffer[6] =Month;
            TicketBuffer[7] =Day;
@@ -3406,24 +3406,24 @@ Grouh=0;
            TicketBuffer[9] =Min;
            TicketBuffer[10] =Sec;
            TicketBuffer[11] =Grouh&0xFF;
-           TicketBuffer[12] =(Grouh>>8)&0xFF;
+           TicketBuffer[12] =(Grouh >> 8)&0xFF;
            TicketBuffer[13] =i&0xFF;
-           TicketBuffer[14] =(i>>8)&0xFF;
+           TicketBuffer[14] =(i >> 8)&0xFF;
            TicketBuffer[15] =HEtebar&0xFF;
-           TicketBuffer[16] =(HEtebar>>8)&0xFF;
-           TicketBuffer[17] =(HEtebar>>16)&0xFF;
-           TicketBuffer[18] =(HEtebar>>24)&0xFF;
+           TicketBuffer[16] =(HEtebar >> 8)&0xFF;
+           TicketBuffer[17] =(HEtebar >> 16)&0xFF;
+           TicketBuffer[18] =(HEtebar >> 24)&0xFF;
            TicketBuffer[19] =HNPayment&0xFF;
-           TicketBuffer[20] =(HNPayment>>8)&0xFF;
-           TicketBuffer[21] =(HNPayment>>16)&0xFF;
-           TicketBuffer[22] =(HNPayment>>24)&0xFF;
+           TicketBuffer[20] =(HNPayment >> 8)&0xFF;
+           TicketBuffer[21] =(HNPayment >> 16)&0xFF;
+           TicketBuffer[22] =(HNPayment >> 24)&0xFF;
            TicketBuffer[23] =0xE9;
            TicketBuffer[24] =Config.DeviceID%256;
            TicketBuffer[25] =Config.DeviceID/256; 
            TicketBuffer[26] =0;//Indicators.OperatorID&0xFF;
-           TicketBuffer[27] =0;//(Indicators.OperatorID>>8)&0xFF;
-           TicketBuffer[28] =0;//(Indicators.OperatorID>>16)&0xFF;
-           TicketBuffer[29] =0;//(Indicators.OperatorID>>24)&0xFF;
+           TicketBuffer[27] =0;//(Indicators.OperatorID >> 8)&0xFF;
+           TicketBuffer[28] =0;//(Indicators.OperatorID >> 16)&0xFF;
+           TicketBuffer[29] =0;//(Indicators.OperatorID >> 24)&0xFF;
         	 SaveTransaction(TicketBuffer);
         	 //SaveTransactionRecord(TicketBuffer, 32);
            Indicators.Transactions++;   
@@ -3433,9 +3433,9 @@ Grouh=0;
 		   	 
 		 }else{
     	 TicketBuffer[1] =ID&0xFF;
-       TicketBuffer[2] =(ID>>8)&0xFF;
-       TicketBuffer[3] =(ID>>16)&0xFF;
-       TicketBuffer[4] =(ID>>24)&0xFF;
+       TicketBuffer[2] =(ID >> 8)&0xFF;
+       TicketBuffer[3] =(ID >> 16)&0xFF;
+       TicketBuffer[4] =(ID >> 24)&0xFF;
        TicketBuffer[5] =Year-1300;
        TicketBuffer[6] =Month;
        TicketBuffer[7] =Day;
@@ -3444,24 +3444,24 @@ Grouh=0;
        TicketBuffer[10] =Sec;
 
        TicketBuffer[11] =Grouh&0xFF;
-       TicketBuffer[12] =(Grouh>>8)&0xFF;
+       TicketBuffer[12] =(Grouh >> 8)&0xFF;
        TicketBuffer[13] =Price&0xFF;
-       TicketBuffer[14] =(Price>>8)&0xFF;
+       TicketBuffer[14] =(Price >> 8)&0xFF;
        TicketBuffer[15] =PreEtebar&0xFF;
-       TicketBuffer[16] =(PreEtebar>>8)&0xFF;
-       TicketBuffer[17] =(PreEtebar>>16)&0xFF;
-       TicketBuffer[18] =(PreEtebar>>24)&0xFF;
+       TicketBuffer[16] =(PreEtebar >> 8)&0xFF;
+       TicketBuffer[17] =(PreEtebar >> 16)&0xFF;
+       TicketBuffer[18] =(PreEtebar >> 24)&0xFF;
        TicketBuffer[19] =Etebar&0xFF;
-       TicketBuffer[20] =(Etebar>>8)&0xFF;
-       TicketBuffer[21] =(Etebar>>16)&0xFF;
-       TicketBuffer[22] =(Etebar>>24)&0xFF;
-       TicketBuffer[23] =(Price>>16)&0xFF;
+       TicketBuffer[20] =(Etebar >> 8)&0xFF;
+       TicketBuffer[21] =(Etebar >> 16)&0xFF;
+       TicketBuffer[22] =(Etebar >> 24)&0xFF;
+       TicketBuffer[23] =(Price >> 16)&0xFF;
        TicketBuffer[24] =Config.DeviceID%256;
        TicketBuffer[25] =Config.DeviceID/256; 
        TicketBuffer[26] =Indicators.TransactionUID&0xFF;
-       TicketBuffer[27] =(Indicators.TransactionUID>>8)&0xFF;
-       TicketBuffer[28] =(Indicators.TransactionUID>>16)&0xFF;
-       TicketBuffer[29] =(Indicators.TransactionUID>>24)&0xFF;
+       TicketBuffer[27] =(Indicators.TransactionUID >> 8)&0xFF;
+       TicketBuffer[28] =(Indicators.TransactionUID >> 16)&0xFF;
+       TicketBuffer[29] =(Indicators.TransactionUID >> 24)&0xFF;
 
        if (Status==25)
        {
@@ -3503,9 +3503,9 @@ Grouh=0;
 		     HNPayment=HEtebar-Price;
 		
 		     HediyeBuf[0] =HNPayment&0xFF;
-         HediyeBuf[1] =(HNPayment>>8)&0xFF;
-         HediyeBuf[2] =(HNPayment>>16)&0xFF;	
-         HediyeBuf[3] =(HNPayment>>24)&0xFF;	
+         HediyeBuf[1] =(HNPayment >> 8)&0xFF;
+         HediyeBuf[2] =(HNPayment >> 16)&0xFF;	
+         HediyeBuf[3] =(HNPayment >> 24)&0xFF;	
          HediyeBuf[4] =0xAB;	
          HediyeBuf[5] =0xCD;	 	
 				
@@ -3692,9 +3692,9 @@ unsigned char MEMBuffer[LEN_TRANSACTIONS];
   GlobalBuffer[6] =8;  //SABA Dec Transactions
 
   GlobalBuffer[7] =Start&0xFF;
-  GlobalBuffer[8] =(Start>>8)&0xFF;
-  GlobalBuffer[9] =(Start>>16)&0xFF;
-  GlobalBuffer[10] =(Start>>24)&0xFF;
+  GlobalBuffer[8] =(Start >> 8)&0xFF;
+  GlobalBuffer[9] =(Start >> 16)&0xFF;
+  GlobalBuffer[10] =(Start >> 24)&0xFF;
 	
   Idx=11;
   SendUsers=Start;	
@@ -3724,20 +3724,20 @@ unsigned char MEMBuffer[LEN_TRANSACTIONS];
     Byte=MEMBuffer[5]-85; //year
     Byte <<= 4;
     c=MEMBuffer[6]; //Month
-    c&=0x0F;
+    c &= 0x0F;
     Byte|=c;
     GlobalBuffer[Idx++] =Byte; //;Year-Month       
     Byte=MEMBuffer[7]; //Day
     Byte <<= 3;
     c=MEMBuffer[9]; //Min
-    c&=0x07;
+    c &= 0x07;
     Byte|=c;
     GlobalBuffer[Idx++] =Byte; //Day-Min L       
     Byte=MEMBuffer[8]; //Hour
     Byte <<= 3;
     c=MEMBuffer[9]; //Min
     c >>= 3;
-    c&=0x07;
+    c &= 0x07;
     Byte|=c;
     GlobalBuffer[Idx++] =Byte; //Hour-Min H       
     GlobalBuffer[Idx++] =MEMBuffer[10]; //Sec
@@ -3769,9 +3769,9 @@ unsigned char MEMBuffer[LEN_TRANSACTIONS];
   Temp=SendUsers;
 
   GlobalBuffer[7] =Temp&0xFF;
-  GlobalBuffer[8] =(Temp>>8)&0xFF;
-  GlobalBuffer[9] =(Temp>>16)&0xFF;
-  GlobalBuffer[10] =(Temp>>24)&0xFF;
+  GlobalBuffer[8] =(Temp >> 8)&0xFF;
+  GlobalBuffer[9] =(Temp >> 16)&0xFF;
+  GlobalBuffer[10] =(Temp >> 24)&0xFF;
   GlobalBuffer[4] =(Idx-6)%256;
   GlobalBuffer[5] =(Idx-6)/256;
   WaitForAddress=Temp;

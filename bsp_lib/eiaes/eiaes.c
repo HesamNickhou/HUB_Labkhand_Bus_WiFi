@@ -399,24 +399,24 @@ unsigned long int W0, W1, W2, W3;
   T0[3] = (W0 ^ ((W1 << 8) | (W1 >> 24)) ^ ((W2 << 16) | (W2 >> 16))
     ^ ((W3 << 24) | (W3 >> 8))) ^ Key[43];
   // finalizing   
-  OutBuf[3] =(T0[0]>>24)&0xFF;
-  OutBuf[2] =(T0[0]>>16)&0xFF;
-  OutBuf[1] =(T0[0]>>8)&0xFF;
+  OutBuf[3] =(T0[0] >> 24)&0xFF;
+  OutBuf[2] =(T0[0] >> 16)&0xFF;
+  OutBuf[1] =(T0[0] >> 8)&0xFF;
   OutBuf[0] =(T0[0])&0xFF;
 
-  OutBuf[7] =(T0[1]>>24)&0xFF;
-  OutBuf[6] =(T0[1]>>16)&0xFF;
-  OutBuf[5] =(T0[1]>>8)&0xFF;
+  OutBuf[7] =(T0[1] >> 24)&0xFF;
+  OutBuf[6] =(T0[1] >> 16)&0xFF;
+  OutBuf[5] =(T0[1] >> 8)&0xFF;
   OutBuf[4] =(T0[1])&0xFF;
 
-  OutBuf[11] =(T0[2]>>24)&0xFF;
-  OutBuf[10] =(T0[2]>>16)&0xFF;
-  OutBuf[9] =(T0[2]>>8)&0xFF;
+  OutBuf[11] =(T0[2] >> 24)&0xFF;
+  OutBuf[10] =(T0[2] >> 16)&0xFF;
+  OutBuf[9] =(T0[2] >> 8)&0xFF;
   OutBuf[8] =(T0[2])&0xFF;
 
-  OutBuf[15] =(T0[3]>>24)&0xFF;
-  OutBuf[14] =(T0[3]>>16)&0xFF;
-  OutBuf[13] =(T0[3]>>8)&0xFF;
+  OutBuf[15] =(T0[3] >> 24)&0xFF;
+  OutBuf[14] =(T0[3] >> 16)&0xFF;
+  OutBuf[13] =(T0[3] >> 8)&0xFF;
   OutBuf[12] =(T0[3])&0xFF;
 };
 
@@ -687,24 +687,24 @@ unsigned long int W0, W1, W2, W3;
   T0[3] = (W0 ^ ((W1 << 8) | (W1 >> 24)) ^ ((W2 << 16) | (W2 >> 16))
     ^ ((W3 << 24) | (W3 >> 8))) ^ Key[3];
   // finalizing
-  OutBuf[3] =(T0[0]>>24)&0xFF;
-  OutBuf[2] =(T0[0]>>16)&0xFF;
-  OutBuf[1] =(T0[0]>>8)&0xFF;
+  OutBuf[3] =(T0[0] >> 24)&0xFF;
+  OutBuf[2] =(T0[0] >> 16)&0xFF;
+  OutBuf[1] =(T0[0] >> 8)&0xFF;
   OutBuf[0] =(T0[0])&0xFF;
 
-  OutBuf[7] =(T0[1]>>24)&0xFF;
-  OutBuf[6] =(T0[1]>>16)&0xFF;
-  OutBuf[5] =(T0[1]>>8)&0xFF;
+  OutBuf[7] =(T0[1] >> 24)&0xFF;
+  OutBuf[6] =(T0[1] >> 16)&0xFF;
+  OutBuf[5] =(T0[1] >> 8)&0xFF;
   OutBuf[4] =(T0[1])&0xFF;
 
-  OutBuf[11] =(T0[2]>>24)&0xFF;
-  OutBuf[10] =(T0[2]>>16)&0xFF;
-  OutBuf[9] =(T0[2]>>8)&0xFF;
+  OutBuf[11] =(T0[2] >> 24)&0xFF;
+  OutBuf[10] =(T0[2] >> 16)&0xFF;
+  OutBuf[9] =(T0[2] >> 8)&0xFF;
   OutBuf[8] =(T0[2])&0xFF;
 
-  OutBuf[15] =(T0[3]>>24)&0xFF;
-  OutBuf[14] =(T0[3]>>16)&0xFF;
-  OutBuf[13] =(T0[3]>>8)&0xFF;
+  OutBuf[15] =(T0[3] >> 24)&0xFF;
+  OutBuf[14] =(T0[3] >> 16)&0xFF;
+  OutBuf[13] =(T0[3] >> 8)&0xFF;
   OutBuf[12] =(T0[3])&0xFF;
 };
 

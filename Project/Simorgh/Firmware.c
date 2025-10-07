@@ -36,7 +36,7 @@ extern unsigned short RequestNo;
 //==============================================================================
 void IntToBytes(unsigned int i, unsigned char *buf) {
 	buf[0] =  i 			 & 0xFF;
-	buf[1] = (i >>  8) & 0xFF;
+	buf[1] = (i >> 8) & 0xFF;
 	buf[2] = (i >> 16) & 0xFF;
 	buf[3] = (i >> 24) & 0xFF;
 }
@@ -119,7 +119,7 @@ unsigned char CheckNewFirmware(void) {
 	
   GlobalBuffer[0] =0xC2;
   GlobalBuffer[1] =(crc2)&0xFF;
-  GlobalBuffer[2] =(crc2>>8)&0xFF;
+  GlobalBuffer[2] =(crc2 >> 8)&0xFF;
 	IntToBytes(Downloaded_FirmwareLength, &GlobalBuffer[3]);
   GlobalBuffer[7] =0x55;
 	FLASH_UNLOCK
@@ -570,7 +570,7 @@ unsigned char Check_AndSaveDownloadedFirmware(void) {
 	{		
   GlobalBuffer[0] =0xC2;
   GlobalBuffer[1] =(crc2)&0xFF;
-  GlobalBuffer[2] =(crc2>>8)&0xFF;
+  GlobalBuffer[2] =(crc2 >> 8)&0xFF;
 	IntToBytes(Downloaded_FirmwareLength, &GlobalBuffer[3]);
   GlobalBuffer[7] =0x55;
 		

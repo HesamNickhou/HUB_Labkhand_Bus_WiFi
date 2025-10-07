@@ -513,8 +513,8 @@ unsigned int StartAddress, Len;
 
   SPI_FLASH_CS=0;      
   SPI2_ReadWriteByte(W25X_ReadData);    
-  SPI2_ReadWriteByte((u8)((StartAddress)>>16)); 
-  SPI2_ReadWriteByte((u8)((StartAddress)>>8));   
+  SPI2_ReadWriteByte((u8)((StartAddress) >> 16)); 
+  SPI2_ReadWriteByte((u8)((StartAddress) >> 8));   
   SPI2_ReadWriteByte((u8)StartAddress);   
 
 	for (StartAddress=0;StartAddress<Len; StartAddress++)	

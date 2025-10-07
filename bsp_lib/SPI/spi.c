@@ -35,7 +35,7 @@ SPI_InitTypeDef  SPI_InitStructure;
 //=============================================================================
 void SPI1_SetSpeed(u8 SpeedSet)
 {
-	SPI1->CR1&=0XFFC7; 
+	SPI1->CR1 &= 0XFFC7; 
 	SPI1->CR1|=SpeedSet;
 	SPI_Cmd(SPI1,ENABLE);	   
 } 
@@ -95,7 +95,7 @@ void SPI2_Init(void)
 void SPI2_SetSpeed(u8 SPI_BaudRatePrescaler)
 {
   	assert_param(IS_SPI_BAUDRATE_PRESCALER(SPI_BaudRatePrescaler));
-	SPI2->CR1&=0XFFC7;
+	SPI2->CR1 &= 0XFFC7;
 	SPI2->CR1|=SPI_BaudRatePrescaler;	
 	SPI_Cmd(SPI2,ENABLE); 
 

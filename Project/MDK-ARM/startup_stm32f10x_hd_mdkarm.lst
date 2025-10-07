@@ -32,7 +32,7 @@ ARM Macro Assembler    Page 1
                        or is in Thread mode,
    18 00000000         ;*                      priority is Privileged, and the 
                        Stack is set to Main.
-   19 00000000         ;* <<< Use Configuration Wizard in Context Menu >>>   
+   19 00000000         ;* <<< Use Configuration Wizard in Context Menu >> >   
    20 00000000         ;*******************************************************
                        ************************
    21 00000000         ; 

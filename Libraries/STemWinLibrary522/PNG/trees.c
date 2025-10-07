@@ -952,8 +952,8 @@ void _tr_flush_block(s, buf, stored_len, eof)
         max_blindex = build_bl_tree(s);
 
         /* Determine the best encoding. Compute the block lengths in bytes. */
-        opt_lenb = (s->opt_len+3+7)>>3;
-        static_lenb = (s->static_len+3+7)>>3;
+        opt_lenb = (s->opt_len+3+7) >> 3;
+        static_lenb = (s->static_len+3+7) >> 3;
 
         Tracev((stderr, "\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u ",
                 opt_lenb, s->opt_len, static_lenb, s->static_len, stored_len,
@@ -1011,7 +1011,7 @@ void _tr_flush_block(s, buf, stored_len, eof)
         s->compressed_len += 7;  /* align on byte boundary */
 #endif
     }
-    Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len>>3,
+    Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len >> 3,
            s->compressed_len-7*eof));
 }
 

@@ -200,10 +200,10 @@ uint8_t bFsci;
   for (i=0; i<14; i++)
 		PayInfo[i+1] =ResBuff[i];
 
-  *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  *CardID=((ResBuff[10] >> 4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[11] >> 4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[12] >> 4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[13] >> 4)*10)+(ResBuff[13]&0x0F); 
   //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
 #endif		
   return 0;
@@ -322,10 +322,10 @@ unsigned int Price=Payment/10;
   for (i=0; i<14; i++)
 		PayInfo[i+1] =ResBuff[i];
 
-  *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  *CardID=((ResBuff[10] >> 4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[11] >> 4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[12] >> 4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[13] >> 4)*10)+(ResBuff[13]&0x0F); 
   //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
   
 //9410221250222776
@@ -992,7 +992,7 @@ unsigned int Price=Payment/10;
 
   ApduCmd[6] =0x0;
   ApduCmd[7] =0x0;
-  ApduCmd[8] =(Payment>>8) & 0xFF;
+  ApduCmd[8] =(Payment >> 8) & 0xFF;
   ApduCmd[9] =Payment & 0xFF;
 	
 	ApduCmd[10] =CRC8(ApduCmd, 5, 5);
@@ -1158,10 +1158,10 @@ unsigned int Price=Payment/10;
   for (i=0; i<14; i++)
 		PayInfo[i+1] =ResBuff[i];
 
-  *CardID=((ResBuff[10]>>4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[11]>>4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[12]>>4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
-  *CardID += ((ResBuff[13]>>4)*10)+(ResBuff[13]&0x0F); 
+  *CardID=((ResBuff[10] >> 4)*10)+(ResBuff[10]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[11] >> 4)*10)+(ResBuff[11]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[12] >> 4)*10)+(ResBuff[12]&0x0F); *CardID*=100;
+  *CardID += ((ResBuff[13] >> 4)*10)+(ResBuff[13]&0x0F); 
   //ProgressBar2(40,50,280,75, 200,3000,YELLOW);
   
 
@@ -1819,7 +1819,7 @@ unsigned int Price=Payment/10;
 
   ApduCmd[6] =0x0;
   ApduCmd[7] =0x0;
-  ApduCmd[8] =(Payment>>8) & 0xFF;
+  ApduCmd[8] =(Payment >> 8) & 0xFF;
   ApduCmd[9] =Payment & 0xFF;
 	
 	ApduCmd[10] =CRC8(ApduCmd, 5, 5);
@@ -2119,10 +2119,10 @@ unsigned char keyCoded[12];
   PayInfo[1] =buf2[0]; //Version
   PayInfo[2] =buf2[1]; //Version
 
-  *CardID=((buf2[10]>>4)*10)+(buf2[10]&0x0F); *CardID*=100;
-  *CardID += ((buf2[11]>>4)*10)+(buf2[11]&0x0F); *CardID*=100;
-  *CardID += ((buf2[12]>>4)*10)+(buf2[12]&0x0F); *CardID*=100;
-  *CardID += ((buf2[13]>>4)*10)+(buf2[13]&0x0F);
+  *CardID=((buf2[10] >> 4)*10)+(buf2[10]&0x0F); *CardID*=100;
+  *CardID += ((buf2[11] >> 4)*10)+(buf2[11]&0x0F); *CardID*=100;
+  *CardID += ((buf2[12] >> 4)*10)+(buf2[12]&0x0F); *CardID*=100;
+  *CardID += ((buf2[13] >> 4)*10)+(buf2[13]&0x0F);
 	
 	Num=SearchForCard(*CardID, &LastTime);
 	if (Num)
@@ -2206,9 +2206,9 @@ unsigned char keyCoded[12];
 	
   for (i=0; i<12; i++)	
 	  buf[i] =Log[i];
-	buf[12] =(li>>24)&0xFF;
-	buf[13] =(li>>16)&0xFF;
-	buf[14] =(li>>8)&0xFF;
+	buf[12] =(li >> 24)&0xFF;
+	buf[13] =(li >> 16)&0xFF;
+	buf[14] =(li >> 8)&0xFF;
 	buf[15] =li&0xFF;
 
 	LogBlock=Log[12];
@@ -2253,23 +2253,23 @@ unsigned char keyCoded[12];
 
 	Log[4] =(MYear%100);
 	Log[4] <<= 1;
-	Log[4]|=((MMonth&0x0F)>>3);
+	Log[4]|=((MMonth&0x0F) >> 3);
 	Log[5] =MMonth&0x07; 
 	Log[5] <<= 5;
 	Log[5]|=(MDay&0x1F);
 	Log[6] =Hour;
 	Log[6] <<= 3;
-	Log[6]|=((Min&0x3F)>>3);
+	Log[6]|=((Min&0x3F) >> 3);
 	Log[7] =Min;
 	Log[7] <<= 5;
-	Log[7]|=((Sec>>1)&0x1F);
+	Log[7]|=((Sec >> 1)&0x1F);
 	
 	Log[8] =1; //debit
 	Log[9] =WalletType; //1 city  2 cash
 	i=Log[10]; i <<= 8;
 	i += Log[11];
 	i++; //TxCounter
-	Log[10] =(i>>8)&0xFF;
+	Log[10] =(i >> 8)&0xFF;
 	Log[11] =i&0xFF;
 	Log[12] =NewLogBlock;
   PayInfo[15] =WalletType;

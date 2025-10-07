@@ -251,29 +251,29 @@ unsigned int VPW=3;
 	LCD_WriteCom(0x00B0);	//LCD SPECIFICATION
 	LCD_WriteRAM(0x0020);
 	LCD_WriteRAM(0x0000);
-	LCD_WriteRAM((HDP>>8)&0X00FF);  //Set HDP
+	LCD_WriteRAM((HDP >> 8)&0X00FF);  //Set HDP
 	LCD_WriteRAM(HDP&0X00FF);
-    LCD_WriteRAM((VDP>>8)&0X00FF);  //Set VDP
+    LCD_WriteRAM((VDP >> 8)&0X00FF);  //Set VDP
 	LCD_WriteRAM(VDP&0X00FF);
     LCD_WriteRAM(0x0000);
 
 	LCD_WriteCom(0x00B4);	//HSYNC
-	LCD_WriteRAM((HT>>8)&0X00FF);  //Set HT
+	LCD_WriteRAM((HT >> 8)&0X00FF);  //Set HT
 	LCD_WriteRAM(HT&0X00FF);
-	LCD_WriteRAM((HPS>>8)&0X00FF);  //Set HPS
+	LCD_WriteRAM((HPS >> 8)&0X00FF);  //Set HPS
 	LCD_WriteRAM(HPS&0X00FF);
 	LCD_WriteRAM(HPW);			   //Set HPW
-	LCD_WriteRAM((LPS>>8)&0X00FF);  //Set HPS
+	LCD_WriteRAM((LPS >> 8)&0X00FF);  //Set HPS
 	LCD_WriteRAM(LPS&0X00FF);
 	LCD_WriteRAM(0x0000);
 
 	LCD_WriteCom(0x00B6);	//VSYNC
-	LCD_WriteRAM((VT>>8)&0X00FF);   //Set VT
+	LCD_WriteRAM((VT >> 8)&0X00FF);   //Set VT
 	LCD_WriteRAM(VT&0X00FF);
-	LCD_WriteRAM((VPS>>8)&0X00FF);  //Set VPS
+	LCD_WriteRAM((VPS >> 8)&0X00FF);  //Set VPS
 	LCD_WriteRAM(VPS&0X00FF);
 	LCD_WriteRAM(VPW);			   //Set VPW
-	LCD_WriteRAM((FPS>>8)&0X00FF);  //Set FPS
+	LCD_WriteRAM((FPS >> 8)&0X00FF);  //Set FPS
 	LCD_WriteRAM(FPS&0X00FF);
 
 	LCD_WriteCom(0x00BA);

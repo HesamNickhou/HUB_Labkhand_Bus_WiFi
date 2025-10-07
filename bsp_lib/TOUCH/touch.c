@@ -181,7 +181,7 @@ u8 TP_Scan(u8 tp)
 	{
 		if (tp_dev.sta&TP_PRES_DOWN)
 		{
-			tp_dev.sta&=~(1<<7);	
+			tp_dev.sta &= ~(1<<7);	
 		}else
 		{
 			tp_dev.x0=0;

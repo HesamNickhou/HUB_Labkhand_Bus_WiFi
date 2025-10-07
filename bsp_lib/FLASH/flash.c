@@ -96,8 +96,8 @@ void SPI_Flash_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead)
  	u16 i;    												    
 	SPI_FLASH_CS=0;                         
     SPI2_ReadWriteByte(W25X_ReadData);    
-    SPI2_ReadWriteByte((u8)((ReadAddr)>>16)); 
-    SPI2_ReadWriteByte((u8)((ReadAddr)>>8));   
+    SPI2_ReadWriteByte((u8)((ReadAddr) >> 16)); 
+    SPI2_ReadWriteByte((u8)((ReadAddr) >> 8));   
     SPI2_ReadWriteByte((u8)ReadAddr);   
     for (i=0;i<NumByteToRead;i++)
 	{ 
@@ -113,8 +113,8 @@ unsigned char SPI_Flash_Write_Page(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
     SPI_FLASH_Write_Enable();               
 	SPI_FLASH_CS=0;                           
     SPI2_ReadWriteByte(W25X_PageProgram);   
-    SPI2_ReadWriteByte((u8)((WriteAddr)>>16)); 
-    SPI2_ReadWriteByte((u8)((WriteAddr)>>8));   
+    SPI2_ReadWriteByte((u8)((WriteAddr) >> 16)); 
+    SPI2_ReadWriteByte((u8)((WriteAddr) >> 8));   
     SPI2_ReadWriteByte((u8)WriteAddr);   
     for (i=0;i<NumByteToWrite;i++) SPI2_ReadWriteByte(pBuffer[i]);
 	SPI_FLASH_CS=1;                   
@@ -184,10 +184,10 @@ unsigned char Month, Day, Hour, Min;
       CardID=SPI_FLASH_BUF[j+3]; CardID <<= 8;
       CardID += SPI_FLASH_BUF[j+2]; CardID <<= 8;
       CardID += SPI_FLASH_BUF[j+1];
-      Year=(SPI_FLASH_BUF[j+5]>>4)+1390;
+      Year=(SPI_FLASH_BUF[j+5] >> 4)+1390;
       Month=SPI_FLASH_BUF[j+5]&0x0F;
-      Day=SPI_FLASH_BUF[j+6]>>3;
-      Hour=SPI_FLASH_BUF[j+7]>>3;
+      Day=SPI_FLASH_BUF[j+6] >> 3;
+      Hour=SPI_FLASH_BUF[j+7] >> 3;
       Min=((SPI_FLASH_BUF[j+7]&0x07)<<3)+(SPI_FLASH_BUF[j+6]&0x07);
     printf("CardID: %d %d/%d/%d %d:%d",CardID,Year,Month,Day,Hour,Min);
 
@@ -387,8 +387,8 @@ void SPI_Flash_Erase_Sector(u32 Dst_Addr)
     SPI_Flash_Wait_Busy();   
   	SPI_FLASH_CS=0;                 
     SPI2_ReadWriteByte(W25X_SectorErase);
-    SPI2_ReadWriteByte((u8)((Dst_Addr)>>16)); 
-    SPI2_ReadWriteByte((u8)((Dst_Addr)>>8));   
+    SPI2_ReadWriteByte((u8)((Dst_Addr) >> 16)); 
+    SPI2_ReadWriteByte((u8)((Dst_Addr) >> 8));   
     SPI2_ReadWriteByte((u8)Dst_Addr);  
 	SPI_FLASH_CS=1;                          
     SPI_Flash_Wait_Busy();   				

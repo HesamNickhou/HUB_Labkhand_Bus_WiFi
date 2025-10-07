@@ -997,7 +997,7 @@ void TIM_InternalClockConfig(TIM_TypeDef* TIMx)
   /* Check the parameters */
   assert_param(IS_TIM_LIST6_PERIPH(TIMx));
   /* Disable slave mode to clock the prescaler directly with the internal clock */
-  TIMx->SMCR &=  (uint16_t)(~((uint16_t)TIM_SMCR_SMS));
+  TIMx->SMCR &= (uint16_t)(~((uint16_t)TIM_SMCR_SMS));
 }
 
 /**
@@ -2068,7 +2068,7 @@ void TIM_SelectOCxM(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_OCMode
 
   if ((TIM_Channel == TIM_Channel_1) ||(TIM_Channel == TIM_Channel_3))
   {
-    tmp += (TIM_Channel>>1);
+    tmp += (TIM_Channel >> 1);
 
     /* Reset the OCxM bits in the CCMRx register */
     *(__IO uint32_t *) tmp &= (uint32_t)~((uint32_t)TIM_CCMR1_OC1M);
@@ -2078,7 +2078,7 @@ void TIM_SelectOCxM(TIM_TypeDef* TIMx, uint16_t TIM_Channel, uint16_t TIM_OCMode
   }
   else
   {
-    tmp += (uint16_t)(TIM_Channel - (uint16_t)4)>> (uint16_t)1;
+    tmp += (uint16_t)(TIM_Channel - (uint16_t)4) >> (uint16_t)1;
 
     /* Reset the OCxM bits in the CCMRx register */
     *(__IO uint32_t *) tmp &= (uint32_t)~((uint32_t)TIM_CCMR1_OC2M);
