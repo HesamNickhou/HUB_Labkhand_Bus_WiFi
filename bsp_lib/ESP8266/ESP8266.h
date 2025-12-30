@@ -9,7 +9,7 @@ extern unsigned char WIFIDataIsAvailable;
 extern unsigned char WifiConnectionStep,NeedTowifiInit;
 extern char CheckWiFi(void);
 extern char WIFISend(unsigned int len, unsigned char *DataToSendRec);
-extern void sendData(unsigned int len, unsigned char *data);
+extern char sendData(unsigned int len, unsigned char *data);
 
 extern unsigned int WifiConnectionError;
 #endif

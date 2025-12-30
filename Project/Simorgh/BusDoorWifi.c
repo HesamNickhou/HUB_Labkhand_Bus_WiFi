@@ -26,6 +26,8 @@
 #include <LCDConf_stm3210e_eval.h>
 #include "esp8266/esp8266.h"
 #include "BusDoorWifi.h"
+#include "cJSON.h"
+
 #define MAX_TRANSACTIONS  32500 
 #define LEN_TRANSACTIONS  128
 #define GlobalBufferLen   1200
@@ -216,16 +218,68 @@ unsigned char SendALive();
 void DisplayToolbar(unsigned char c) {}
 
 void WifiCallback(char* data, char len) {
-	char i;	
-	/*unsigned int sum = 0;
-	for (i=0; i<len; i++)
-		sum += data[i];
-	GUI_SetColor(GUI_RED);
-	GUI_DispDecAt(sum, 10, 30, 3);*/
-	//PlayBip(1);
-	SendALive();
-}
+	sprintf(GlobalBuffer, "%s %d", data, len);
+	if (GlobalBuffer[3] == 0xAF)
+		GlobalBuffer[3] = 0xAF;
+	else
+		sprintf(GlobalBuffer, "This is Hesam");
+	return;
 	
+	cJSON *json = cJSON_Parse(data);
+	if (json != NULL) {//--------------اگر جيسون ارسالي مشکلي ندارد
+		
+		cJSON* header = cJSON_GetObjectItem(json, "Header");
+		if (cJSON_IsNumber(header)) { //--------------- اگر مقدار هدر درست و عددي باشد
+			
+			if (header->valueint == 13) { //HEADER_CONFIG
+				/*
+				{
+          "header": 13, // HEADER_CONFIG`
+          "deviceId": "integer", // optional, defaults to 0
+          "uc": "integer", // optional, defaults to 0
+          "operatorId": "integer", // optional, defaults to 0
+          "operatorCardId": "integer", // optional, defaults to 0 (used as opPassword)
+          "lineId": "integer", // optional, defaults to 0
+          "lineCode": "integer", // optional, defaults to 0
+          "linePrice": "long", // optional, defaults to 0L
+          "lineTitle": "string", // optional, defaults to ""
+          "date": "long", // optional, defaults to 0 (timestamp)
+          "type": "integer" // Calculated in JsonBuilder, client will just receive it
+        }
+				*/
+				Config.DeviceID 	= cJSON_GetObjectItem(json, "deviceId")->valueint;
+				Config.UC 				= cJSON_GetObjectItem(json, "uc")->valueint;
+				Config.DriverID 	= cJSON_GetObjectItem(json, "operatorId")->valueint;
+													//cJSON_GetObjectItem(json, "operatorCardId")->valueint;
+				Config.BusID 			= cJSON_GetObjectItem(json, "lineId")->valueint;
+													//cJSON_GetObjectItem(json, "lineCode")->valueint;
+				Config.Price 			= cJSON_GetObjectItem(json, "linePrice")->valueint;
+													//cJSON_GetObjectItem(json, "lineTitle")->valueint;
+													//cJSON_GetObjectItem(json, "date")->valueint;
+				Config.deviceType = cJSON_GetObjectItem(json, "type")->valueint;
+			}
+			
+			else if (header->valueint == 12) { //Live Packet
+				/*
+				{
+          "header": 12, // HEADER_CONFIG_RESPONSE
+          "deviceType": "integer", // ordinal of DeviceType, defaults to 0
+          "needDate": "boolean", // defaults to false
+          "message": "string" // Expected to be "LIVE PACKET RECEIVE CORRECTLY"
+        }
+				*/
+				SendALive();
+			}
+			
+			else if (header->valueint == 15) { //HEADER_CHECK_QR_RESPONSE
+			}
+			
+		}
+	}
+	cJSON_Delete(json);
+	
+}
+
 void SaveRingDetail(void){
 	unsigned int i;
 	unsigned short crc=0;
@@ -2110,19 +2164,21 @@ unsigned char SendALive() {
 	unsigned short Len = 0;
 
 	WifiConnectionError = 0;
-	
+
 	/*{
 		"header": 12, // HEADER_CONFIG_RESPONSE (Note: This is labeled as a response header, but the method suggests client sends it)
 		"deviceType": "integer", // from deviceType.ordinal
 		"needDate": "boolean", // from needDate
 		"message": "LIVE PACKET RECEIVE CORRECTLY" // JsonBuilder.LIVE_PACKET_DATA
 	}*/
-
-	sprintf(GlobalBuffer, "{\"Header\":12, \"deviceType\":%u, \"needDate" \
-		"\":false, \"message\":\"LIVE PACKET RECEIVE CORRECTLY\"}", 
-		Config.deviceType);
+	cJSON* json = cJSON_CreateObject();
+	cJSON_AddNumberToObject(json, "Header", 		12);
+	cJSON_AddNumberToObject(json, "deviceType", Config.deviceType);
+	cJSON_AddBoolToObject(json, 	"needDate", 	FALSE);
+	cJSON_AddStringToObject(json, "message", 		"LIVE PACKET RECEIVE CORRECTLY");
+	strcpy(GlobalBuffer, cJSON_Print(json));
+	cJSON_Delete(json);
 	Len = strlen(GlobalBuffer);
-	
 	return (SendPacket(Len));
 }
 
@@ -2996,10 +3052,7 @@ void SendOfflines(void) {
       break;
 		
     LoadFromDFToRam(addTransactions + (SendUsers * LEN_TRANSACTIONS), 
-			LEN_TRANSACTIONS, MEMBuffer);
-		
-		
-		
+			LEN_TRANSACTIONS, MEMBuffer);		
 		/*
 		 {
 				"header": 			 10, 				// HEADER_TRANSACTION
@@ -3016,8 +3069,22 @@ void SendOfflines(void) {
 				"qrId": 				 "long" 		// from tr.qrId
 			}
 		*/
+		cJSON *json = cJSON_CreateObject();
+		cJSON_AddNumberToObject(json, "header", 10);
+		cJSON_AddNumberToObject(json, "deviceId", MEMBuffer[0] + (MEMBuffer[1] << 8) + (MEMBuffer[2] << 16));
+		cJSON_AddNumberToObject(json, "deviceType", Config.deviceType);
+		cJSON_AddNumberToObject(json, "uc", UCMap[MEMBuffer[3]]);
+		cJSON_AddNumberToObject(json, "OperatorId", MEMBuffer[25] + (MEMBuffer[26] << 8) + (MEMBuffer[27] << 16));
+		cJSON_AddNumberToObject(json, "lineId", MEMBuffer[23] + (MEMBuffer[24] << 8));
+		cJSON_AddNumberToObject(json, "cardId", 100);
+		cJSON_AddNumberToObject(json, "preCardCredit", MEMBuffer[15] + (MEMBuffer[16] << 8) + (MEMBuffer[17] << 16) + (MEMBuffer[18] << 24));
+		cJSON_AddNumberToObject(json, "price", MEMBuffer[12] + (MEMBuffer[13]));
+		cJSON_AddNumberToObject(json, "cardCredit", MEMBuffer[19] + (MEMBuffer[20] << 8) + (MEMBuffer[21] << 16));
+		cJSON_AddNumberToObject(json, "date", 14040722);
+		cJSON_AddNumberToObject(json, "qrId", 13640611);
+		strcpy(str, cJSON_Print(json));
 		
-		sprintf(str, //-------------------------------------------------------------  Creating a JSON data to send to BCU via WIFI
+		/*sprintf(str, //-------------------------------------------------------------  Creating a JSON data to send to BCU via WIFI
 			"{\"header\":10, \"deviceId\":%u, \"deviceType\":%u, \"uc\":%u, \"Opera" \
 			"torId\":%u, \"lineId\":%u, \"cardId\":%u, \"preCardCredit\":%u, \"price"\
 			"\":%u, \"cardCredit\":%u, \"date\":%u, \"qrId\":%u}", 
@@ -3065,8 +3132,9 @@ void SendOfflines(void) {
 			 
 			 MEMBuffer[28] + 					// LastDevice
 			(MEMBuffer[29] << 8)
-		);
+		);*/
 		WIFISend(strlen(str), str);
+		cJSON_Delete(json);
 		
 		/*sprintf(str, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X" \
 			"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n",

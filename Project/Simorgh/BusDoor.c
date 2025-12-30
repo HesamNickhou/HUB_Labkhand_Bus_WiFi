@@ -2267,10 +2267,21 @@ unsigned char ProcessPacket(unsigned char Port) {
 					Changed=1;
 				}
           
-        if ((Year != (GlobalBuffer[12]+1300)) || (Month != GlobalBuffer[13]) || (Day != GlobalBuffer[14]) || (Hour != GlobalBuffer[15]) || (Min != GlobalBuffer[16]))
-        {
-          SetDateAndTime(GlobalBuffer[12],GlobalBuffer[13],GlobalBuffer[14],GlobalBuffer[15],GlobalBuffer[16],GlobalBuffer[17],0);
-          Refresh=1;
+				//Check the Date Time range validity
+        if ((Year  != (GlobalBuffer[12] + 1300)) || 
+						(Month != GlobalBuffer[13]) || 
+						(Day   != GlobalBuffer[14]) || 
+						(Hour  != GlobalBuffer[15]) || 
+						(Min   != GlobalBuffer[16])) {
+							
+          SetDateAndTime(GlobalBuffer[12], //Year
+												 GlobalBuffer[13], //Month
+												 GlobalBuffer[14], //Day
+												 GlobalBuffer[15], //Hour
+												 GlobalBuffer[16], //Minute
+												 GlobalBuffer[17], //Save! not used in function :(
+												 0);
+          Refresh = 1;
         } 
 
         ChangePrice=0;
