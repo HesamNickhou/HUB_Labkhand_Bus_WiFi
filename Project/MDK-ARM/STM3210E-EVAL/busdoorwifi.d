@@ -68,6 +68,7 @@
 .\stm3210e-eval\busdoorwifi.o: ..\Simorgh\ecardKashan.h
 .\stm3210e-eval\busdoorwifi.o: .\..\..\Libraries\STemWinLibrary522\inc\wm.h
 .\stm3210e-eval\busdoorwifi.o: .\..\..\Libraries\STemWinLibrary522\inc\WM_GUI.h
+.\stm3210e-eval\busdoorwifi.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
 .\stm3210e-eval\busdoorwifi.o: .\..\..\bsp_lib\rdlib/types/RdLib.h
 .\stm3210e-eval\busdoorwifi.o: .\..\..\bsp_lib\mfrc/mfrc531.h
 .\stm3210e-eval\busdoorwifi.o: .\..\..\bsp_lib\mfrc/iso14443ab.h
@@ -115,5 +116,4 @@
 .\stm3210e-eval\busdoorwifi.o: .\..\..\Libraries\STemWinLibrary522\inc\TREEVIEW.h
 .\stm3210e-eval\busdoorwifi.o: .\..\..\bsp_lib\esp8266/esp8266.h
 .\stm3210e-eval\busdoorwifi.o: ..\Simorgh\BusDoorWifi.h
-.\stm3210e-eval\busdoorwifi.o: D:\Keil_v5\Keil_Packs\MDK-Packs\cJSON\1.0.0\cJSON.h
 .\stm3210e-eval\busdoorwifi.o: ..\Simorgh\Firmware.h

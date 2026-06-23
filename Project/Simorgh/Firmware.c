@@ -252,7 +252,7 @@ unsigned char Request_FirmwareNextPacketfromServer512Byte(void)
  
  
  #ifdef WithWIFI
- WIFISend(13,GlobalBuffer); 
+ //WIFISend(13,GlobalBuffer); 
  #endif
  
  //SendData(13); 
@@ -322,7 +322,7 @@ void Request_UploadedFirmwaresPropertiesFromServer512Byte(void) {
 // DataSent=0; 
 
 	#ifdef WithWIFI
-		WIFISend(13,GlobalBuffer); 
+		//WIFISend(13,GlobalBuffer); 
 	#endif
 	//SendData(13);
 	FirmwarePacketIndex=1;

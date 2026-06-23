@@ -22,11 +22,11 @@
 #include "ecard/ecard.h"
 #include "ecardKashan.h"
 #include <wm.h>
+#include "time.h"
 #include <rdlib/types/RdLib.h>
 #include <LCDConf_stm3210e_eval.h>
 #include "esp8266/esp8266.h"
 #include "BusDoorWifi.h"
-#include "cJSON.h"
 
 #define MAX_TRANSACTIONS  32500 
 #define LEN_TRANSACTIONS  128
@@ -44,6 +44,7 @@ unsigned int
 	trTail,
 	loHead,
 	loTail,
+	sentAlive              = 0,
 	BinSize								 = 0,
 	_PreEtebar 						 = 20000,
 	__ID 									 = 0,
@@ -67,6 +68,7 @@ unsigned int
 	TransactionID 				 = 0;
 	
 unsigned char 
+	DataIsReady                = 0,
 	OldMin										 = 0, 
 	OldHour 									 = 0, 
 	fCounter 									 = 0, 
@@ -109,7 +111,8 @@ unsigned char
 	ServiceRequest 						 = 0,
 	CheckFirmware 						 = 0x81,
 	ServiceRequestTimeout 		 = 0,
-	GlobalBuffer[GlobalBufferLen],
+	GlobalBuffer[1200],
+	wifiBuffer[1024],
 	DriverName[102],
 	LastCardingDateTime[10],
 	PayInfo[30],
@@ -177,7 +180,8 @@ void Request_UploadedFirmwaresPropertiesFromServer(void);
 //........................................................... 
 extern TGPSData GPSData;
 void SendOfflines(void);
-
+void ShowPaymentBox(void);
+void ProcessWifi();
 //unsigned char InCity=0;
 
 float 
@@ -196,89 +200,179 @@ static union {
   TDeviceInfo DeviceInfo;
 } TaxiDeviceInfoTransfer;
 
-
 union {
   unsigned char Buf[5];
   float f;
 } uFloat;
 
-
 signed short int CurrentCourse = -1, OldCourse = -1;
 
 const unsigned char 
-	*strDays[7]    = {{"يکشنبه"}, {"دوشنبه"}, {"سه شنبه"}, {"چهارشنبه"}, {"پنج شنبه"}, {"جمعه"}, {"شنبه"}},
+	*strDays[7]    = {{"يکشنبه"},  {"دوشنبه"},  {"سه شنبه"}, {"چهارشنبه"}, {"پنج شنبه"}, {"جمعه"}, {"شنبه"}},
   *strMonths[13] = {{"فروردين"}, {"ارديبهشت"}, {"خرداد"}, 
-										{"تير"},     {"مرداد"},    {"شهريور"}, 
-									  {"مهر"}, 		 {"آبان"}, 		 {"آذر"}, 
-										{"دي"}, 		 {"بهمن"}, 		 {"اسفند"}};
-	
+										{"تير"},    {"مرداد"},   {"شهريور"}, 
+									  {"مهر"}, 	{"آبان"}, 	 {"آذر"}, 
+										{"دي"}, 	  {"بهمن"}, 	 {"اسفند"}};
+
 void ShowCardingResult(char Mode,unsigned int Pay,unsigned int _UC,unsigned int _ID,unsigned char Result,unsigned char *);
 unsigned char SendALive();
 
-void DisplayToolbar(unsigned char c) {}
-
-void WifiCallback(char* data, char len) {
-	sprintf(GlobalBuffer, "%s %d", data, len);
-	if (GlobalBuffer[3] == 0xAF)
-		GlobalBuffer[3] = 0xAF;
-	else
-		sprintf(GlobalBuffer, "This is Hesam");
-	return;
 	
-	cJSON *json = cJSON_Parse(data);
-	if (json != NULL) {//--------------اگر جيسون ارسالي مشکلي ندارد
+void readTimeStamp(unsigned long timeStamp) {
+	/* Local variables only */
+	unsigned short year = 1970;
+	unsigned char month, day, hour, minute, second;
+	unsigned long days, seconds;
+	
+	/* Constants */
+	#define SEC_PER_DAY 86400UL
+	#define SEC_PER_HOUR 3600UL
+	#define SEC_PER_MINUTE 60UL
+	
+	/* Calculate days and time */
+	days 		= timeStamp / SEC_PER_DAY;
+	seconds = timeStamp % SEC_PER_DAY;
+	
+	/* Calculate time */
+	hour 		 = seconds / SEC_PER_HOUR;
+	seconds %= SEC_PER_HOUR;
+	minute 	 = seconds / SEC_PER_MINUTE;
+	second 	 = seconds % SEC_PER_MINUTE;
+	
+	/* Calculate year */
+	while (days >= 365)	{
+		/* Check for leap year */
+		unsigned char is_leap = 0;
 		
-		cJSON* header = cJSON_GetObjectItem(json, "Header");
-		if (cJSON_IsNumber(header)) { //--------------- اگر مقدار هدر درست و عددي باشد
-			
-			if (header->valueint == 13) { //HEADER_CONFIG
-				/*
-				{
-          "header": 13, // HEADER_CONFIG`
-          "deviceId": "integer", // optional, defaults to 0
-          "uc": "integer", // optional, defaults to 0
-          "operatorId": "integer", // optional, defaults to 0
-          "operatorCardId": "integer", // optional, defaults to 0 (used as opPassword)
-          "lineId": "integer", // optional, defaults to 0
-          "lineCode": "integer", // optional, defaults to 0
-          "linePrice": "long", // optional, defaults to 0L
-          "lineTitle": "string", // optional, defaults to ""
-          "date": "long", // optional, defaults to 0 (timestamp)
-          "type": "integer" // Calculated in JsonBuilder, client will just receive it
-        }
-				*/
-				Config.DeviceID 	= cJSON_GetObjectItem(json, "deviceId")->valueint;
-				Config.UC 				= cJSON_GetObjectItem(json, "uc")->valueint;
-				Config.DriverID 	= cJSON_GetObjectItem(json, "operatorId")->valueint;
-													//cJSON_GetObjectItem(json, "operatorCardId")->valueint;
-				Config.BusID 			= cJSON_GetObjectItem(json, "lineId")->valueint;
-													//cJSON_GetObjectItem(json, "lineCode")->valueint;
-				Config.Price 			= cJSON_GetObjectItem(json, "linePrice")->valueint;
-													//cJSON_GetObjectItem(json, "lineTitle")->valueint;
-													//cJSON_GetObjectItem(json, "date")->valueint;
-				Config.deviceType = cJSON_GetObjectItem(json, "type")->valueint;
-			}
-			
-			else if (header->valueint == 12) { //Live Packet
-				/*
-				{
-          "header": 12, // HEADER_CONFIG_RESPONSE
-          "deviceType": "integer", // ordinal of DeviceType, defaults to 0
-          "needDate": "boolean", // defaults to false
-          "message": "string" // Expected to be "LIVE PACKET RECEIVE CORRECTLY"
-        }
-				*/
-				SendALive();
-			}
-			
-			else if (header->valueint == 15) { //HEADER_CHECK_QR_RESPONSE
-			}
-			
+		if (year % 4 == 0) {
+			if (year % 100 == 0)
+				is_leap = (year % 400 == 0);
+			else
+				is_leap = 1;
+		}
+		days -= (is_leap ? 366 : 365);
+		year++;
+	}
+	
+	unsigned char month_days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
+		month_days[1] = 29;
+	
+	month = 1;
+	for (uint8_t i = 0; i < 12; i++) {
+		if (days >= month_days[i]) {
+			days -= month_days[i];
+			month++;
+		}
+		else
+			break;
+	}
+	day = days + 1;
+	RTC_Set(year, month, day, hour, minute, second);
+	/*CurrentDate.year  = year;
+	CurrentDate.month = month;
+	CurrentDate.day   = day;*/
+	char str[100];
+	sprintf(str, "\nCurrentDate = %d/%d/%d\nymd = %d/%d/%d\n", CurrentDate.year, CurrentDate.month, CurrentDate.day,
+		year, month, day);
+	debug(str, 1);
+	
+	Year  = year;
+	Month = month;
+	Day   = day;
+	Hour  = hour;
+	Min   = minute;
+	Sec   = second;
+	/*rDateType now;
+	gregorian_to_jalali(year, month, day, &now);
+	Year 	= now.year;
+	Month = now.month;
+	Day 	= now.day;
+	Hour  = hour;
+	Min   = minute;
+	Sec   = second;
+	RTC_Set(CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec);
+	
+	sprintf(str, "\nCurrentDate = %d/%d/%d\nYMD = %d/%d/%d\n", CurrentDate.year, CurrentDate.month, CurrentDate.day,
+		Year, Month, Day);
+	debug(str, 1);*/
+}
+void createQR(const char* data, unsigned short x, unsigned short y) {
+	unsigned short xPos, yPos;
+	for (unsigned char i=0; i<16; i++) {
+		for (unsigned char j=0; j<16; j++) {
+			GUI_SetColor((data[i * 16 + j] % 2) == 1 ? GUI_BLACK : GUI_WHITE);
+			xPos = x + j * 6;
+			yPos = y + i * 6;
+			GUI_FillRect(xPos, yPos, xPos + 6, yPos + 6);
 		}
 	}
-	cJSON_Delete(json);
-	
 }
+char* getFieldValue(const char* source, const char* field, char endChar) {
+	char* tmp = strstr(source, field);
+	char* strEnd = strchr(tmp, endChar);
+	if (strEnd == NULL)
+		return NULL;
+	
+	char value[20];
+	char num = strEnd - tmp - strlen(field);
+	memcpy(value, tmp + strlen(field), num);
+	value[num] = '\0';
+	return value;
+}
+
+void ProcessWifi() {
+	WifiConnectionError = 0;
+
+	while (DataIsReady > 0) {
+		//debug("\n<< ", 1);
+		//debug(wifiBuffer, 0);
+		unsigned char header = atoi(getFieldValue(wifiBuffer, "\"header\":", ','));
+		if (header == 13) {
+			unsigned char type = atoi(getFieldValue(wifiBuffer, "\"type\":", '}'));
+			
+			if (type == 4) {
+				debug("\n<< ", 1);
+				debug(wifiBuffer, 0);
+				Config.GrouhPrice[0][0] = atoi(getFieldValue(wifiBuffer, "\"linePrice\":", ','));
+				Config.UC 							= atoi(getFieldValue(wifiBuffer, "\"uc\":", 			 ','));
+				Config.LineCode 				= atoi(getFieldValue(wifiBuffer, "\"lineCode\":",	 ','));
+				Config.LineNumber       = atoi(getFieldValue(wifiBuffer, "\"lineId\":",     ','));
+				Config.DriverID 				= atoi(getFieldValue(wifiBuffer, "\"operatorId\":", ','));
+
+				char date_str[50];
+				strcpy(date_str, getFieldValue(wifiBuffer, "\"date\":", ','));
+				date_str[strlen(date_str) - 3] = '\0';
+				readTimeStamp(atoll(date_str) + 28800 /*16200*/);
+				
+				/*char str[100];
+				sprintf(str, "\ntimeStamp = %ld, %d/%d/%d %d:%d:%d\n", 
+					toTimeStamp(CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec),
+						CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec);
+				debug(str, 0);*/
+				ShowPaymentBox();
+			}
+			/*else if (type == 3) {
+				createQR(wifiBuffer, 95, 297);
+			}*/
+		}
+		else if (header == 11) {
+			debug("\n<< ", 1);
+			debug(wifiBuffer, 0);
+		}
+		
+		unsigned short index = 0;
+		while (wifiBuffer[index] != '}') {
+			if (index >= 1024)
+				break;
+			index++;
+		}
+		if (index < 1024)
+			memcpy(wifiBuffer, wifiBuffer + index + 1, 1024 - index);
+		DataIsReady--;
+	}
+}
+void WifiCallback() { DataIsReady++; }
 
 void SaveRingDetail(void){
 	unsigned int i;
@@ -314,10 +408,10 @@ void SaveRingDetail(void){
 }
 
 unsigned char LoadRecordsInfo(void) {
-	unsigned int i;
-	unsigned short crc=0;
-	unsigned int OfflineStart, Address, Idx, Idx2;
-	unsigned char bcc, buf[LEN_TRANSACTIONS];
+		unsigned int i;
+		unsigned short crc=0;
+		unsigned int OfflineStart, Address, Idx, Idx2;
+		unsigned char bcc, buf[LEN_TRANSACTIONS];
 
   //printf("\n\r===================================");
   LoadFromDFToRam(addIndicators, 20, buf);
@@ -329,7 +423,7 @@ unsigned char LoadRecordsInfo(void) {
   //trHead += buf[1]; trHead <<= 8;
   //trHead += buf[0];
 	BytesToInt(&trTail, &buf[4]);
-  //trTail=buf[7]; trTail <<= 8;
+  //trTail=buf[7]; trTail <<= 8;                                                                                                                            
   //trTail += buf[6]; trTail <<= 8;
   //trTail += buf[5]; trTail <<= 8;
   //trTail += buf[4];
@@ -412,22 +506,20 @@ unsigned char LoadRecordsInfo(void) {
 	
   //printf("\n\rIndicators.OffTransactions=%d ",Indicators.OffTransactions);
   LoadFromDFToRam(addBlackListInfo, 8, buf);
-	i=buf[2]; i <<= 8;
+	i  = buf[2]; i <<= 8;
 	i += buf[1]; i <<= 8;
 	i += buf[0]; 
-	BlackList_Count=i;
-	i=buf[6]; i <<= 8;
+	BlackList_Count = i;
+	i  = buf[6]; i <<= 8;
 	i += buf[5]; i <<= 8;
 	i += buf[4]; i <<= 8;
 	i += buf[3]; 
 	BlackList_LastIdx=i;
-	bcc=0xBC^buf[0]^buf[1]^buf[2]^buf[3]^buf[4]^buf[5]^buf[6];
-	if (bcc != buf[7])
-	{
-		BlackList_Count=0;
-		BlackList_LastIdx=0;
+	bcc = 0xBC ^ buf[0] ^ buf[1] ^ buf[2] ^ buf[3] ^ buf[4] ^ buf[5] ^ buf[6];
+	if (bcc != buf[7]) {
+		BlackList_Count   = 0;
+		BlackList_LastIdx = 0;
 	}
-
 }
 
 
@@ -483,6 +575,8 @@ void MEMError(void) {
 }
 
 unsigned char SendPacket(unsigned int Len) {
+	//debug("\n>> ", 1);
+	//debug(GlobalBuffer, 0);
 	sendData(Len, GlobalBuffer);
 	
 	
@@ -508,7 +602,6 @@ unsigned char SendPacket(unsigned int Len) {
 	SetRX485();*/
 
 	return 0;
-
 }
 
 /*
@@ -540,44 +633,43 @@ void DisplayText(unsigned char *str){}
 
 void ShowPaymentBox2(void){
 	unsigned char i,Key=0;
- char str[100];
+	char str[100];
+	unsigned long int ID,CardID,Li;
+	long int Credit=0;
 
- unsigned long int ID,CardID,Li;
- long int Credit=0;
+	static const GUI_POINT _aPointHexagon[] = {
+		{ -50, 0 },
+		{ -40, -15 },
+		{ 40, -15 },
+		{ 50, 0 },
+	};
+	static const GUI_POINT _aPointHexagon1[] = {
+		{ -60, 0 },
+		{ -40, -20 },
+		{ 40, -20 },
+		{ 60, 0 },
+	};
 
-static const GUI_POINT _aPointHexagon[] = {
-	{ -50, 0 },
-	{ -40, -15 },
-	{ 40, -15 },
-	{ 50, 0 },
-};
-static const GUI_POINT _aPointHexagon1[] = {
-	{ -60, 0 },
-	{ -40, -20 },
-	{ 40, -20 },
-	{ 60, 0 },
-};
+	static const GUI_POINT _aPointHexagon2[] = {
+		{ -100, 0 },
+		{ -80, 25 },
+		{ 80, 25 },
+		{ 100, 0 },
+	};
+		
+	static const GUI_POINT _aPolig1[] = {
+		{ 0, 0 },
+		{ 0, -30 },
+		{ 50-10, -30 },
+		{ 35-10, 0 },
+	};
 
-static const GUI_POINT _aPointHexagon2[] = {
-	{ -100, 0 },
-	{ -80, 25 },
-	{ 80, 25 },
-	{ 100, 0 },
-};
-	
-static const GUI_POINT _aPolig1[] = {
-	{ 0, 0 },
-	{ 0, -30 },
-	{ 50-10, -30 },
-	{ 35-10, 0 },
-};
-
-static const GUI_POINT _aPolig3[] = {
-	{ 0+40+1, 0+1 },
-	{ 15+40+1, -30-1 },
-	{ 210+50-1, -30-1 },
-	{ 210+50-1, 0+1 },
-};
+	static const GUI_POINT _aPolig3[] = {
+		{ 0+40+1, 0+1 },
+		{ 15+40+1, -30-1 },
+		{ 210+50-1, -30-1 },
+		{ 210+50-1, 0+1 },
+	};
 
  
  GUI_SetColor(0x008000FF);	
@@ -597,18 +689,84 @@ static const GUI_POINT _aPolig3[] = {
  GUI_DrawLine(5+3,20+15+40,272-8,20+15+40);
  
  GUI_SetColor(0x008000FF);
- GUI_FillPolygon(&_aPointHexagon1[0], 4, 135, 225+30+15-40);
- 
+ GUI_FillPolygon(&_aPointHexagon1[0], 4, 135, 225+30+15-40); 
  GUI_SetColor(0x000f0000);
  
- LoadFont(FontBNazanin200);
- sprintf(str,"%d",Config.GrouhPrice[0][0]);
- PutText(0, 50, 272, 350, str, GUI_TA_CENTER);
+ 
+ unsigned short x, y, dist;
+	unsigned char numbers[10];
+	unsigned int temp = Config.GrouhPrice[0][0];
+	LoadFont(FontBNazanin200);
+		GUI_SetPenShape(GUI_PS_ROUND);
+		GUI_SetPenSize(6);
+		dist = 60;
+		sprintf(str, "%d", Config.GrouhPrice[0][0]);
+		if (GUI_GetStringDistX(str) > 272) {
+			LoadFont(FontBNazanin140);
+			GUI_SetPenSize(4);
+			dist = 80;
+			if (GUI_GetStringDistX(str) > 272) {
+				dist = 120;
+				LoadFont(FontBNazanin60);
+				GUI_SetPenSize(2);
+			}
+		}
+	
+	x = 9;
+	while (temp > 0) {
+		numbers[x++] = temp % 10;
+		temp /= 10;
+	}
+
+	unsigned char space = (272 - GUI_GetStringDistX(str)) / 2;
+	if (Config.GrouhPrice[0][0] >= 1000000) {
+		x = space + GUI_GetCharDistX(str[0]);
+		y = dist + GUI_GetFontSizeY() * 2 / 3;
+		GUI_DrawLine(x, y, x - 10, y + 20);
+
+		x = space;
+		y = 0;
+		while (y <= 3)
+		x += GUI_GetCharDistX(str[y++]);
+
+		y = dist + GUI_GetFontSizeY() * 2 / 3;
+		GUI_DrawLine(x, y, x - 10, y + 20);
+	}
+	else if (Config.GrouhPrice[0][0] >= 100000) {
+		x = space;
+		y = 0;
+		while (y <= 2)
+		x += GUI_GetCharDistX(str[y++]);
+
+		y = dist + GUI_GetFontSizeY() * 2 / 3;
+		GUI_DrawLine(x, y, x - 10, y + 20);
+	}
+	else if (Config.GrouhPrice[0][0] >= 10000) {
+		x = space;
+		y = 0;
+		while (y <= 1)
+		x += GUI_GetCharDistX(str[y++]);
+
+		y = dist + GUI_GetFontSizeY() * 2 / 3;
+		GUI_DrawLine(x, y - 5, x - 10, y + 30);
+	}
+	else if (Config.GrouhPrice[0][0] >= 1000) {
+		x = space + GUI_GetCharDistX(str[0]);
+		y = dist + GUI_GetFontSizeY() * 2 / 3;
+		GUI_DrawLine(x, y - 10, x - 10, y + 35);
+	}
+	PutText(0, dist, 272, 400, str, GUI_TA_CENTER);
+	GUI_SetPenSize(1);
+	//LoadFont(FontBNazanin200);
+	//sprintf(str,"%d",Config.GrouhPrice[0][0]);
+	//PutText(0, 50, 272, 350, str, GUI_TA_CENTER);
+ 
+ 
+ 
  
   LoadFont(FontBKoodak40);
-
 	GUI_SetColor(GUI_BLACK);	
-  PutText(0, 20+15, 272, 20+15+50, "نرخ بليت - واحد تومان مي باشد", GUI_TA_CENTER);
+  PutText(0, 20+15, 272, 20+15+50, "نرخ بليت (تومان)", GUI_TA_CENTER);
 
 	GUI_SetColor(GUI_YELLOW);
 
@@ -622,64 +780,65 @@ static const GUI_POINT _aPolig3[] = {
  GUI_DrawRoundedFrame(5, 225+10, 272-5, 265,6,3); 
 
  GUI_SetColor(GUI_WHITE);  
-  if ((Month>=1) && (Month<=12))
-  {
+  if ((Month>=1) && (Month<=12))  {
     if (DayOfWeek<7)
-      sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],Day,strMonths[Month-1],Year);
+      sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],CurrentDate.day,
+			strMonths[CurrentDate.month-1], CurrentDate.year);
     else
-      sprintf(str, "%d  %s  %d ",Day,strMonths[Month-1],Year);
+      sprintf(str, "%d  %s  %d ",CurrentDate.day,
+			strMonths[CurrentDate.month-1],
+			CurrentDate.year);
  
-		PutText(0, 233, 271, 263, str, GUI_TA_CENTER);
+		PutText(0, 230, 271, 263, str, GUI_TA_CENTER);
   }
 }
 
 void ShowPaymentBox(void) {
- unsigned char i,Key=0;
- char str[120];
-	
- static const GUI_POINT _aPointHexagon1[] = {
-	{ -60, 0 },
-	{ -40, -20 },
-	{ 40, -20 },
-	{ 60, 0 },
- };	
- 
- if (LCDType==LCD480_272)
- {
+	unsigned char i,Key=0;
+	char str[120];
+
+	static const GUI_POINT _aPointHexagon1[] = {
+		{ -60, 0 },
+		{ -40, -20 },
+		{ 40, -20 },
+		{ 60, 0 },
+	};	
+
+	if (LCDType == LCD480_272) {
 	 ShowPaymentBox2();
 	 return;
- }
- //........................................................................................
+	}
+	//........................................................................................
 
- GUI_DrawGradientRoundedV(5, 20+15, 272-5+SCREENRESIZE, 225+30+15,6,  GUI_DARKBLUE,GUI_DARKBLUE);	
- GUI_DrawGradientRoundedV(5, 71, 272-5+SCREENRESIZE, 225+30+15,6,  GUI_WHITE,GUI_CYAN);	
- 
- GUI_SetColor(GUI_DARKBLUE);	
- GUI_FillRect(5, 20+15+20, 272-5+SCREENRESIZE, 20+15+40);
+	GUI_DrawGradientRoundedV(5, 20+15, 272-5+SCREENRESIZE, 225+30+15,6,  GUI_DARKBLUE,GUI_DARKBLUE);	
+	GUI_DrawGradientRoundedV(5, 71, 272-5+SCREENRESIZE, 225+30+15,6,  GUI_WHITE,GUI_CYAN);	
 
- GUI_SetColor(GUI_BLUE);
- GUI_DrawRoundedFrame(5, 20+15, 272-5+SCREENRESIZE, 225+30+15,6,3); 
- GUI_DrawLine(5,20+15+40,272-5+SCREENRESIZE,20+15+40);
- 
- GUI_SetColor(GUI_BLUE);
- GUI_FillPolygon(&_aPointHexagon1[0], 4, (272+SCREENRESIZE)/2, 225+30+15);	
- 
- LoadFont(FontBNazanin200);
- GUI_SetColor(0x000f0000);
- sprintf(str,"%d",Config.GrouhPrice[0][0]);
- PutText(0, 70, 272+SCREENRESIZE, 400, str, GUI_TA_CENTER);
- LoadFont(FontBKoodak40);
+	GUI_SetColor(GUI_DARKBLUE);	
+	GUI_FillRect(5, 20+15+20, 272-5+SCREENRESIZE, 20+15+40);
 
- GUI_SetColor(GUI_WHITE);	
- PutText(0, 20+15, 272+SCREENRESIZE, 20+15+50, "نرخ بليت - واحد تومان", GUI_TA_CENTER);
- WDTR;
+	GUI_SetColor(GUI_BLUE);
+	GUI_DrawRoundedFrame(5, 20+15, 272-5+SCREENRESIZE, 225+30+15,6,3); 
+	GUI_DrawLine(5,20+15+40,272-5+SCREENRESIZE,20+15+40);
 
+	GUI_SetColor(GUI_BLUE);
+	GUI_FillPolygon(&_aPointHexagon1[0], 4, (272+SCREENRESIZE)/2, 225+30+15);	
 
- GUI_DrawGradientRoundedV(5, 275+35, 272-38+SCREENRESIZE, 275+35+30,6,  GUI_WHITE,GUI_CYAN);	
+	LoadFont(FontBNazanin200);
+	GUI_SetColor(0x000f0000);
+	sprintf(str,"%d",Config.GrouhPrice[0][0]);
+	PutText(0, 70, 272+SCREENRESIZE, 400, str, GUI_TA_CENTER);
+	LoadFont(FontBKoodak40);
+
+	GUI_SetColor(GUI_WHITE);	
+	PutText(0, 20+15, 272+SCREENRESIZE, 20+15+50, "نرخ بليت - واحد تومان", GUI_TA_CENTER);
+	WDTR;
 
 
- GUI_SetColor(GUI_DARKGREEN);
- GUI_DrawRoundedFrame(5, 275+35, 272-38+SCREENRESIZE, 275+35+30,6,3); 
+	GUI_DrawGradientRoundedV(5, 275+35, 272-38+SCREENRESIZE, 275+35+30,6,  GUI_WHITE,GUI_CYAN);	
+
+
+	GUI_SetColor(GUI_DARKGREEN);
+	GUI_DrawRoundedFrame(5, 275+35, 272-38+SCREENRESIZE, 275+35+30,6,3); 
  
  /*
  LoadFont(FontTahoma20);
@@ -787,25 +946,86 @@ void ShowCardingResult(char Mode,
 	}
  //.....................................................................................
 	if (Mode == 0) {
-		LoadFont(FontBNazanin200);
 		GUI_SetColor(GUI_BLACK);
-		sprintf(str,"%d",Pay);
-		 PutText(0, 70, 272+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 400, str, GUI_TA_CENTER);
+		unsigned short dist;
+		
+		LoadFont(FontBNazanin200);
+		GUI_SetPenShape(GUI_PS_ROUND);
+		GUI_SetPenSize(6);
+		dist = 60;
+		sprintf(str, "%d", Pay);
+		if (GUI_GetStringDistX(str) > 272) {
+			LoadFont(FontBNazanin140);
+			GUI_SetPenSize(4);
+			dist = 80;
+			if (GUI_GetStringDistX(str) > 272) {
+				dist = 120;
+				LoadFont(FontBNazanin60);
+				GUI_SetPenSize(2);
+			}
+		}
 
+		unsigned short x, y;
+		unsigned char numbers[10];
+		unsigned int temp = Pay;
+		x = 9;
+		while (temp > 0) {
+			numbers[x++] = temp % 10;
+			temp /= 10;
+		}
+		
+		unsigned char space = (272 - GUI_GetStringDistX(str)) / 2;
+		if (Pay >= 1000000) {
+			x = space + GUI_GetCharDistX(str[0]);
+			y = dist + GUI_GetFontSizeY() * 2 / 3;
+			GUI_DrawLine(x, y, x - 10, y + 20);
+			
+			x = space;
+			y = 0;
+			while (y <= 3)
+				x += GUI_GetCharDistX(str[y++]);
+			
+			y = dist + GUI_GetFontSizeY() * 2 / 3;
+			GUI_DrawLine(x, y, x - 10, y + 20);
+		}
+		else if (Pay >= 100000) {
+			x = space;
+			y = 0;
+			while (y <= 2)
+				x += GUI_GetCharDistX(str[y++]);
+			
+			y = dist + GUI_GetFontSizeY() * 2 / 3;
+			GUI_DrawLine(x, y, x - 10, y + 20);
+		}
+		else if (Pay >= 10000) {
+			x = space;
+			y = 0;
+			while (y <= 1)
+				x += GUI_GetCharDistX(str[y++]);
+			
+			y = dist + GUI_GetFontSizeY() * 2 / 3;
+			GUI_DrawLine(x, y - 5, x - 10, y + 30);
+		}
+		else if (Pay >= 1000) {
+			x = space + GUI_GetCharDistX(str[0]);
+			y = dist + GUI_GetFontSizeY() * 2 / 3;
+			GUI_DrawLine(x, y - 10, x - 10, y + 35);
+		}
+		PutText(0, dist, 272, 400, str, GUI_TA_CENTER);
+		GUI_SetPenSize(1);
+		
 		LoadFont(FontBKoodak40);
-
 		GUI_SetColor(GUI_WHITE);	
 		PutText(0, 20+15, 272+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 20+15+50, "مانده اعتبار - واحد تومان", GUI_TA_CENTER);
-		VOICEEN=1;
 		
-		CheckReader=1; 
+		//VOICEEN 		= 1;
+		//CheckReader = 1;
 		PlayVoice("08.wav");
-		CheckReader=0;
-		 
-		VOICEEN=0; 
+		//CheckReader = 0;
+		//VOICEEN 		= 0;
 	}
 	else if (Mode == 1) {
-		LoadFont(FontBNazanin200);
+		LoadFont(FontBNazanin140);
 		GUI_SetColor(GUI_BLACK);
 		sprintf(str, "%d", Pay);
 		PutText(0, 70, 
@@ -834,7 +1054,7 @@ void ShowCardingResult(char Mode,
 		LoadFont(FontBNazanin140);
 		GUI_SetColor(GUI_BLACK);
 		sprintf(str,"%d",_UC);
-		PutText(0, 60, 272+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 400, str, GUI_TA_CENTER);
+		PutText(0, 60, 272+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 400,  str, GUI_TA_CENTER);
 
 		sprintf(str,"%d",_ID);
 		PutText(0, 148, 272+SCREENRESIZE-(LCDType==LCD480_272?SCREENRESIZE:0), 400, str, GUI_TA_CENTER);
@@ -1032,19 +1252,19 @@ void ShowPageAlef2(void) {
  sprintf(str,"%d",Config.GrouhPrice[0][0]);
  PutText(0, 50, 272, 350, str, GUI_TA_CENTER);
  
- LoadFont(FontBKoodak40);		
+ LoadFont(FontBKoodak40);
 		
   GUI_SetColor(GUI_BLACK);	
-  PutText(0, 20+15, 272, 20+15+50, "نرخ بليت - واحد تومان مي باشد", GUI_TA_CENTER);
+  PutText(0, 20+15, 272, 20+15+50, "نرخ بليت (تومان)", GUI_TA_CENTER);
   GUI_SetColor(GUI_YELLOW); 
 
   sprintf(str,"آفلاين :%d",Indicators.OffTransactions);
   PutText(100, -3, 230, 25, str, GUI_TA_RIGHT);
 	 
 	GUI_SetColor(GUI_WHITE);	
-       if (Config.DeviceID == 1) sprintf(str, "درب جلو");
-  else if (Config.DeviceID == 2) sprintf(str, "درب عقب");
-  else                           sprintf(str, "ناصحيح");
+       if (Config.deviceType == 2) sprintf(str, "درب جلو");
+  else if (Config.deviceType == 3) sprintf(str, "درب عقب");
+  else                             sprintf(str, "ناصحيح");
 	PutText(5, 260, 270, 290, str, GUI_TA_CENTER);
 
 	GUI_SetColor(GUI_BLACK);	
@@ -1058,11 +1278,15 @@ void ShowPageAlef2(void) {
   if ((Month>=1) && (Month<=12))
   {
     if (DayOfWeek<7)
-      sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],Day,strMonths[Month-1],Year);
+      sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],
+				CurrentDate.day,
+				strMonths[CurrentDate.month-1],
+				CurrentDate.year);
     else
-      sprintf(str, "%d  %s  %d ",Day,strMonths[Month-1],Year);
+      sprintf(str, "%d  %s  %d ",CurrentDate.day,strMonths[CurrentDate.month-1],
+			CurrentDate.year);
  
-		PutText(0, 233, 271, 263, str, GUI_TA_CENTER);
+		PutText(0, 230, 271, 263, str, GUI_TA_CENTER);
 
   }
 	
@@ -1125,7 +1349,6 @@ void ShowPageAlef(void) {
 		{ 70, 95 },	
 	};
 
-
   if (LCDType == LCD480_272) {
     ShowPageAlef2();
 		return;
@@ -1135,15 +1358,12 @@ void ShowPageAlef(void) {
 
  GUI_DrawGradientRoundedV(5, 3, 272-5+SCREENRESIZE, 30,6,  0x000F0000,0x00070000);	
 
- 
  GUI_SetColor(GUI_DARKBLUE);	
  GUI_DrawRoundedFrame(5, 2, 272-5+SCREENRESIZE,30,6,2);
  //........................................................................................
 
  GUI_DrawGradientRoundedV(5, 20+15, 272-5+SCREENRESIZE, 225+30+15,6,  GUI_DARKBLUE,GUI_DARKBLUE);	
  GUI_DrawGradientRoundedV(5, 71, 272-5+SCREENRESIZE, 225+30+15,6,  GUI_WHITE,GUI_CYAN);	
- 
-
  
  GUI_SetColor(GUI_DARKBLUE);	
  GUI_FillRect(5, 20+15+20, 272-5+SCREENRESIZE, 20+15+40);
@@ -1158,7 +1378,6 @@ void ShowPageAlef(void) {
  //........................................................................................
  GUI_SetColor(GUI_DARKGREEN);
  GUI_DrawRoundedFrame(5, 275, 272-5+SCREENRESIZE, 275+30,6,3); 
-
 
  //........................................................................................
  GUI_DrawGradientRoundedV(272-35+SCREENRESIZE, 275+35, 272-5+SCREENRESIZE, 275+35+30,6,  0x000f8000,0x007f8000);	
@@ -1227,7 +1446,7 @@ void ShowPageAlef(void) {
   sprintf(str,"%d",12);
 		
   GUI_SetColor(GUI_WHITE);	
-  PutText(0, 20+15, 272+SCREENRESIZE, 20+15+50, "نرخ بليت - واحد تومان مي باشد", GUI_TA_CENTER);
+  PutText(0, 20+15, 272+SCREENRESIZE, 20+15+50, "نرخ بليت )تومان(", GUI_TA_CENTER);
 
 
   GUI_SetColor(GUI_WHITE); 
@@ -1235,12 +1454,13 @@ void ShowPageAlef(void) {
   PutText(130+SCREENRESIZE, 0, 220+SCREENRESIZE, 25, str, GUI_TA_RIGHT);		
 	 
 	GUI_SetColor(GUI_DARKBLUE);  
-  if ((Month>=1) && (Month<=12))
-  {
+  if ((Month>=1) && (Month<=12)) {
     if (DayOfWeek<7)
-      sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],Day,strMonths[Month-1],Year);
+      sprintf(str, "%s  %d  %s  %d ",strDays[DayOfWeek],CurrentDate.day,
+			strMonths[CurrentDate.month-1],CurrentDate.year);
     else
-      sprintf(str, "%d  %s  %d ",Day,strMonths[Month-1],Year);
+      sprintf(str, "%d  %s  %d ",CurrentDate.day,strMonths[CurrentDate.month-1],
+			CurrentDate.year);
  
 		PutText(60+SCREENRESIZE, 430, 260+SCREENRESIZE, 480, str, GUI_TA_CENTER);
 
@@ -1299,9 +1519,9 @@ void ShowPageAlef(void) {
  GUI_SetColor(GUI_BLACK);
 	 
  LoadFont(FontBKoodak40);
- if (Config.DeviceID==1)      sprintf(str,"درب جلو");
- else if (Config.DeviceID==2) sprintf(str,"درب عقب");
- else sprintf(str,"ناصحيح");
+ if (Config.deviceType==2)      sprintf(str,"درب جلو");
+ else if (Config.deviceType==3) sprintf(str,"درب عقب");
+ else 													sprintf(str,"ناصحيح");
 	 
  PutText(10, 490, 100, 560, str, GUI_TA_CENTER);
 
@@ -1328,31 +1548,23 @@ unsigned char SetDateAndTime(unsigned char Y, unsigned char M, unsigned char D,
 	unsigned char h, unsigned char m, unsigned char s, unsigned char save) {
 	unsigned long int time=0;
 
+	debug("\n\n\tHere in SetDateAndTime\n\n", 1);
   if ((s > 59) || (m > 59) || (h > 23))
     return 1;
   
-  //if (GPSTimeAcquired)
-  //  return 2;
-  
-
+	Year  = Y + 1300;
+  Month = M;
+  Day   = D;
+  jalali_to_gregorian(Year, Month, Day, &CurrentDate);
+  DayOfWeek = GetDayOfWeek(CurrentDate.day, CurrentDate.month, CurrentDate.year); 
 	
-	Year=Y+1300;
-  Month=M;
-  Day=D;  
-  jalali_to_gregorian(Year,Month,Day,&CurrentDate);
-  DayOfWeek=GetDayOfWeek(CurrentDate.day,CurrentDate.month,CurrentDate.year); 
-	
-	
-  Hour=h;
-  Min=m;
-  Sec=s;
-  OldSec=s;
-	RTC_Set(CurrentDate.year,CurrentDate.month,CurrentDate.day,h,m,s);
-	
+  Hour   = h;
+  Min 	 = m;
+  Sec 	 = s;
+  OldSec = s;
+	RTC_Set(CurrentDate.year, CurrentDate.month, CurrentDate.day, h, m, s);
   return 0;
-}
-
-
+}	
 unsigned char SendRequest(unsigned char type, unsigned short idx) {
 	unsigned char i=0;
 	unsigned short crc=0, indx;
@@ -2155,31 +2367,23 @@ char CRC8(unsigned char from, const char* data, unsigned char len) {
 /*
 	Send alive packets every seconds for SUN device
 */
-char SendDeviceInfo(void) {
+char SendDeviceInfo(int num) {
 	//Connects to Driver Console and wait to receive Configuration data
 }
 
-
 unsigned char SendALive() {	
-	unsigned short Len = 0;
-
-	WifiConnectionError = 0;
-
 	/*{
 		"header": 12, // HEADER_CONFIG_RESPONSE (Note: This is labeled as a response header, but the method suggests client sends it)
 		"deviceType": "integer", // from deviceType.ordinal
 		"needDate": "boolean", // from needDate
 		"message": "LIVE PACKET RECEIVE CORRECTLY" // JsonBuilder.LIVE_PACKET_DATA
 	}*/
-	cJSON* json = cJSON_CreateObject();
-	cJSON_AddNumberToObject(json, "Header", 		12);
-	cJSON_AddNumberToObject(json, "deviceType", Config.deviceType);
-	cJSON_AddBoolToObject(json, 	"needDate", 	FALSE);
-	cJSON_AddStringToObject(json, "message", 		"LIVE PACKET RECEIVE CORRECTLY");
-	strcpy(GlobalBuffer, cJSON_Print(json));
-	cJSON_Delete(json);
-	Len = strlen(GlobalBuffer);
-	return (SendPacket(Len));
+	if ((OS_TimeMS - sentAlive) > 2000) {
+		sprintf(GlobalBuffer, "{\"header\":12,\"deviceType\":%d,\"needDate\":false," \
+			"\"message\":\"LIVE PACKET RECEIVE CORRECTLY\"}\r\n", 2);
+		WIFISend(strlen(GlobalBuffer), GlobalBuffer);
+		sentAlive = OS_TimeMS;
+	}
 }
 
 void DisplayPacket(void) {
@@ -2246,7 +2450,7 @@ unsigned char ProcessPacket(unsigned char Port) {
 					CheckWiFi();
 				}
       ConnectedToServer = 1;				 
-      SendDeviceInfo();
+      SendDeviceInfo(1);
       break;   
 			
     case 10:  //Command  
@@ -2513,6 +2717,7 @@ unsigned char buf[8];
 * @return The maximum allowable amount of credit
 */
 unsigned long int getMaxCharge(unsigned int UC) {
+	return 5000000;
 	switch (UC) {
     case 6364: //گرگان
     case 6374: //خوي
@@ -2580,7 +2785,7 @@ unsigned long int getMaxCharge(unsigned int UC) {
 
 char ProcessCard(unsigned char MifareType, unsigned char *snr) {
 	unsigned char 
-		buf[50],
+		buf[500],
 		TicketBuffer[100],
 		Deselect 	= 1,
 		MemRes 		= 0,
@@ -2653,7 +2858,7 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
     }
     #endif
   }
-	 
+	
   Price     = Config.GrouhPrice[0][0];
 	MaxCharge = getMaxCharge(Config.UC);
 	
@@ -2738,7 +2943,8 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
     SetRX485();
     #endif
 
-    InfoCounter = 2;   
+    InfoCounter = 2;
+		
     if ((Status >= 0x6300) && (Status <= 0x63FF))
 	    ShowCardingResult(4, Etebar, Config.UC, ID, 0, "ناسازگاري کارت با ماژول امنيتي");
     else if ((Status >= 19) && (Status <= 29)) {
@@ -2783,67 +2989,86 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
 			LastDevice);*/
 		
 	//HNA - saveing data to ram to send offline in the future
-	/*TicketBuffer[0] =  ID 			 & 0xFF;
-  TicketBuffer[1] = (ID >> 8) & 0xFF;
-  TicketBuffer[2] = (ID >> 16) & 0xFF;
-
-	TicketBuffer[3] = 2; //Device Type: 2 means front door, 3 means back door
-
-	TicketBuffer[4] =  UC        & 0xFF;
-	TicketBuffer[5] = (UC >> 8)  & 0xFF;
-	TicketBuffer[6] = (UC >> 16) & 0xFF;
-		
-  TicketBuffer[4] = GetUCMap(UC);
-
-  TicketBuffer[4] = Year - 1300;
-  TicketBuffer[5] = Month;
-  TicketBuffer[6] = Day;
-  TicketBuffer[7] = Hour;
-  TicketBuffer[8] = Min;
-  TicketBuffer[9] = Sec;
-
-  if (Status == 0xABCD)
- 	  Grouh = 200;
-				
-  TicketBuffer[10] =  Grouh 			& 0xFF;
-  TicketBuffer[11] = (Grouh >> 8) & 0xFF;
-      
-  TicketBuffer[12] = Price 				& 0xFF;
-  TicketBuffer[13] = (Price >> 8) & 0xFF;
-      
-  if (PreEtebar < 0) {
+	TicketBuffer[3] =  UC        & 0xFF; //--------------------------------------- UC
+	TicketBuffer[2] = (UC >> 8)  & 0xFF;
+	TicketBuffer[1] = (UC >> 16) & 0xFF;
+	TicketBuffer[0] = (UC >> 24) & 0xFF;
+	
+	TicketBuffer[7] =  ID 			 & 0xFF; //---------------------------------------- Card ID
+  TicketBuffer[5] = (ID >> 8)  & 0xFF;
+  TicketBuffer[5] = (ID >> 16) & 0xFF;
+	TicketBuffer[4] = (ID >> 24) & 0xFF;
+	
+	TicketBuffer[8] = Config.DeviceID; //----------------------------------------- Device ID
+	
+	//Device Type: 2 means front door, 3 means back door
+	TicketBuffer[9] = Config.deviceType; //--------------------------------------- Device Type
+	
+	TicketBuffer[13] =  Config.DriverID; //--------------------------------------- Driver ID
+	TicketBuffer[12] = (Config.DriverID >> 8)  & 0xFF;
+	TicketBuffer[11] = (Config.DriverID >> 16) & 0xFF;
+	TicketBuffer[10] = (Config.DriverID >> 24) & 0xFF;
+	
+	TicketBuffer[17] =  Config.LineNumber; //------------------------------------- Line Number
+	TicketBuffer[16] = (Config.LineNumber >> 8)  & 0xFF;
+	TicketBuffer[15] = (Config.LineNumber >> 16) & 0xFF;
+	TicketBuffer[14] = (Config.LineNumber >> 24) & 0xFF;
+	
+	if (PreEtebar < 0) {
     TempInt  = 0x100000000 - PreEtebar;
     TempInt |= (0x800000);
   }
   else
     TempInt = PreEtebar;
-      
-  TicketBuffer[14] =  TempInt 			 & 0xFF;
-  TicketBuffer[15] = (TempInt >> 8) & 0xFF;
-  TicketBuffer[16] = (TempInt >> 16) & 0xFF;
-  TicketBuffer[17] = (TempInt >> 24) & 0xFF;
-      
-  if (Etebar < 0) {
+	TicketBuffer[21] =  TempInt; //----------------------------------------------- Pre Credit
+	TicketBuffer[20] = (TempInt >> 8)  & 0xFF;
+	TicketBuffer[19] = (TempInt >> 16) & 0xFF;
+	TicketBuffer[18] = (TempInt >> 24) & 0xFF;
+	
+	TicketBuffer[24] =  Price 			 & 0xFF; //----------------------------------- Price
+  TicketBuffer[23] = (Price >> 8)  & 0xFF;
+	TicketBuffer[22] = (Price >> 16) & 0xFF;
+	
+	if (Etebar < 0) {
     TempInt  = 0x100000000 - Etebar;
     TempInt |= (0x800000);
   }
   else
-    TempInt = Etebar;     
-
-  TicketBuffer[18] =  TempInt        & 0xFF;
-  TicketBuffer[19] = (TempInt >> 8) & 0xFF;
-  TicketBuffer[20] = (TempInt >> 16) & 0xFF;
-
-  TicketBuffer[22] = 0xE9;
-  TicketBuffer[23] = Config.BusID % 256;
-  TicketBuffer[24] = Config.BusID / 256; 
-  TicketBuffer[25] =  Indicators.OperatorID        & 0xFF;
-  TicketBuffer[26] = (Indicators.OperatorID >> 8) & 0xFF;
-  TicketBuffer[27] = (Indicators.OperatorID >> 16) & 0xFF;
-  TicketBuffer[21] = LastOP;
-  TicketBuffer[28] = LastDevice % 256;
-  TicketBuffer[29] = LastDevice / 256;*/
+    TempInt = Etebar;
+	TicketBuffer[28] =  TempInt; //----------------------------------------------- New Credit
+	TicketBuffer[27] = (TempInt >> 8)  & 0xFF;
+	TicketBuffer[26] = (TempInt >> 16) & 0xFF;
+	TicketBuffer[25] = (TempInt >> 24) & 0xFF;
+		
 	
+	/*sprintf(buf, "\n%d/%d/%d %d/%d/%d \n", 
+		CurrentDate.year, CurrentDate.month, CurrentDate.day, Year, Month, Day);
+	debug(buf, 1);
+	
+	sprintf(buf, "\n%d/%d/%d %02d:%02d:%02d\nTimeStamp = %u\n", 
+		CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec,
+		toTimeStamp(CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec));
+	debug(buf, 1);*/
+		
+	unsigned long long datetime = toTimeStamp(Year, Month, Day, Hour, Min, Sec);
+	datetime -= 28800;
+	
+	TicketBuffer[32] =  datetime        & 0xFF; //---------------------------------------------- Date Time
+	TicketBuffer[31] = (datetime >> 8)  & 0xFF;
+	TicketBuffer[30] = (datetime >> 16) & 0xFF;
+	TicketBuffer[29] = (datetime >> 24) & 0xFF;
+	
+	unsigned long qr = 0x0123456789abcdef;
+	TicketBuffer[40] = 0xEF; //--------------------------------------------------- QR Code
+	TicketBuffer[39] = 0xCD;
+	TicketBuffer[38] = 0xAB;
+	TicketBuffer[37] = 0x89;
+	TicketBuffer[36] = 0x67;
+	TicketBuffer[35] = 0x45;
+	TicketBuffer[34] = 0x23;
+	TicketBuffer[33] = 0x01;
+
+	/*
 	//==========================================================
 	//====================Old Format============================
 	//==========================================================
@@ -2901,7 +3126,7 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
   TicketBuffer[27] = (Indicators.OperatorID >> 16) & 0xFF;
   TicketBuffer[21] = LastOP;
   TicketBuffer[28] = LastDevice % 256;
-  TicketBuffer[29] = LastDevice / 256;
+  TicketBuffer[29] = LastDevice / 256;*/
 
   #ifdef WithSAMCARD
   TicketBuffer[21] =Config.BusID&0xFF;  
@@ -2967,9 +3192,31 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
 					
       ///////////////////////SaveIndicators();
 			WaitForAddress    = 0;
-		  DataCurrentlySend = 1;	
-      SendOfflines();
-
+		  DataCurrentlySend = 1;
+			
+			/*
+			put("header", HEADER_TRANSACTION)
+            put("deviceId", tr.deviceId)
+            put("deviceType", tr.deviceType.ordinal)
+            put("uc", tr.uc)
+            put("operatorId", tr.operatorId ?: 0)
+            put("lineId", tr.lineId)
+            put("cardId", tr.cardId)
+            put("preCardCredit", tr.preCardCredit)
+            put("price", tr.price)
+            put("cardCredit", tr.cardCredit)
+            put("date", tr.date)
+            put("qrId", tr.qrId)
+			*/
+			/*sprintf(buf, "{\"header\":10,\"deviceId\":%d,\"deviceType\":%d,\"uc\"" \
+				":%ld,\"operatorId\":%d,\"lineId\":%d,\"cardId\":%ld,\"preCardCredit" \
+				"\":%ld,\"price\":%d,\"cardCredit\":%ld,\"date\":%ld,\"qrId\":%ld}", 
+				Config.DeviceID, Config.deviceType, Config.UC, Config.DriverID, 
+				Config.LineNumber, ID, Etebar, Config.Price, Etebar, 1741824000 + Sec, 
+				13640611);
+			WIFISend(strlen(buf), buf);*/
+			
+      //SendOfflines();
 			ShowCardingResult(0, Etebar, Config.UC, ID, 0, "");
           
       LastCardSnr[0] = snr[0];
@@ -3020,7 +3267,7 @@ char ProcessCard(unsigned char MifareType, unsigned char *snr) {
   }
 }
 
-void SendOfflines(void) {
+void SendOfflines() {
 	//============================= Variables ====================================
 	unsigned char 
 		Byte, 
@@ -3038,6 +3285,8 @@ void SendOfflines(void) {
 	char str[512];	
 	//============================================================================
 	
+	//LEN_TRANSACTIONS 128
+	//MAX_TRANSACTIONS 32500
   if (Indicators.OffTransactions == 0) 
 		return; 
 	
@@ -3069,84 +3318,50 @@ void SendOfflines(void) {
 				"qrId": 				 "long" 		// from tr.qrId
 			}
 		*/
-		cJSON *json = cJSON_CreateObject();
-		cJSON_AddNumberToObject(json, "header", 10);
-		cJSON_AddNumberToObject(json, "deviceId", MEMBuffer[0] + (MEMBuffer[1] << 8) + (MEMBuffer[2] << 16));
-		cJSON_AddNumberToObject(json, "deviceType", Config.deviceType);
-		cJSON_AddNumberToObject(json, "uc", UCMap[MEMBuffer[3]]);
-		cJSON_AddNumberToObject(json, "OperatorId", MEMBuffer[25] + (MEMBuffer[26] << 8) + (MEMBuffer[27] << 16));
-		cJSON_AddNumberToObject(json, "lineId", MEMBuffer[23] + (MEMBuffer[24] << 8));
-		cJSON_AddNumberToObject(json, "cardId", 100);
-		cJSON_AddNumberToObject(json, "preCardCredit", MEMBuffer[15] + (MEMBuffer[16] << 8) + (MEMBuffer[17] << 16) + (MEMBuffer[18] << 24));
-		cJSON_AddNumberToObject(json, "price", MEMBuffer[12] + (MEMBuffer[13]));
-		cJSON_AddNumberToObject(json, "cardCredit", MEMBuffer[19] + (MEMBuffer[20] << 8) + (MEMBuffer[21] << 16));
-		cJSON_AddNumberToObject(json, "date", 14040722);
-		cJSON_AddNumberToObject(json, "qrId", 13640611);
-		strcpy(str, cJSON_Print(json));
 		
-		/*sprintf(str, //-------------------------------------------------------------  Creating a JSON data to send to BCU via WIFI
-			"{\"header\":10, \"deviceId\":%u, \"deviceType\":%u, \"uc\":%u, \"Opera" \
-			"torId\":%u, \"lineId\":%u, \"cardId\":%u, \"preCardCredit\":%u, \"price"\
-			"\":%u, \"cardCredit\":%u, \"date\":%u, \"qrId\":%u}", 
-			 MEMBuffer[0] 			+ 	  //ID
-			(MEMBuffer[1] << 8) + 
-			(MEMBuffer[2] << 16),
-			
-			 Config.deviceType,				// Type
-			 
- UCMap[MEMBuffer[3]], 					// UC
- 
-			 MEMBuffer[25] + 					// Operator ID
-			(MEMBuffer[26] << 8) + 
-			(MEMBuffer[27] << 16),
-			
-			 MEMBuffer[23] +					// BusID
-			(MEMBuffer[24] << 8),
+		sprintf(str, "{\"header\":%d,\"deviceId\":%ld,\"deviceType\":%d,\"uc\":%ld"\
+			",\"operatorId\":%ld,\"lineId\":%u,\"cardId\":%ld,\"preCardCredit\":%u," \
+			"\"price\":%u,\"cardCredit\":%u,\"date\":%u000,\"qrId\":%lu}",
+			 10,
+			 MEMBuffer[8],
+			 MEMBuffer[9],
+			(MEMBuffer[0]  << 24) + (MEMBuffer[1]  << 16) + (MEMBuffer[2]  << 8) + MEMBuffer[3],
+			(MEMBuffer[10] << 24) + (MEMBuffer[11] << 16) + (MEMBuffer[12] << 8) + MEMBuffer[13],
+			(MEMBuffer[14] << 24) + (MEMBuffer[15] << 16) + (MEMBuffer[16] << 8) + MEMBuffer[17],
+			(MEMBuffer[4]  << 24) + (MEMBuffer[5]  << 16) + (MEMBuffer[6]  << 8) + MEMBuffer[7],
+			(MEMBuffer[18] << 24) + (MEMBuffer[19] << 16) + (MEMBuffer[20] << 8) + MEMBuffer[21],
+			(MEMBuffer[22] << 16) + (MEMBuffer[23] << 8)  +  MEMBuffer[24],
+			(MEMBuffer[25] << 24) + (MEMBuffer[26] << 16) + (MEMBuffer[27] << 8) + MEMBuffer[28],
+			(MEMBuffer[29] << 24) + (MEMBuffer[30] << 16) + (MEMBuffer[31] << 8) + MEMBuffer[32],
+			(MEMBuffer[33] << 24) + (MEMBuffer[34] << 16) + (MEMBuffer[35] << 8) + MEMBuffer[36] +
+			(MEMBuffer[37] << 24) + (MEMBuffer[38] << 16) + (MEMBuffer[39] << 8) + MEMBuffer[40]);
 
-			100,                     //cardId
+		if (ConnectedToServer == 1) {
+			debug("\n>> ", 1);
+			debug(str, 0);
+			WIFISend(strlen(str), str);
+			GUI_Delay(100);
 			
-			 MEMBuffer[15] +					// PreEtebar
-			(MEMBuffer[16] << 8)  +
-			(MEMBuffer[17] << 16) +
-			(MEMBuffer[18] << 24),
-			 
-			(MEMBuffer[12] << 8) +
-			 MEMBuffer[13] + 					// Price
+			GlobalBuffer[0] = 0x90;
+			SaveFromRamToDF(addTransactions + (SendUsers * LEN_TRANSACTIONS) + 
+                       LEN_TRANSACTIONS - 1, 1, GlobalBuffer);
+			if (SendUsers == trTail) {
+				// Move tail forward
+				if (++trTail >= MAX_TRANSACTIONS)
+					trTail = 0;
+			}
+			if (Indicators.OffTransactions > 0)
+				Indicators.OffTransactions--;
 			
-			 MEMBuffer[19] 			 + 		// Etebar
-			(MEMBuffer[20] << 8) +
-			(MEMBuffer[21] << 16), 
-			
-			 MEMBuffer[5] + 1300,			// Year
-			 MEMBuffer[6], 						// Month
-			 MEMBuffer[7], 						// Day
-			 MEMBuffer[8], 						// Hour
-			 MEMBuffer[9], 						// Minute
-			 MEMBuffer[10], 					// Second
-			 
-			 MEMBuffer[11] +					// Grouh
-			
-			(MEMBuffer[14] << 8),
-
-			 MEMBuffer[22], 					// LastOP
-			 
-			 MEMBuffer[28] + 					// LastDevice
-			(MEMBuffer[29] << 8)
-		);*/
-		WIFISend(strlen(str), str);
-		cJSON_Delete(json);
-		
-		/*sprintf(str, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X" \
-			"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X\n",
-			MEMBuffer[0],MEMBuffer[1],MEMBuffer[2],MEMBuffer[3],MEMBuffer[4],MEMBuffer[5],
-			MEMBuffer[6],MEMBuffer[7],MEMBuffer[8],MEMBuffer[9],MEMBuffer[10],MEMBuffer[11],
-			MEMBuffer[12],MEMBuffer[13],MEMBuffer[14],MEMBuffer[15],MEMBuffer[16],MEMBuffer[17],
-			MEMBuffer[18],MEMBuffer[19],MEMBuffer[20],MEMBuffer[21],MEMBuffer[22],MEMBuffer[23],
-			MEMBuffer[24],MEMBuffer[25],MEMBuffer[26],MEMBuffer[27],MEMBuffer[28],MEMBuffer[29],
-			MEMBuffer[30]);
-			
-		WIFISend(strlen(str), str);*/
-		
+			LoadFont(FontBKoodak40);
+			GUI_SetColor(GUI_BLACK);
+			GUI_FillRect(100, 6, 230, 25);
+			GUI_SetColor(GUI_YELLOW); 
+			sprintf(str, "آفلاين :%d", Indicators.OffTransactions);
+			PutText(100, -3, 230, 25, str, GUI_TA_RIGHT);
+		}
+		else
+			return;
 
     SendUsers++;
     if (SendUsers >= MAX_TRANSACTIONS)
@@ -3154,104 +3369,8 @@ void SendOfflines(void) {
     if (++NumRecords >= 5) 
 			break;
   }
-	Delete_Records();
-  	
-	/*unsigned char  HNA
-		Byte, 
-		MEMBuffer[LEN_TRANSACTIONS],
-		NumRecords = 0;
-	
-	unsigned long int 
-		SendUsers,
-		Start,
-		Temp;
-	
-	unsigned int Idx   = 0, i;
-	unsigned short crc = 0;	
-	static char GG     = 0;
-	
-  if (Indicators.OffTransactions == 0) 
-		return; 
-	
-  Start = (Indicators.OffTransactions > trHead) ? 
-		(MAX_TRANSACTIONS - (Indicators.OffTransactions - trHead)) : 
-		trHead - Indicators.OffTransactions;
-
-  Idx       = 11;
-  SendUsers = Start;
-  while (1) {
-    if (SendUsers == trHead)
-      break;
-		
-    LoadFromDFToRam(addTransactions + (SendUsers * LEN_TRANSACTIONS), 
-			LEN_TRANSACTIONS, MEMBuffer);
-    Byte          = MEMBuffer[30];
-    MEMBuffer[30] = MEMBuffer[29];
-    MEMBuffer[29] = MEMBuffer[28];
-    MEMBuffer[28] = MEMBuffer[21];
-    MEMBuffer[21] = 0;   
-
-    for (i=0; i<31; i++)
-      GlobalBuffer[Idx++] = MEMBuffer[i];
-      
-    #ifdef WithSAMCARD
-    GlobalBuffer[Idx++] =Byte;//30 ID >> 4
-    for (i=0; i<30; i++)
-      GlobalBuffer[Idx++] =MEMBuffer[31+i];//PayInfo
-    #endif		
-    
-    SendUsers++;
-    if (SendUsers >= MAX_TRANSACTIONS)
-      SendUsers = 0;
-    if (++NumRecords >= 5) 
-			break;
-  }                 
-  
-  Temp = SendUsers;
-	
-	Idx = 0; HNA
-	GlobalBuffer[Idx++] = STX;
-  GlobalBuffer[Idx++] = 10; //Header Transaction
-	GlobalBuffer[Idx++] = 45; //Size of data in front of...
-	
-	//================= Device ID =======================
-  GlobalBuffer[Idx++] =  Config.DeviceID 			  & 0xFF;
-  GlobalBuffer[Idx++] = (Config.DeviceID >> 8) & 0xFF;
-  GlobalBuffer[Idx++] = (Config.DeviceID >> 16) & 0xFF;
-	
-	//================= Device Type =====================
-  GlobalBuffer[Idx++] = Config.deviceType;
-  
-	//================= UC ==============================
-	GlobalBuffer[Idx++] =  Config.UC 			  & 0xFF;
-  GlobalBuffer[Idx++] = (Config.UC >> 8) & 0xFF;
-  GlobalBuffer[Idx++] = (Config.UC >> 16) & 0xFF;
-	
-	//================= Operator ID =====================
-	GlobalBuffer[Idx++] =  Config.DriverID 			  & 0xFF;
-  GlobalBuffer[Idx++] = (Config.DriverID >> 8) & 0xFF;
-  GlobalBuffer[Idx++] = (Config.DriverID >> 16) & 0xFF;
-	
-	//================= Line ID =========================
-	GlobalBuffer[Idx++] =  Config.LineCode 				& 0xFF;
-  GlobalBuffer[Idx++] = (Config.LineCode >> 8) & 0xFF;
-  GlobalBuffer[Idx++] = (Config.LineCode >> 16) & 0xFF;
-	
-	//================= Card ID =========================
-	GlobalBuffer[Idx++] =  Config.LineCode & 0xFF;
-  GlobalBuffer[Idx++] = (Config.LineCode >> 8) & 0xFF;
-  GlobalBuffer[Idx++] = (Config.LineCode >> 16) & 0xFF;
-	
-	//================= preCredit Card ==================
-	GlobalBuffer[Idx++] = Config.
-	//================= Price ===========================
-	//================= Card Credit =====================
-	//================= Date ============================
-	//================= QR Id ===========================
-	//================= CRC & ETX =======================
-	
-  ActivePort = 3;	HNA
-	WIFISend(Idx, GlobalBuffer);*/
+	//Delete_Records();
+	SaveRingDetail();
 }
 
 void ProcessPeriodicTasks(void) {
@@ -3279,14 +3398,15 @@ void ProcessPeriodicTasks(void) {
 		LWiFiStep = WiFiStep;
 		CheckWiFi();
 		
-		if (WiFiStep == 10)
+		if (WiFiStep == 10) {
 			if (LWiFiStep == 9) {//If connected to server for the first time
 				ActivePort = 3; 
-				SendDeviceInfo(); 
+				SendDeviceInfo(2); 
 				ConnectedToServer = 1; 
 			}
 			else 								//If connected previously
-				SendALive();		
+				SendALive();
+		}
 	}
   //..........................................................................................................
    
@@ -3688,12 +3808,10 @@ void MainAlef(void) {
 	//while (1) WDTR;
 	
 	Config.WiFi  = 1;
-	Config.GrouhPrice[0][0] = 4;
+	Config.GrouhPrice[0][0] = 0;
+	Config.deviceType = 2;
+	Config.ConnectionPort = 1212;
 	
-	#if (DeviceType == BUSDOOR)
-	if ((Config.DeviceID != 1) && (Config.DeviceID != 2)) Config.DeviceID = 1;
-	#endif
-
 	setCallback(WifiCallback);
 
 	if ((Config.LocalIP[0] < '0') || (Config.LocalIP[0] > '9'))
@@ -3723,32 +3841,11 @@ void MainAlef(void) {
 	ShowPageAlef();		
  	LEDERR = 0;
 	Config.PriceType = 0;
+	
 
 	//DumpMem();/////////////////////////
 
-	while (1) {		
-    #ifdef WithSAMCARD
-	  CardEtebarKashan=0;
-
-		#ifdef CLRC_CHIP
-    Byte=ISO14443_SingleTagSelect2(snr);
-		#else
-    if (!ISO14443_SingleTagSelect(snr))
-			Byte=2;
-		else
-			Byte=0;
-		#endif	
-    if (Byte) {
-      if ((lastsnr[0] != snr[0]) || (lastsnr[1] != snr[1]) || (lastsnr[2] != snr[2]) || (lastsnr[3] != snr[3]))
-        if (ProcessCard(Byte,snr)) {
-					lastsnr[0] = snr[0]; 
-					lastsnr[1] = snr[1];
-					lastsnr[2] = snr[2];
-					lastsnr[3] = snr[3];
-					lastsnr[4] = 2;
-				}
-    }
-    #else
+	while (1) {
     if (!ISO14443_SingleTagSelect(snr)) {
       if ((lastsnr[0] != snr[0]) || (lastsnr[1] != snr[1]) || (lastsnr[2] != snr[2]) || (lastsnr[3] != snr[3]))
         if (ProcessCard(2, snr)) {
@@ -3758,9 +3855,8 @@ void MainAlef(void) {
 					lastsnr[3] = snr[3];
 					lastsnr[4] = 2;
 				}
-    } 
-    #endif		
-		 
+    }
+
 		if (Tick >= 1000) {
 			if (lastsnr[4])
 				if (--lastsnr[4] == 0) {
@@ -3771,10 +3867,13 @@ void MainAlef(void) {
 				}
       SetRX485();
 	    ProcessPeriodicTasks();
-			SetRX485();
+			//SetRX485(); HNA
 			Tick = 0;
 		}
-
+		
+		while (DataIsReady > 0) 
+			ProcessWifi();
+		
 		Key = ScanKeyboard();
     if (Key)
 			ProcessKeysAlef(Key);

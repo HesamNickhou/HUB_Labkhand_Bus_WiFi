@@ -10,6 +10,12 @@
 
 extern int ConnectedToServer;
 #define BUFFER3_SIZE         1200
+#define DEBUG_HNA     //To log the important data
+#define DEBUG_WIFI  	//For sending and receiving data
+#define DEBUG_WIFI2	//For details AT Commands
+
+extern unsigned char wifiBuffer[1200];
+extern unsigned char DataIsReady;
 
 unsigned char 
 	getReady            = 0,
@@ -25,7 +31,6 @@ unsigned char
 	WIFICurSocket 			= 1,
 	NeedTowifiInit			= 0,
 	IPDLoc							= 0,
-	DataBuffer[2048],
 	WIFIReceiveBuf[1024],
 	RXD3Buffer[BUFFER3_SIZE],
 							WIFI_GCF(unsigned char *c),
@@ -35,19 +40,15 @@ unsigned char
 
 unsigned int
 	WifiConnectionError = 0,
-	DataBufferLen 			= 0,
 	rxd3_counter 				= 0,
 	rxd3_wr_index 			= 0,
 	rxd3_rd_index 			= 0,
+	read_index          = 0,
 	DataSize 						= 0;
 	
 unsigned short WIFIReceiveBufLen;
 
-const unsigned char 
-	IPD[6] = "+IPD,",
-	IPDLen = 5;
-
-char DebugX = 0;
+char DebugX = 0, started = 0;
 
 struct TUSARTMessage{
   char *Message;
@@ -65,21 +66,38 @@ USARTMessage USART_2[5] = {
   {"busy p\0",             6, 0, &WifiBusyP,        ""},
 };
 
-typedef void (*WIFIListener)(char* data, char len);
+typedef void (*WIFIListener)();
 WIFIListener callback;
 
-unsigned char GetWiFiResponse2(const char *Response1, const char* Response2);
 void setCallback(WIFIListener interface);
+
+//HNA
+void debug(const char* str_out, char reset) {
+#ifdef DEBUG_HNA
+	if (reset == 1)
+		SetTX485();
+	for (unsigned int k=0; k<strlen(str_out); k++)
+		SendByte(str_out[k]);
+#endif
+}
 
 void setCallback(WIFIListener interface) { callback = interface; }
 void USART_SendStr(USART_TypeDef* USARTx, char *str) {
+	
+	#ifdef DEBUG_WIFI2
+		debug("\n>> ", 0);
+		debug(str, 0);
+	#else
+		GUI_X_Delay(100);
+	#endif
+	
 	int i = 0;
   while (str[i] != 0) {
     switch (str[i]) {
       case '\n': USART_SendData(USARTx, 13); break;
       case '\r': USART_SendData(USARTx, 10); break;
       case '\"': USART_SendData(USARTx, 34); break;
-        default: USART_SendData(USARTx, str[i]);
+      default  : USART_SendData(USARTx, str[i]);
     }
     i++;
   }
@@ -89,7 +107,7 @@ unsigned char WIFI_GCL(unsigned char *c) {
 	while (1) {
   	if (i > OS_TimeMS) 
 			return 0;
-	  if ((OS_TimeMS - i) >= 1000) //3 sec
+	  if ((OS_TimeMS - i) >= 3000) //3 sec
 			return 0;
     if (rxd3_counter != 0) 
       break;
@@ -97,6 +115,7 @@ unsigned char WIFI_GCL(unsigned char *c) {
 		WDTR;
 	}
   *c = RXD3Buffer[rxd3_rd_index];
+	//SendByte(RXD3Buffer[rxd3_rd_index]);
   if (++rxd3_rd_index >= BUFFER3_SIZE) 
 		rxd3_rd_index = 0;
   if (rxd3_counter)
@@ -116,107 +135,118 @@ unsigned char WIFI_GCF(unsigned char *c) {
 		WDTR;
 	}		
   *c = RXD3Buffer[rxd3_rd_index];
+	//SendByte(RXD3Buffer[rxd3_rd_index]);
   if (++rxd3_rd_index >= BUFFER3_SIZE) 
 		rxd3_rd_index = 0;
   if (rxd3_counter) 
 		rxd3_counter--;
   return 1;
 }
-unsigned char WIFI_GCVF(unsigned char *c) {
-	unsigned int i = OS_TimeMS;
-	while (1) {
-  	if (i > OS_TimeMS) 
-			return 0;
-	  if ((OS_TimeMS - i) >= 50)
-			return 0;
-    if (rxd3_counter != 0) 
-      break;
-		GUI_Delay(1);
-		WDTR;
-	}		
-  *c = RXD3Buffer[rxd3_rd_index];
-  if (++rxd3_rd_index >= BUFFER3_SIZE) 
-		rxd3_rd_index = 0;
-  if (rxd3_counter) 
-		rxd3_counter--;
-  return 1;
-}	 
+
 void EmptyWIFIRXBuffer(void) { 
 	unsigned short i;
-	rxd3_rd_index = rxd3_counter = rxd3_wr_index = 0; 
-	for (i=0; i<BUFFER3_SIZE; i++)
-		RXD3Buffer[i] = 0;
+	#ifdef DEBUG_WIFI
+	debug("<< ", 1);
+	debug(RXD3Buffer, 0);
+	#endif
+	
+	rxd3_rd_index = rxd3_counter = rxd3_wr_index = 0;
+	memset(RXD3Buffer, 0, BUFFER3_SIZE);
+	//for (i=0; i<BUFFER3_SIZE; i++)
+		//RXD3Buffer[i] = 0;
 }
 unsigned char GetWiFiResponse(const char* Response) {
 	int i, j;
-	unsigned char Byte;
+	unsigned int now;
+	unsigned char Byte, str[100];
 
 	 // printf("\n\rResponse[%d](%s) : \n\r",WIFIReceiveBufLen,Response);/////////////
-
   WIFIReceiveBufLen = 0;
 	while (WIFIReceiveBufLen == 0) {
     if (WIFI_GCL(&Byte)) {
       if ((Byte != 13) && (Byte != 10))
 		    WIFIReceiveBuf[WIFIReceiveBufLen++] = Byte;  
-    } 
-		else 
+    }
+		else {
       return 1;
+		}
   }
-
-  while ((WIFI_GCF(&Byte)) && (WIFIReceiveBufLen < 1020)) 
+	
+  while ((WIFI_GCF(&Byte)) && (WIFIReceiveBufLen < 1020))
     WIFIReceiveBuf[WIFIReceiveBufLen++] = Byte;
   WIFIReceiveBuf[WIFIReceiveBufLen] = 0;
-  
+
   j = 0;
   for (i = 0; i<WIFIReceiveBufLen; i++) {
-    if (Response[j] == '\0')
+    if (Response[j] == '\0') {
 			return 0;
-    if (Response[j] == WIFIReceiveBuf[i]) 
+		}
+    else if (Response[j] == WIFIReceiveBuf[i]) 
 			j++;
 		else 
 			j = 0;
-  }          
-  return 2;
-}
-
-unsigned char GetWiFiResponse2(const char *Response1, const char* Response2) {
-	int i, j, k;
-	unsigned char Byte;
-
-	 // printf("\n\rResponse[%d](%s) : \n\r",WIFIReceiveBufLen,Response);/////////////
-
-  WIFIReceiveBufLen = 0;
-	while (WIFIReceiveBufLen == 0) {
-    if (WIFI_GCL(&Byte)) {
-      if ((Byte != 13) && (Byte != 10))
-		    WIFIReceiveBuf[WIFIReceiveBufLen++] = Byte;  
-    } 
-		else 
-      return 1;
   }
-
-  while ((WIFI_GCF(&Byte)) && (WIFIReceiveBufLen < 1020)) 
-    WIFIReceiveBuf[WIFIReceiveBufLen++] = Byte;
-  WIFIReceiveBuf[WIFIReceiveBufLen] = 0;
-  
-  k = j = 0;
-  for (i = 0; i<WIFIReceiveBufLen; i++) {
-    if ((Response1[j] == '\0') || (Response2[k] == '\0'))
-			return 0;
-    if (Response1[j] == WIFIReceiveBuf[i]) 
-			j++;
-		else 
-			j = 0;
-		if (Response2[k] == WIFIReceiveBuf[i])
-			k++;
-    else 
-			k = 0;
-  }          
   return 2;
 }
+
+
+char* rilz(const char *ip_with_zeros) {
+	if (!ip_with_zeros) return NULL;
+	
+	char input_copy[16];  // Max IP length is 15 chars + null terminator
+	strncpy(input_copy, ip_with_zeros, sizeof(input_copy) - 1);
+	input_copy[sizeof(input_copy) - 1] = '\0';
+	
+	char *octet;
+	char *saveptr;
+	int octet_count = 0;
+	unsigned int octets[4];
+	
+	// Parse the IP address by splitting on dots
+	octet = strtok_r(input_copy, ".", &saveptr);
+	
+	while (octet != NULL && octet_count < 4) {
+			// Check if octet contains only digits
+			for (char *c = octet; *c; c++) {
+					if (!isdigit(*c)) {
+							return NULL;  // Invalid character
+					}
+			}
+			
+			// Convert to integer to remove leading zeros
+			unsigned int value = (unsigned int)atoi(octet);
+			
+			// Validate octet range (0-255)
+			if (value > 255) {
+					return NULL;  // Invalid value
+			}
+			
+			octets[octet_count] = value;
+			octet_count++;
+			
+			octet = strtok_r(NULL, ".", &saveptr);
+	}
+	
+	// Valid IP must have exactly 4 octets and no extra data
+	if (octet_count != 4 || octet != NULL) {
+			return NULL;
+	}
+	
+	// Allocate memory for result (max "255.255.255.255" = 15 chars + null = 16)
+	char *result = (char*)malloc(16 * sizeof(char));
+	if (!result) return NULL;
+	
+	// Format without leading zeros
+	sprintf(result, "%u.%u.%u.%u", octets[0], octets[1], octets[2], octets[3]);
+	
+	return result;
+}
+
 char CheckWiFi(void) {
 	unsigned char str[200];	
 	char *ptr;
+	if (WiFiStep < 10)
+		EmptyWIFIRXBuffer();
 	
 	if (WiFiStep == 10) {
 		GUI_SetColor(GUI_CYAN);
@@ -236,16 +266,12 @@ char CheckWiFi(void) {
 		GUI_SetColor(GUI_LIGHTGREEN);
 		GUI_DispDecAt(WiFiStep, 240, 6, 2);
   }
- 
-    //  SendByte(WiFiStep+'0');
-  
-  //printf("\n\rWiFiStep=%d ",WiFiStep);
-  
+     
   Config.ServerIP[15]      = 0;
 	Config.LocalIP[15]       = 0;
 	Config.RoutIpAddress[15] = 0;
 	Config.SubnetIP[15]      = 0;
-	
+		
   switch (WiFiStep)  {
     case 0: { //Hardware reset the WIFI module
 			#ifdef STM32F2XX
@@ -276,27 +302,25 @@ char CheckWiFi(void) {
       break;
 		}
     case 3: { //Enable client mode and transparent mode
-      EmptyWIFIRXBuffer(); 
       USART_SendStr(USART3, "AT+CWMODE=1\n\r");  //client		
-      EmptyWIFIRXBuffer(); 
+			GUI_Delay(500);
       USART_SendStr(USART3, "AT+CIPMODE=1\n\r");
+			GUI_Delay(500);
+			//USART_SendStr(USART3, "AT+CWDHCP=1,1\n\r"); //Enable DHCP Auto IP
      //  GetWiFiResponse("OK");  
       WiFiStep++;
       break;
 		}
     case 4:	{ //Configure IP instead of DHCP
-		  EmptyWIFIRXBuffer(); 
-      sprintf(str, "AT+CIPSTA=\"%s\",\"%s\",\"%s\"\n\r", Config.LocalIP, 
-				Config.RoutIpAddress, Config.SubnetIP);
-			//sprintf(str, "AT+CIPSTA=\"192.168.1.40\",\"192.168.1.1\",\"255.255.255.0\"\n\r");
-			//sprintf(str, "AT+CWDHCP=1,1"); Enable DHCP Auto IP
+      sprintf(str, "AT+CIPSTA=\"%s\",\"%s\",\"%s\"\n\r", rilz(Config.LocalIP), 
+				rilz(Config.RoutIpAddress), rilz(Config.SubnetIP));
+			//sprintf(str, "AT+CIPSTA=\"192.168.1.40\",\"192.168.1.1\",\"255.255.255.0\"\n\r");			
       USART_SendStr(USART3, str);
-		    //GetWiFiResponse("OK");
+		  //GetWiFiResponse("OK");
       WiFiStep++;
       break;
 		}
     case 5: { //Connect to SSID and Password
-			EmptyWIFIRXBuffer(); 
       sprintf(str, "AT+CWJAP=\"%s\",\"%s\"\n\r", Config.SSID, Config.WiFiPassword); 
       USART_SendStr(USART3, str);
 			WiFiStep++;
@@ -304,7 +328,7 @@ char CheckWiFi(void) {
       break;
 		}
     case 6: { //Check the connection status
-      EmptyWIFIRXBuffer(); 
+      //EmptyWIFIRXBuffer(); 
       WIFIReceiveBuf[0] = 0;
       USART_SendStr(USART3, "AT+CIPSTATUS\n\r");
       if (GetWiFiResponse("STATUS:2") == 0) {
@@ -332,34 +356,38 @@ char CheckWiFi(void) {
       break;
 		}
     case 7: { //Establishing the connection
-      EmptyWIFIRXBuffer();
-      Config.ConnectionPort = 1212;
-      sprintf(str, "AT+CIPSTART=\"TCP\",\"%s\",%d\n\r", Config.ServerIP, Config.ConnectionPort);
-			sprintf(str, "AT+CIPSTART=\"TCP\",\"192.168.1.12\",1212\n\r");
+      //EmptyWIFIRXBuffer();
+			/*sprintf(str, "AT+CIFSR\n\r");
+			USART_SendStr(USART3, str);
+			GUI_Delay(1000);*/
+			
+      sprintf(str, "AT+CIPSTART=\"TCP\",\"%s\",%d\n\r", rilz(Config.ServerIP), Config.ConnectionPort);
+			//sprintf(str, "AT+CIPSTART=\"TCP\",\"192.168.1.52\",1212\n\r");
 			//AT+CIPSTART="TCP","192.168.1.5",1212\n\r
       USART_SendStr(USART3, str);
-      WiFiStep++;
-      break;
+      WiFiStep++;			
+      //break;
 		}
-    case 8: { //Wait to get CONNECT phrase
-      //if (GetWiFiResponse2("CONNECT", "OK") == 0) {
+    case 8: { //Wait to get CONNECT phrase 
 			if (GetWiFiResponse("CONNECT") == 0) {
-        USART_SendStr(USART3, "AT+CWMODE=1\n\r");
+        //USART_SendStr(USART3, "AT+CWMODE=1\n\r");
+				DebugX   = 0;
 		    WiFiStep = 9;
 			}
 			else {
-				if (++ConnectionRetry > 0)
+				debug(".", 0);
+				if (++ConnectionRetry > 10)
 					WiFiStep = 6;
 			}	
       break;
 		}
     case 9: {
-			EmptyWIFIRXBuffer(); 
-      USART_SendStr(USART3, "AT+CIPMODE=1\n\r");
-      GetWiFiResponse("OK");
+			//EmptyWIFIRXBuffer(); 
+      //USART_SendStr(USART3, "AT+CIPMODE=1\n\r");
+      //GetWiFiResponse("OK");
 			
 			//======= Enable TCP Server on Port 1212 =============
-			USART_SendStr(USART3, "AT+CIPSERVER=1,1212");
+			//USART_SendStr(USART3, "AT+CIPSERVER=1,1212");
 			
 		/*
 		 EmptyWIFIRXBuffer(); 
@@ -371,23 +399,23 @@ char CheckWiFi(void) {
          PutText(5, 80, 272-38, 275+30+30+10, WIFIReceiveBuf, GUI_TA_CENTER);
 		*/
 		
-      EmptyWIFIRXBuffer();
+      /*EmptyWIFIRXBuffer();
       WIFIReceiveBuf[0] = 0;
       USART_SendStr(USART3, "AT+CIPSEND\n\r");
-      if (GetWiFiResponse(">"))  {}
+      if (GetWiFiResponse(">"))  {}*/
       WiFiStep++;
       WifiConnectionError = 0;
       break;
 		}
 		case 10: {
-			DebugX = 1;
-  		if (++WifiConnectionError > 36) {
+  		if (++WifiConnectionError > 10) {
 				DebugX   = 0;
 				WiFiStep = 0;
 			}
 		  break;
 		}
   }
+	
 }
 void DisplaySSIDList(unsigned char List[20][30], unsigned char OldMenuItem, unsigned char MenuItem, unsigned char RefreshAllItems) {
 	unsigned char FirstItem;
@@ -540,9 +568,18 @@ unsigned char SearchAndSelectSSID(void) {
 
 char WIFISend(unsigned int len, unsigned char *DataToSendRec) {
 	unsigned int i = 0;
-  //EmptyWIFIRXBuffer();
-	while (i < len)
+  //EmptyWIFIRXBuffer(); 
+	USART_SendStr(USART3, "AT+CIPSEND\n\r");
+	GUI_Delay(1);
+	#ifdef DEBUG_WIFI
+	debug("\n>> ", 1);
+	#endif
+	while (i < len) {
 		USART_SendData(USART3, DataToSendRec[i++]);
+		#ifdef 	DEBUG_WIFI
+		SendByte(DataToSendRec[i-1]);
+		#endif
+	}
   return 1;
 }
 
@@ -565,7 +602,6 @@ char sendData(unsigned int len, unsigned char *data) {
 	}*/
 }
 void USART3_IRQHandler(void) {
-	int dataLen;
 	volatile unsigned int IIR;
 	unsigned char Byte;
 	
@@ -577,32 +613,35 @@ void USART3_IRQHandler(void) {
     USART3->SR &= ~USART_FLAG_TXE;	          // clear interrupt
 
   if (IIR & USART_FLAG_RXNE) {
-    USART3->SR &= ~USART_FLAG_RXNE;	          // clear interrupt
+		USART3->SR &= ~USART_FLAG_RXNE;	          // clear interrupt
 		Byte = (USART3->DR & 0x1FF);
-		printf("%c", Byte);
-		RXD3Buffer[rxd3_wr_index] = Byte;
-		
-		//Written by HNA
-		//if \r\n is detected on the last of phrase
-		//then check is it the +IPD response? (+IPD is received when a data is come from TCP socket)
-		//The +IPD,Size:[data block in given size]
-		if ((RXD3Buffer[rxd3_wr_index - 1] == '\r') && (RXD3Buffer[rxd3_wr_index] == '\n')) {
-			char* result = strstr(RXD3Buffer, "+IPD");
-			if (result != NULL) {
-				char colon = strchr(result, ':') - result;
-				char strLen[10] = {0};
-				char data[100];
-				memcpy(strLen, result + 5, colon - 5);
-				dataLen = atoi(strLen);				
-				memcpy(data, result + colon + 1, dataLen);
-				EmptyWIFIRXBuffer();
-				callback(data, dataLen);				
+		RXD3Buffer[rxd3_wr_index++] = Byte;
+
+		if (WiFiStep > 8) {
+			if (Byte == '{') {
+				if (DataIsReady == 0)
+					read_index = 0;
+				started = 1;
+				wifiBuffer[read_index++] = Byte;
 			}
+			else if ((started > 0) && (Byte == '}')) {
+				wifiBuffer[read_index++] = Byte;
+				wifiBuffer[read_index] = '\0';
+				#ifdef DEBUG_WIFI
+					debug("\n<< ", 1);
+					for (unsigned int i=0; i<read_index; i++)
+						SendByte(wifiBuffer[i]);
+				#endif
+				started = 0;
+				callback();
+			}
+			else if (started > 0)
+				wifiBuffer[read_index++] = Byte;
 		}
 
-		if (++rxd3_wr_index == BUFFER3_SIZE) 
+		if (rxd3_wr_index >= BUFFER3_SIZE) 
 			rxd3_wr_index = 0;
-    if (++rxd3_counter == BUFFER3_SIZE)
+    if (++rxd3_counter >= BUFFER3_SIZE)
       rxd3_rd_index = rxd3_counter = rxd3_wr_index = 0;
   }
 } 

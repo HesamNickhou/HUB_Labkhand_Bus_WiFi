@@ -807,7 +807,7 @@ unsigned char ExecTransaction(unsigned char      Type,
         CurECardInfo.Etebar += Payment;  
         break;
       case Decrement:
-        #if (DeviceType == BUSDOOR)
+        #if (DeviceType == BUSDOOR) || (DeviceType == BUSDOOR_WIFI)
 					if (CurECardInfo.Etebar < Payment)
 						return S_OutOfRange;
 					if (CurECardInfo.Etebar < Payment) {

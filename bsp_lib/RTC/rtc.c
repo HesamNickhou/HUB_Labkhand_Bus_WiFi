@@ -30,10 +30,19 @@ const int hshSumOfDays[2][13] = {
 #define div(a,b) ((a) / (b))
 #define FALSE	0
 #define TRUE	-1
+														
+#define SECONDS_PER_MINUTE  60
+#define SECONDS_PER_HOUR    3600
+#define SECONDS_PER_DAY     86400
+#define DAYS_PER_YEAR       365
+#define DAYS_PER_LEAP_YEAR  366
+
+/* Epoch reference: 1970-01-01 00:00:00 UTC */
+#define EPOCH_YEAR 1970
 
 //=========================================================================
 unsigned char GetDayOfWeek(unsigned int Year,unsigned int Month,unsigned int Day) {
-unsigned int days, i, m;
+	unsigned int days, i, m;
 
   days=Day-1;
   
@@ -54,9 +63,8 @@ unsigned int days, i, m;
 }
 
 //=========================================================================
-unsigned short GetDayOfYear(void) 
-{
-unsigned short days;
+unsigned short GetDayOfYear(void) {
+	unsigned short days;
  
   days=Day;
   
@@ -72,14 +80,12 @@ unsigned short days;
 }
 
 //=========================================================================
-unsigned char grgIsLeap(int Year)
-{
-  return ((Year%4) == 0 && ((Year%100) != 0 || (Year%400) == 0));
+unsigned char grgIsLeap(int Year) {
+  return ((Year % 4) == 0 && ((Year % 100) != 0 || (Year % 400) == 0));
 }
  
 //=========================================================================
-unsigned char hshIsLeap(int Year)
-{
+unsigned char hshIsLeap(int Year) {
   Year = (Year - 474) % 128;
   Year = ((Year >= 30) ? 0 : 29) + Year;
   Year = Year - floor((double)Year/33) - 1;
@@ -87,94 +93,187 @@ unsigned char hshIsLeap(int Year)
 }
 
 //=========================================================================
-void gregorian_to_jalali(int grgYear, char grgMonth, char grgDay, rDateType *gDate)
-{
-unsigned char grgLeap=0;
-unsigned char hshLeap=0;
-int hshYear;
-int hshMonth, hshDay, i;
-long int hshElapsed;
-long int grgElapsed;
-int XmasToNorooz;
+void gregorian_to_jalali(int gy, char gm, char gd, rDateType *gDate) {
+  long jy, gy2, days, g_d_m[12] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
+  gy2 = (gm > 2) ? (gy + 1) : gy;
+  days = 355666 + (365 * gy) + ((int)((gy2 + 3) / 4)) - 
+		((int)((gy2 + 99) / 100)) + ((int)((gy2 + 399) / 400)) + gd + 
+		g_d_m[gm - 1];
+		
+  jy = -1595 + (33 * ((int)(days / 12053)));
+  days %= 12053;
+  jy += 4 * ((int)(days / 1461));
+  days %= 1461;
+  if (days > 365) {
+    jy += (int)((days - 1) / 365);
+    days = (days - 1) % 365;
+  }
+  gDate->year = jy;
+  if (days < 186) {
+    gDate->month = 1 + (int)(days / 31);
+    gDate->day  = 1 + (days % 31);
+  } else {
+    gDate->month = 7 + (int)((days - 186) / 30);
+    gDate->day   = 1 + ((days - 186) % 30);
+  }
+}
+
+
+unsigned long long toTimeStamp(unsigned short year, 
+												 unsigned char month, 
+												 unsigned char day,
+                         unsigned char hour, 
+												 unsigned char minute, 
+												 unsigned char second) {
+    /* Days in each month (non-leap year) */
+    static const uint16_t days_in_month[] = {
+        0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+    };
+
+    /* Days since Unix epoch (1970-01-01) up to start of given year */
+    uint32_t y = year - 1970;
+    uint32_t leap_days = (y + 1) / 4;   /* Leap years since 1970 */
+
+    uint32_t days = y * 365 + leap_days;
+
+    /* Add days for months elapsed this year */
+    days += days_in_month[month - 1];
+
+    /* Add leap day for current year if past February */
+    if (month > 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)))
+        days += 1;
+
+    /* Add days elapsed this month (zero-indexed) */
+    days += day - 1;
+
+    /* Convert to seconds and add time */
+		unsigned long long result = (unsigned long) days * 86400UL;
+		result += (unsigned long) hour   * 3600UL;
+		result += (unsigned long) minute * 60UL;
+		result += (unsigned long) second;
+		
+    return result;
+}
+
+/*unsigned long toTimeStamp(unsigned short year, unsigned char month,  unsigned char day, 
+													unsigned char hour,  unsigned char minute, unsigned char second) {
+	unsigned long timestamp = 0;
+    
+	// Basic validation 
+	if (year < EPOCH_YEAR || month < 1 || month > 12 || 
+		day < 1 || day > 31 || hour > 23 || minute > 59 || second > 59) {
+		return -1;
+	}
+	
+	// 1. Calculate days since epoch using algorithm 
+	// Formula based on days since March 1 (to handle leap years more easily) 
+	
+	// Adjust month/year for March-based year 
+	uint16_t m = month;
+	uint16_t y = year;
+	
+	if (m <= 2) {
+		m += 12;
+		y -= 1;
+	}
+	
+	// Convert years to days 
+	// Days from 1970-03-01 to year-03-01 
+	uint64_t days = (uint64_t)y * 365 + y/4 - y/100 + y/400;
+	days -= (uint64_t)EPOCH_YEAR * 365 + EPOCH_YEAR/4 - EPOCH_YEAR/100 + EPOCH_YEAR/400;
+	
+	// Add days for months 
+	days += (uint64_t)(m * 153 + 8) / 5;
+	
+	// Adjust for day of month 
+	days += day - 1;
+	
+	// Subtract days from Jan 1 to Mar 1 (59 for non-leap, 60 for leap) 
+	if (grgIsLeap(year) && month <= 2)
+		days -= 60;  // Leap year adjustment 
+	else
+		days -= 59;
+	
+	// 2. Convert days to seconds and add time 
+	timestamp  = days 						* SECONDS_PER_DAY;
+	timestamp += (uint64_t)hour   * SECONDS_PER_HOUR;
+	timestamp += (uint64_t)minute * SECONDS_PER_MINUTE;
+	timestamp += second;
+	
+	return timestamp;
+}*/
+/*
+			OLD function!
+void gregorian_to_jalali(int grgYear, char grgMonth, char grgDay, rDateType *gDate) {
+	unsigned char grgLeap = 0, hshLeap = 0;
+	int hshYear, hshMonth, hshDay, i, XmasToNorooz;
+	long int hshElapsed, grgElapsed;
         
-  hshYear = grgYear-621;
-  grgLeap=grgIsLeap(grgYear);
-  hshLeap=hshIsLeap(hshYear-1);                            
-  grgElapsed = grgSumOfDays[(grgLeap ? 1:0)][grgMonth-1]+grgDay;
+  hshYear = grgYear - 621;
+  grgLeap = grgIsLeap(grgYear);
+  hshLeap = hshIsLeap(hshYear - 1);
+  grgElapsed 	 = grgSumOfDays[(grgLeap ? 1 : 0)][grgMonth - 1] + grgDay;
   XmasToNorooz = (hshLeap && grgLeap) ? 80 : 79;
-	if (grgElapsed <= XmasToNorooz)
-	{
-		hshElapsed = grgElapsed+286;
+	if (grgElapsed <= XmasToNorooz) {
+		hshElapsed = grgElapsed + 286;
 		hshYear--;
 		if (hshLeap && !grgLeap)
 			hshElapsed++;
 	}
-	else
-	{
+	else {
 		hshElapsed = grgElapsed - XmasToNorooz;
-		hshLeap = hshIsLeap (hshYear);
+		hshLeap 	 = hshIsLeap(hshYear);
 	}
  
-	for (i=1; i <= 12 ; i++)
-	{
-		if (hshSumOfDays [(hshLeap ? 1:0)][i] >= hshElapsed)
-		{
+	for (i=1; i <= 12 ; i++) {
+		if (hshSumOfDays [(hshLeap ? 1:0)][i] >= hshElapsed) {
 			hshMonth = i;
-			hshDay = hshElapsed - hshSumOfDays [(hshLeap ? 1:0)][i-1];
+			hshDay 	 = hshElapsed - hshSumOfDays [(hshLeap ? 1 : 0)][i - 1];
 			break;
 		}
 	}
  
-	gDate->day = hshDay;
+	gDate->day   = hshDay;
 	gDate->month = hshMonth;
-	gDate->year = hshYear;   
-}
+	gDate->year  = hshYear;   
+}*/
  
 //=========================================================================
-void jalali_to_gregorian(int hshYear, char hshMonth, char hshDay, rDateType *gDate)
-{
-int grgYear, i;
-int grgMonth,grgDay;
-unsigned char hshLeap;
-unsigned char grgLeap;
-long int hshElapsed;
-long int grgElapsed;                   
-	
-	grgYear = hshYear+621;
-	hshElapsed=hshSumOfDays [hshLeap ? 1:0][hshMonth-1]+hshDay;
-	hshLeap=hshIsLeap(hshYear);       
-	grgLeap=grgIsLeap(grgYear);
+void jalali_to_gregorian(int hshYear, char hshMonth, char hshDay, rDateType *gDate) {
+	int 					grgYear, 		grgMonth, 	grgDay, i;
+	unsigned char hshLeap, 		grgLeap;
+	long int 			hshElapsed, grgElapsed;
+
+	grgYear 	 = hshYear+621;
+	hshElapsed = hshSumOfDays [hshLeap ? 1 : 0][hshMonth - 1] + hshDay;
+	hshLeap 	 = hshIsLeap(hshYear);
+	grgLeap 	 = grgIsLeap(grgYear);
  
-	if (hshMonth > 10 || (hshMonth == 10 && hshElapsed > 286+(grgLeap ? 1:0)))
-	{
+	if (hshMonth > 10 || (hshMonth == 10 && hshElapsed > 286 + (grgLeap ? 1 : 0))) {
 		grgElapsed = hshElapsed - (286 + (grgLeap ? 1:0));
 		grgLeap = grgIsLeap (++grgYear);
 	}
-	else
-	{
+	else {
 		hshLeap = hshIsLeap (hshYear-1);
-		grgElapsed = hshElapsed + 79 + (hshLeap ? 1:0) - (grgIsLeap(grgYear-1) ? 1:0);
+		grgElapsed = hshElapsed + 79 + (hshLeap ? 1:0) - (grgIsLeap(grgYear-1) ? 1 : 0);
 	}
  
-	for (i=1; i <= 12; i++)
-	{
-		if (grgSumOfDays [grgLeap ? 1:0][i] >= grgElapsed)
-		{
+	for (i=1; i <= 12; i++) {
+		if (grgSumOfDays [grgLeap ? 1 : 0][i] >= grgElapsed) {
 			grgMonth = i;
-			grgDay = grgElapsed - grgSumOfDays [grgLeap ? 1:0][i-1];
+			grgDay = grgElapsed - grgSumOfDays [grgLeap ? 1 : 0][i - 1];
 			break;
 		}
 	}
  
-	gDate->day = grgDay;
+	gDate->day   = grgDay;
 	gDate->month = grgMonth;
-	gDate->year = grgYear;   
+	gDate->year  = grgYear;   
 }
 
 
 //=========================================================================
-static void RTC_NVIC_Config(void)
-{	
+static void RTC_NVIC_Config(void) {	
   NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQn;		//RTC????
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;	//?????1?,????3?
@@ -183,13 +282,10 @@ static void RTC_NVIC_Config(void)
 	NVIC_Init(&NVIC_InitStructure);		//??NVIC_InitStruct???????????NVIC???
 }
 
-
 //=========================================================================
 unsigned char RTC_STEP=0;
-u8 RTC_Wait4Init(void)
-{
-	if (RTC_STEP==1)
-	{
+u8 RTC_Wait4Init(void) {
+	if (RTC_STEP == 1) {
 		if (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)	
 			return 1;
 
@@ -208,8 +304,7 @@ u8 RTC_Wait4Init(void)
 		RTC_Get();
   }
 
-  if (RTC_STEP==2)
-	{
+  if (RTC_STEP == 2) {
 		RTC->CRL &= (uint16_t)~RTC_FLAG_RSF;
 		/* Loop until RSF flag is set */
 		if ((RTC->CRL & RTC_FLAG_RSF) == (uint16_t)RESET)
@@ -305,10 +400,9 @@ u8 Is_Leap_Year(u16 year)
 //=========================================================================
 u8 const table_week[12] ={0,3,3,6,1,4,6,2,5,0,3,5}; 
 const u8 mon_table[12] ={31,28,31,30,31,30,31,31,30,31,30,31};
-u8 RTC_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
-{
-u16 t;
-u32 seccount=0;
+u8 RTC_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec) {
+	u16 t;
+	u32 seccount=0;
 	
 	daycnt=0;
 	if (syear<1970||syear>2099)return 1;	   

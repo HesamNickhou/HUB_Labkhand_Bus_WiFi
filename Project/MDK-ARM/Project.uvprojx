@@ -1641,11 +1641,6 @@
               <FileType>5</FileType>
               <FilePath>..\Simorgh\BusDoorWifi.h</FilePath>
             </File>
-            <File>
-              <FileName>cJSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>D:\Keil_v5\Keil_Packs\MDK-Packs\cJSON\1.0.0\cJSON.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -3248,11 +3243,6 @@
               <FileName>BusDoorWifi.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Simorgh\BusDoorWifi.h</FilePath>
-            </File>
-            <File>
-              <FileName>cJSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>D:\Keil_v5\Keil_Packs\MDK-Packs\cJSON\1.0.0\cJSON.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5265,11 +5255,6 @@
               <FileType>5</FileType>
               <FilePath>..\Simorgh\BusDoorWifi.h</FilePath>
             </File>
-            <File>
-              <FileName>cJSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>D:\Keil_v5\Keil_Packs\MDK-Packs\cJSON\1.0.0\cJSON.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -7280,11 +7265,6 @@
               <FileName>BusDoorWifi.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Simorgh\BusDoorWifi.h</FilePath>
-            </File>
-            <File>
-              <FileName>cJSON.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>D:\Keil_v5\Keil_Packs\MDK-Packs\cJSON\1.0.0\cJSON.c</FilePath>
             </File>
           </Files>
         </Group>

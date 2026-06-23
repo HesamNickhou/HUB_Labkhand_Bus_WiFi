@@ -92,18 +92,16 @@ unsigned char j=0;
 }
 
 //==============================================================================
-void PlayVoice(const char* FileName)
-{
-const unsigned char chkLIST[] ="LIST";
-unsigned int i,j,k;
-unsigned short ByteRead;
-unsigned int StartAddress, Len;
-unsigned char EndCounter2=0, FirstSector=1,snr[10];
-unsigned short b=0;
-unsigned int TIM6ARRValue = 1088,ReadedSector=0;
-	
-		
-	  if (GetVoiceAddress((char *)FileName, &StartAddress, &Len))
+void PlayVoice(const char* FileName) {
+	const unsigned char chkLIST[] ="LIST";
+	unsigned int i,j,k;
+	unsigned short ByteRead;
+	unsigned int StartAddress, Len;
+	unsigned char EndCounter2=0, FirstSector=1,snr[10];
+	unsigned short b=0;
+	unsigned int TIM6ARRValue = 1088,ReadedSector=0;
+
+	if (GetVoiceAddress((char *)FileName, &StartAddress, &Len))
 			return;
 
 		

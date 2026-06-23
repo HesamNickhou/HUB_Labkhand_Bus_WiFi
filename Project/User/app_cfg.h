@@ -72,9 +72,8 @@
 #define RELAY2  PGout(2)
 
 #define DERE    PAout(1)
-
 #define SetTX485()  DERE=1
-#define SetRX485()  DERE=0
+#define SetRX485()  DERE=1
 
 #endif
 

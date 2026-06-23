@@ -806,15 +806,13 @@ unsigned short b=0;
 
 //==============================================================================
 void PutText(unsigned int left, unsigned int top, unsigned int right, unsigned int bottom, const unsigned char *str, unsigned char style) {
-GUI_RECT Rect;	
-
-	Rect.x0=left;
-	Rect.x1=right;
-	Rect.y0=TFT_START_Y+top;
-	Rect.y1=TFT_START_Y+bottom;
+	GUI_RECT Rect;
+	Rect.x0 = left;
+	Rect.x1 = right;
+	Rect.y0 = TFT_START_Y+top;
+	Rect.y1 = TFT_START_Y+bottom;	
 	
-  GUI_DispStringInRectWrap(str, &Rect, style, GUI_WRAPMODE_WORD); 
-	
+  GUI_DispStringInRectWrap(str, &Rect, style, GUI_WRAPMODE_WORD);
 }
 
 //==============================================================================
@@ -1424,8 +1422,7 @@ unsigned char Setup(void) {
 	unsigned int Pass = 0;
 	unsigned int DefPass = Hour + Min;	
 
-  DefPass = (Hour + Min) ^ Day; 
-	
+  DefPass = (Hour + Min) ^ Day; 	
 	
   Pass = GetNumber("رمز را وارد نماييد", 0, 1);
   if ((Pass == Config.Password) || (Pass == DefPass)) {
