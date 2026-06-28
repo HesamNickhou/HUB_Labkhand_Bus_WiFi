@@ -362,27 +362,45 @@ char CheckWiFi(void) {
       //EmptyWIFIRXBuffer(); 
       WIFIReceiveBuf[0] = 0;
       USART_SendStr(USART3, "AT+CIPSTATUS\n\r");
+      // STATUS:2 = Got IP (AP connected, no TCP yet) -> proceed to TCP connect (step 7)
+      // STATUS:3 = TCP already connected             -> skip TCP connect, go straight to step 8
       if (GetWiFiResponse("STATUS:2") == 0) {
 				ConnectionRetry = 0;
-        WiFiStep++;
+        WiFiStep++;      // go to step 7 to open TCP connection
 			}
+      else if (GetWiFiResponse("STATUS:3") == 0) {
+        // TCP already established (e.g. retry from step 8): skip CIPSTART
+        ConnectionRetry = 0;
+        WiFiStep = 8;    // jump straight to waiting for data
+      }
       else {
-				ptr = (char *)WIFIReceiveBuf;
-				if ((ptr = strstr(ptr, "STATUS:")) || (ptr = strstr(ptr, "bus"))) {
-					if (++ConnectionRetry > 10) {
-						if (strstr(ptr, "bus")) {
-							EmptyWIFIRXBuffer(); 
-							WIFIReceiveBuf[0] = 0;
-							USART_SendStr(USART3, "AT+CIPSTATUS\n\r");
-							ConnectionRetry = 0;
-						}
-						WiFiStep = 0;
-					}
-				}
+        // Save a clean copy of the buffer before any pointer manipulation
+        char *bufStart = (char *)WIFIReceiveBuf;
+        int isBusy   = (strstr(bufStart, "bus")    != NULL);
+        int hasStatus= (strstr(bufStart, "STATUS:") != NULL);
+
+        if (isBusy || hasStatus) {
+          if (++ConnectionRetry > 10) {
+            if (isBusy) {
+              // "busy p" from module: flush and retry status check, don't full-reset
+              EmptyWIFIRXBuffer();
+              WIFIReceiveBuf[0] = 0;
+              USART_SendStr(USART3, "AT+CIPSTATUS\n\r");
+              ConnectionRetry = 0;
+              // stay on step 6
+            } else {
+              // Non-busy failure after many retries: full reset
+              WiFiStep        = 0;
+              ConnectionRetry = 0;
+            }
+          }
+          // else: still within retry limit, stay on step 6
+        }
         else if (++ConnectionRetry > 10) {
-					WiFiStep 				= 0;
-					ConnectionRetry = 0;
-				}
+          // No recognisable status at all after many retries
+          WiFiStep        = 0;
+          ConnectionRetry = 0;
+        }
       }
       break;
 		}
