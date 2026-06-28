@@ -365,46 +365,48 @@ char CheckWiFi(void) {
       // STATUS:2 = Got IP (AP connected, no TCP yet)  -> proceed to CIPSTART (step 7)
       // STATUS:3 = TCP already connected              -> skip CIPSTART, go to step 8
       // STATUS:4 = TCP was closed (post-close limbo)  -> treat like STATUS:2, retry CIPSTART
-      // Read the response buffer once for all checks below
-      char *bufStart = (char *)WIFIReceiveBuf;
+      //
+      // IMPORTANT: bufStart must be read AFTER GetWiFiResponse() fills WIFIReceiveBuf.
+      // GetWiFiResponse() returns 0 on match, 2 on mismatch, 1 on timeout.
+      unsigned char wifiResp = GetWiFiResponse("STATUS:");  // read once into buffer
+      char *bufStart = (char *)WIFIReceiveBuf;              // now safe to inspect
 
-      if (GetWiFiResponse("STATUS:2") == 0) {
+      if (strstr(bufStart, "STATUS:2") != NULL) {
         // Connected to AP, no TCP — proceed to CIPSTART
+        debug("\n[WIFI] STATUS:2 — going to CIPSTART.\n", 1);
         ConnectionRetry = 0;
         WiFiStep++;
       }
-      else if (GetWiFiResponse("STATUS:3") == 0) {
+      else if (strstr(bufStart, "STATUS:3") != NULL) {
         // TCP already active — skip CIPSTART
+        debug("\n[WIFI] STATUS:3 — TCP already up, skipping CIPSTART.\n", 1);
         ConnectionRetry = 0;
         WiFiStep = 8;
       }
       else if (strstr(bufStart, "STATUS:4") != NULL) {
-        // FIX: STATUS:4 = TCP closed/failed but still on AP.
-        // The module is stuck in post-close limbo. Treat like STATUS:2:
-        // go straight to CIPSTART to re-open the TCP connection.
-        debug("\n[WIFI] STATUS:4 detected — TCP closed, retrying CIPSTART.\n", 1);
+        // TCP closed limbo — still on AP, retry CIPSTART directly
+        debug("\n[WIFI] STATUS:4 — TCP closed, retrying CIPSTART.\n", 1);
         ConnectionRetry = 0;
-        WiFiStep++;      // step 7 = AT+CIPSTART
+        WiFiStep++;
+      }
+      else if (strstr(bufStart, "STATUS:5") != NULL) {
+        // Disconnected from AP entirely — full reset
+        debug("\n[WIFI] STATUS:5 — lost AP, full reset.\n", 1);
+        ConnectionRetry = 0;
+        WiFiStep        = 0;
       }
       else {
-        int isBusy    = (strstr(bufStart, "bus")      != NULL);
-        int hasStatus = (strstr(bufStart, "STATUS:")  != NULL);
-
-        if (isBusy || hasStatus) {
-          if (++ConnectionRetry > 10) {
-            if (isBusy) {
-              // "busy p": flush and retry status check without full reset
-              EmptyWIFIRXBuffer();
-              WIFIReceiveBuf[0] = 0;
-              USART_SendStr(USART3, "AT+CIPSTATUS\n\r");
-              ConnectionRetry = 0;
-            } else {
-              WiFiStep        = 0;
-              ConnectionRetry = 0;
-            }
-          }
+        // No recognisable STATUS — could be "busy p..." or garbage
+        int isBusy = (strstr(bufStart, "bus") != NULL);
+        if (isBusy) {
+          // Module busy joining AP — flush and retry without counting against limit
+          debug("\n[WIFI] busy p — flushing and retrying CIPSTATUS.\n", 1);
+          EmptyWIFIRXBuffer();
+          WIFIReceiveBuf[0] = 0;
+          // stay on step 6, don't increment ConnectionRetry
         }
         else if (++ConnectionRetry > 10) {
+          debug("\n[WIFI] CIPSTATUS retry limit — full reset.\n", 1);
           WiFiStep        = 0;
           ConnectionRetry = 0;
         }
@@ -425,34 +427,43 @@ char CheckWiFi(void) {
       //break;
 		}
     case 8: { //Wait to get CONNECT phrase
-			// FIX: Check for "CLOSED" immediately after CONNECT — the server dropped us.
-			// When this happens, don't keep retrying CIPSTART; go back to step 6 (CIPSTATUS)
-			// so we verify AP association is still valid before attempting TCP again.
-			char *bufPtr = (char *)WIFIReceiveBuf;
-			if (GetWiFiResponse("CONNECT") == 0) {
-				// Extra safety: if the buffer also contains "CLOSED" the connection
-				// was accepted and immediately torn down by the server.
+			// IMPORTANT: Read buffer AFTER GetWiFiResponse() fills WIFIReceiveBuf.
+			// Assigning bufPtr before the call reads stale data from a previous cycle.
+			unsigned char connectResp = GetWiFiResponse("CONNECT");
+			char *bufPtr = (char *)WIFIReceiveBuf;  // now safe to inspect
+
+			if (connectResp == 0) {
 				if (strstr(bufPtr, "CLOSED") != NULL) {
+					// Server accepted then immediately dropped — CONNECT+CLOSED
 					debug("\n[WIFI] CONNECT+CLOSED: server refused. Back to CIPSTATUS.\n", 1);
-					ConnectionRetry = 0;
-					WiFiStep        = 6;   // re-check AP status before retrying TCP
+					ConnectionRetry     = 0;
+					WifiConnectionError = 0;  // FIX: reset error counter on retry
+					WiFiStep            = 6;
 				} else {
-					DebugX   = 0;
-					WiFiStep = 9;
+					// Clean CONNECT — good TCP link established
+					debug("\n[WIFI] CONNECT OK — TCP link up.\n", 1);
+					WifiConnectionError = 0;  // FIX: reset so step 10 starts from 0
+					ConnectedToServer   = 1;
+					DebugX              = 0;
+					WiFiStep            = 9;
 				}
 			}
 			else {
-				// Also catch a bare "CLOSED" response (no CONNECT at all)
+				// No CONNECT yet — check for bare CLOSED or keep waiting
 				if (strstr(bufPtr, "CLOSED") != NULL) {
-					debug("\n[WIFI] Got CLOSED on step 8. Back to CIPSTATUS.\n", 1);
-					ConnectionRetry = 0;
-					WiFiStep        = 6;
+					debug("\n[WIFI] Got CLOSED on step 8 (no CONNECT). Back to CIPSTATUS.\n", 1);
+					ConnectionRetry     = 0;
+					WifiConnectionError = 0;
+					WiFiStep            = 6;
 				} else {
 					debug(".", 0);
-					if (++ConnectionRetry > 10)
-						WiFiStep = 6;
+					if (++ConnectionRetry > 10) {
+						ConnectionRetry     = 0;
+						WifiConnectionError = 0;
+						WiFiStep            = 6;
+					}
 				}
-			}	
+			}
       break;
 		}
     case 9: {
