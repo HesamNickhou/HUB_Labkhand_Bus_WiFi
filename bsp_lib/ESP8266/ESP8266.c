@@ -417,16 +417,34 @@ char CheckWiFi(void) {
       WiFiStep++;			
       //break;
 		}
-    case 8: { //Wait to get CONNECT phrase 
+    case 8: { //Wait to get CONNECT phrase
+			// FIX: Check for "CLOSED" immediately after CONNECT — the server dropped us.
+			// When this happens, don't keep retrying CIPSTART; go back to step 6 (CIPSTATUS)
+			// so we verify AP association is still valid before attempting TCP again.
+			char *bufPtr = (char *)WIFIReceiveBuf;
 			if (GetWiFiResponse("CONNECT") == 0) {
-        //USART_SendStr(USART3, "AT+CWMODE=1\n\r");
-				DebugX   = 0;
-		    WiFiStep = 9;
+				// Extra safety: if the buffer also contains "CLOSED" the connection
+				// was accepted and immediately torn down by the server.
+				if (strstr(bufPtr, "CLOSED") != NULL) {
+					debug("\n[WIFI] CONNECT+CLOSED: server refused. Back to CIPSTATUS.\n", 1);
+					ConnectionRetry = 0;
+					WiFiStep        = 6;   // re-check AP status before retrying TCP
+				} else {
+					DebugX   = 0;
+					WiFiStep = 9;
+				}
 			}
 			else {
-				debug(".", 0);
-				if (++ConnectionRetry > 10)
-					WiFiStep = 6;
+				// Also catch a bare "CLOSED" response (no CONNECT at all)
+				if (strstr(bufPtr, "CLOSED") != NULL) {
+					debug("\n[WIFI] Got CLOSED on step 8. Back to CIPSTATUS.\n", 1);
+					ConnectionRetry = 0;
+					WiFiStep        = 6;
+				} else {
+					debug(".", 0);
+					if (++ConnectionRetry > 10)
+						WiFiStep = 6;
+				}
 			}	
       break;
 		}
@@ -457,9 +475,28 @@ char CheckWiFi(void) {
       break;
 		}
 		case 10: {
+			// FIX: When in transparent/passthrough mode the ESP8266 sends "CLOSED"
+			// if the TCP connection drops. The IRQ handler already sets WifiClosed=1
+			// via the USARTMessage match table. React to it here instead of waiting
+			// for WifiConnectionError to count up to 10 (which takes ~10 seconds).
+			if (WifiClosed) {
+				debug("\n[WIFI] TCP CLOSED detected in step 10. Reconnecting...\n", 1);
+				WifiClosed          = 0;
+				WifiConnectionError = 0;
+				ConnectedToServer   = 0;
+				// Exit transparent mode first, then go back to CIPSTATUS
+				USART_SendStr(USART3, "+++");   // escape from passthrough mode
+				GUI_Delay(1100);                // mandatory 1 s silence around +++
+				EmptyWIFIRXBuffer();
+				WiFiStep = 6;                   // jump to CIPSTATUS, not a full reset
+				break;
+			}
   		if (++WifiConnectionError > 10) {
-				DebugX   = 0;
-				WiFiStep = 0;
+				debug("\n[WIFI] Connection error limit reached. Full reset.\n", 1);
+				DebugX              = 0;
+				WifiConnectionError = 0;
+				ConnectedToServer   = 0;
+				WiFiStep            = 0;
 			}
 		  break;
 		}

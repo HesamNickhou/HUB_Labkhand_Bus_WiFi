@@ -2369,6 +2369,12 @@ unsigned char SendALive() {
 		"needDate": "boolean", // from needDate
 		"message": "LIVE PACKET RECEIVE CORRECTLY" // JsonBuilder.LIVE_PACKET_DATA
 	}*/
+
+	// FIX: Do not send on a closed/dead TCP connection.
+	// WiFiStep==10 means we are fully connected and in transparent (passthrough) mode.
+	// Sending while the TCP link is down causes a flood of ERROR responses from the ESP8266.
+	if (WiFiStep != 10) return 0;
+
 	if ((OS_TimeMS - sentAlive) > 2000) {
 		sprintf(GlobalBuffer, "{\"header\":12,\"deviceType\":%d,\"needDate\":false," \
 			"\"message\":\"LIVE PACKET RECEIVE CORRECTLY\"}\r\n", 2);
@@ -3275,14 +3281,17 @@ void SendOfflines() {
 	static char GG = 0;
 	char str[512];	
 	//============================================================================
-	
+
+	// FIX: Never attempt to send when TCP link is not established.
+	if (WiFiStep != 10 || ConnectedToServer == 0) return;
+
 	//LEN_TRANSACTIONS 128
 	//MAX_TRANSACTIONS 32500
-  if (Indicators.OffTransactions == 0) 
+	if (Indicators.OffTransactions == 0)
 		return; 
-	
-  Start = (Indicators.OffTransactions > trHead) ? 
-		(MAX_TRANSACTIONS - (Indicators.OffTransactions - trHead)) : 
+
+	Start = (Indicators.OffTransactions > trHead) ?
+		(MAX_TRANSACTIONS - (Indicators.OffTransactions - trHead)) :
 		trHead - Indicators.OffTransactions;
 
   Idx = 11;
@@ -3403,6 +3412,14 @@ void ProcessPeriodicTasks(void) {
    
 	if (WiFiStep < 7)
 		ConnectedToServer = 0;
+
+	// FIX: Also clear ConnectedToServer immediately when we drop out of step 10
+	// (e.g. CLOSED event moved us back to step 6). Without this, SendOfflines()
+	// and SendALive() could still fire one more time on a dead connection.
+	if (WiFiStep != 10 && ConnectedToServer) {
+		debug("\n[APP] WiFiStep dropped from 10 — clearing ConnectedToServer.\n", 1);
+		ConnectedToServer = 0;
+	}
 
 	if (Min != OldMin) {
 		RTC_Get();
