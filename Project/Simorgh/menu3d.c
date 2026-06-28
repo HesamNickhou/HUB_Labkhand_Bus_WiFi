@@ -126,7 +126,7 @@ unsigned char SetX10(void);
     {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"جستجوي وايفاي", ""}, SearchAndSelectSSID, 0},		
     {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"رمز وايفاي", ""}, ChangeWifiPassword, 0},				
     {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"آي پي دستگاه", ""}, SetLocalIP, 0},
-    {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"آي پي سرور", ""}, SetServerIP, 0},
+    {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"آي پي راننده", ""}, SetServerIP, 0},
     {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"ساب نت", ""}, SetSubnetIP, 0},		
     {{"0:icons/M0002/003.bmp", ""}, {"0:1.bmp", ""}, {"آي پي دروازه", ""}, SetGatewayIP, 0},
     {{"0:icons/M0002/002.bmp", ""}, {"0:1.bmp", ""}, {"زمانبندي", ""}, SetTransactionsSendInterval, 0},
@@ -1844,14 +1844,12 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
          if (i>=500000)
            return n; 
 			   */
-         if (n<99999999)
-           n=n*10;
+         if (n < 999999999)
+           n = n * 10;
          break;
        case BLEFT:
-				 if (n>0)
-				 {
-					 n=n/10;
-				 }
+				 if (n > 0)
+					 n = n / 10;
 				 break;
        case BOK: 
          return n;
@@ -1859,8 +1857,7 @@ unsigned int GetNumber(const unsigned char *msg, unsigned int n, unsigned char P
        case BCANCEL:
          return DefValue;
      }
-     if (n != n1)
-     {
+     if (n != n1) {
        cnt=0;
      	 #ifdef Torgheh
        G_LoadBMP(10,85,"0:desktop/InputBox.bmp",0);
@@ -2265,7 +2262,7 @@ unsigned char SetServerIP(void) {
   GUI_FillRect(25, TFT_START_Y+45, 272-25, TFT_START_Y+345);
   G_LoadBMP(128,105,"0:desktop/InputBox.bmp",0);
   GUI_SetColor(GUI_WHITE);
-  PutText(0,60,270,90,"آدرس سرور",GUI_TA_CENTER);
+  PutText(0,60,270,90,"آدرس راننده",GUI_TA_CENTER);
   DisplayKeys("", "انصراف", "تاييد");
   LoadFont(FontTahoma20);
   #endif

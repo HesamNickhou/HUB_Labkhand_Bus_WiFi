@@ -190,6 +190,26 @@ unsigned char GetWiFiResponse(const char* Response) {
 }
 
 
+unsigned char safe_rilz(const char *ip, char* result) {
+	//static char result[16];  // Static buffer - no malloc needed
+	unsigned int octets[4];
+	
+	if (!ip) return 0;
+	
+	// Parse and validate the IP
+	if (sscanf(ip, "%u.%u.%u.%u", 
+					 &octets[0], &octets[1], &octets[2], &octets[3]) != 4)
+		return 0;  // Invalid format
+	
+	// Validate each octet (0-255)
+	for (int i = 0; i < 4; i++)
+		if (octets[i] > 255) return 0;
+	
+	// Format without leading zeros
+	sprintf(result, "%u.%u.%u.%u", 
+					octets[0], octets[1], octets[2], octets[3]);
+	return 1;
+}
 char* rilz(const char *ip_with_zeros) {
 	if (!ip_with_zeros) return NULL;
 	
@@ -260,11 +280,11 @@ char CheckWiFi(void) {
 		GUI_FillCircle(22 + 234, 20 + 2, 4);
 	} 
   else {	 
-		LoadFont(FontTahoma20);
+		LoadFont(FontBKoodak40);
 		GUI_SetColor(GUI_DARKGRAY);
 		GUI_FillRoundedRect(4 + 234, 2 + 3, 30 + 233, 27 + 1, 3);	
 		GUI_SetColor(GUI_LIGHTGREEN);
-		GUI_DispDecAt(WiFiStep, 240, 6, 2);
+		GUI_DispDecAt(WiFiStep, 240, 0, 2);
   }
      
   Config.ServerIP[15]      = 0;
@@ -312,12 +332,23 @@ char CheckWiFi(void) {
       break;
 		}
     case 4:	{ //Configure IP instead of DHCP
-      sprintf(str, "AT+CIPSTA=\"%s\",\"%s\",\"%s\"\n\r", rilz(Config.LocalIP), 
-				rilz(Config.RoutIpAddress), rilz(Config.SubnetIP));
-			//sprintf(str, "AT+CIPSTA=\"192.168.1.40\",\"192.168.1.1\",\"255.255.255.0\"\n\r");			
+			char ip1[16], ip2[16], ip3[16];
+			if (!safe_rilz(Config.LocalIP, ip1))
+				sprintf(ip1, "123.456.789.0");
+			
+			if (!safe_rilz(Config.RoutIpAddress, ip2))
+				sprintf(ip2, "123.456.789.0");
+			
+			if (!safe_rilz(Config.SubnetIP, ip3))
+				sprintf(ip3, "255.255.255.0");
+			
+      sprintf(str, "AT+CIPSTA=\"%s\",\"%s\",\"%s\"\n\r", ip1, ip2, ip3);
+			//sprintf(str, "AT+CIPSTA=\"192.168.1.40\",\"192.168.1.1\",\"255.255.255.0\"\n\r");		
+
       USART_SendStr(USART3, str);
 		  //GetWiFiResponse("OK");
       WiFiStep++;
+			
       break;
 		}
     case 5: { //Connect to SSID and Password
@@ -348,8 +379,8 @@ char CheckWiFi(void) {
 						WiFiStep = 0;
 					}
 				}
-        else if (++ConnectionRetry > 3) {
-					WiFiStep 				= 9;
+        else if (++ConnectionRetry > 10) {
+					WiFiStep 				= 0;
 					ConnectionRetry = 0;
 				}
       }
@@ -569,7 +600,7 @@ unsigned char SearchAndSelectSSID(void) {
 char WIFISend(unsigned int len, unsigned char *DataToSendRec) {
 	unsigned int i = 0;
   //EmptyWIFIRXBuffer(); 
-	USART_SendStr(USART3, "AT+CIPSEND\n\r");
+	//USART_SendStr(USART3, "AT+CIPSEND\n\r");
 	GUI_Delay(1);
 	#ifdef DEBUG_WIFI
 	debug("\n>> ", 1);

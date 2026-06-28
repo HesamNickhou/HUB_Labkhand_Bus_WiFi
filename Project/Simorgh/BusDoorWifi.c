@@ -32,6 +32,9 @@
 #define LEN_TRANSACTIONS  128
 #define GlobalBufferLen   1200
 
+unsigned char dotCounter = 0;
+unsigned char freezeDetected = 0;
+
 //extern unsigned char WIFI_GCF(unsigned char *c);
 
 //==============================================================================
@@ -68,7 +71,6 @@ unsigned int
 	TransactionID 				 = 0;
 	
 unsigned char 
-	DataIsReady                = 0,
 	OldMin										 = 0, 
 	OldHour 									 = 0, 
 	fCounter 									 = 0, 
@@ -129,6 +131,7 @@ unsigned short
 	SecLocation,
 	FirmwareRequestNo,
 	OldGPSSpeed,
+	DataIsReady        = 0,
 	SaveInterval			 = 0,
 	Brightness 				 = 0x80,
 	DeltaTimes 				 = 0,
@@ -272,10 +275,10 @@ void readTimeStamp(unsigned long timeStamp) {
 	/*CurrentDate.year  = year;
 	CurrentDate.month = month;
 	CurrentDate.day   = day;*/
-	char str[100];
+	/*char str[100];
 	sprintf(str, "\nCurrentDate = %d/%d/%d\nymd = %d/%d/%d\n", CurrentDate.year, CurrentDate.month, CurrentDate.day,
 		year, month, day);
-	debug(str, 1);
+	debug(str, 1);*/
 	
 	Year  = year;
 	Month = month;
@@ -283,19 +286,6 @@ void readTimeStamp(unsigned long timeStamp) {
 	Hour  = hour;
 	Min   = minute;
 	Sec   = second;
-	/*rDateType now;
-	gregorian_to_jalali(year, month, day, &now);
-	Year 	= now.year;
-	Month = now.month;
-	Day 	= now.day;
-	Hour  = hour;
-	Min   = minute;
-	Sec   = second;
-	RTC_Set(CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec);
-	
-	sprintf(str, "\nCurrentDate = %d/%d/%d\nYMD = %d/%d/%d\n", CurrentDate.year, CurrentDate.month, CurrentDate.day,
-		Year, Month, Day);
-	debug(str, 1);*/
 }
 void createQR(const char* data, unsigned short x, unsigned short y) {
 	unsigned short xPos, yPos;
@@ -308,48 +298,49 @@ void createQR(const char* data, unsigned short x, unsigned short y) {
 		}
 	}
 }
-char* getFieldValue(const char* source, const char* field, char endChar) {
+unsigned char getFieldValue(const char* source, const char* field, char endChar, char* value) {
 	char* tmp = strstr(source, field);
 	char* strEnd = strchr(tmp, endChar);
 	if (strEnd == NULL)
-		return NULL;
+		return 0;
 	
-	char value[20];
 	char num = strEnd - tmp - strlen(field);
 	memcpy(value, tmp + strlen(field), num);
 	value[num] = '\0';
-	return value;
+	return 1;
 }
-
+unsigned int getFieldValueI(const char* source, const char* field, char endChar) {
+	char str[20];
+	if (getFieldValue(source, field, endChar, str))
+		return atoi(str);
+	else
+		return 0xFFFFFFFF;
+}
 void ProcessWifi() {
 	WifiConnectionError = 0;
 
 	while (DataIsReady > 0) {
 		//debug("\n<< ", 1);
 		//debug(wifiBuffer, 0);
-		unsigned char header = atoi(getFieldValue(wifiBuffer, "\"header\":", ','));
+		unsigned char header = getFieldValueI(wifiBuffer, "\"header\":", ',');
 		if (header == 13) {
-			unsigned char type = atoi(getFieldValue(wifiBuffer, "\"type\":", '}'));
+			unsigned char type = getFieldValueI(wifiBuffer, "\"type\":", '}');
 			
 			if (type == 4) {
 				debug("\n<< ", 1);
 				debug(wifiBuffer, 0);
-				Config.GrouhPrice[0][0] = atoi(getFieldValue(wifiBuffer, "\"linePrice\":", ','));
-				Config.UC 							= atoi(getFieldValue(wifiBuffer, "\"uc\":", 			 ','));
-				Config.LineCode 				= atoi(getFieldValue(wifiBuffer, "\"lineCode\":",	 ','));
-				Config.LineNumber       = atoi(getFieldValue(wifiBuffer, "\"lineId\":",     ','));
-				Config.DriverID 				= atoi(getFieldValue(wifiBuffer, "\"operatorId\":", ','));
+				Config.GrouhPrice[0][0] = getFieldValueI(wifiBuffer, "\"linePrice\":", ',');
+				Config.UC 							= getFieldValueI(wifiBuffer, "\"uc\":", 			 ',');
+				Config.LineCode 				= getFieldValueI(wifiBuffer, "\"lineCode\":",	 ',');
+				Config.LineNumber       = getFieldValueI(wifiBuffer, "\"lineId\":",     ',');
+				Config.DriverID 				= getFieldValueI(wifiBuffer, "\"operatorId\":", ',');
 
 				char date_str[50];
-				strcpy(date_str, getFieldValue(wifiBuffer, "\"date\":", ','));
+				getFieldValue(wifiBuffer, "\"date\":", ',', date_str);
+				//strcpy(date_str, getFieldValue(wifiBuffer, "\"date\":", ','));
 				date_str[strlen(date_str) - 3] = '\0';
 				readTimeStamp(atoll(date_str) + 28800 /*16200*/);
 				
-				/*char str[100];
-				sprintf(str, "\ntimeStamp = %ld, %d/%d/%d %d:%d:%d\n", 
-					toTimeStamp(CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec),
-						CurrentDate.year, CurrentDate.month, CurrentDate.day, Hour, Min, Sec);
-				debug(str, 0);*/
 				ShowPaymentBox();
 			}
 			/*else if (type == 3) {
@@ -368,11 +359,11 @@ void ProcessWifi() {
 			index++;
 		}
 		if (index < 1024)
-			memcpy(wifiBuffer, wifiBuffer + index + 1, 1024 - index);
+			memmove(wifiBuffer, wifiBuffer + index + 1, 1024 - index);
 		DataIsReady--;
 	}
 }
-void WifiCallback() { DataIsReady++; }
+void WifiCallback() { if (DataIsReady < 1200) DataIsReady++; }
 
 void SaveRingDetail(void){
 	unsigned int i;
@@ -3796,6 +3787,22 @@ void DumpArea() {
 	}
 }
 
+void checkHeartBeat() {
+	static unsigned long lastHeartbeat = 0;
+    
+	// Print a heartbeat dot every 5 seconds
+	if ((OS_TimeMS - lastHeartbeat) > 5000) {
+			printf(".");  // Or use debug(".", 0);
+			lastHeartbeat = OS_TimeMS;
+			dotCounter++;
+			
+			// Check if we've been stuck in the same place
+			if (dotCounter > 12) {  // 60 seconds with no activity
+					printf("\n[WARNING] No activity for 60 seconds!\n");
+					freezeDetected = 1;
+			}
+	}
+}
 void MainAlef(void) {
 	unsigned char lastsnr[5];
 	unsigned char TestCounter,Byte, snr[20];
@@ -3814,6 +3821,9 @@ void MainAlef(void) {
 	
 	setCallback(WifiCallback);
 
+	
+	//Config.TransactionsSendInterval = 5;
+	
 	if ((Config.LocalIP[0] < '0') || (Config.LocalIP[0] > '9'))
 		sprintf(Config.LocalIP, "192.168.001.178");
 
@@ -3846,6 +3856,7 @@ void MainAlef(void) {
 	//DumpMem();/////////////////////////
 
 	while (1) {
+		checkHeartBeat();
     if (!ISO14443_SingleTagSelect(snr)) {
       if ((lastsnr[0] != snr[0]) || (lastsnr[1] != snr[1]) || (lastsnr[2] != snr[2]) || (lastsnr[3] != snr[3]))
         if (ProcessCard(2, snr)) {
@@ -3865,13 +3876,14 @@ void MainAlef(void) {
 					lastsnr[2] = 0;
 					lastsnr[3] = 0;
 				}
-      SetRX485();
+      //SetRX485();
 	    ProcessPeriodicTasks();
 			//SetRX485(); HNA
 			Tick = 0;
 		}
+		Tick++;
 		
-		while (DataIsReady > 0) 
+		if (DataIsReady > 0) 
 			ProcessWifi();
 		
 		Key = ScanKeyboard();
@@ -3886,6 +3898,8 @@ void MainAlef(void) {
       CommunicateWithHost();
       EmptyRXBuffer();
     }
+		dotCounter = 0;  // Reset the freeze detection
+		freezeDetected = 0;
   }
 
 }
